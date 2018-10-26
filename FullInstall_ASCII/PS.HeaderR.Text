@@ -1,0 +1,62 @@
+
+/hx 1 string def
+/rh {currentfile hx readhexstring pop 0 get} bind def
+
+/colarray {
+	256 {rh 255 div} repeat 256 array astore
+} bind def
+
+/pix {
+	newpath
+	moveto
+	1 0 rlineto
+	stroke
+} bind def
+
+/setcol {
+	/col exch def
+	red col get
+	green col get
+	blue col get
+	setrgbcolor
+} bind def
+
+/repl {
+	/dx exch def
+	newpath
+	moveto
+	dx 0 rlineto
+	stroke
+} bind def
+
+% rlepic
+% run length encoded picture
+%
+/rlepic {
+	/red colarray def
+	/green colarray def
+	/blue colarray def
+	/h exch def
+	/w exch def
+	0 setlinecap
+	1 setlinewidth
+	0 0.5 translate
+	/y h def
+	h {
+		/y y 1 sub def
+		/x 0 def
+		{
+			/k rh def
+			k 128 lt {
+				currentfile k 1 add string readhexstring pop
+					{setcol x y pix /x x 1 add def} forall
+			} {
+				/k k 127 sub def
+				rh setcol
+				x y k repl
+				/x x k add def
+			} ifelse
+			x w ge {exit} if
+		} loop
+	} repeat
+} bind def

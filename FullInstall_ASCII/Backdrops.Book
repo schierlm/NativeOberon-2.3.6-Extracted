@@ -1,0 +1,424 @@
+BookDocs.NewDocIcons.NoteD\<\R]~FOberon20b.Scn.Fnt%Oberon10.Scn.FntOberon16b.Scn.Fnt%!+Oberon14b.Scn.Fnt	~Anleitung fr Backdrops fr Desktops
+
+	Einleitung
+	Setzen der Farben
+	Generierung eines Backdrops
+	Farbtransformationen auf ein Backdrop
+		Erklrung der einzelnen Backdrops
+	Kurzanleitung zum Erstellen eines Backdrops
+
+	Index
+	Fractal
+	Surface
+	Marble
+	Textils
+	Spirals
+	Bows
+	Trees
+	Cells
+	Bricks 
+!	Threads"
+#	Clouds$
+%	Molecules&
+'	Coins(
+)	Plasma*
+BIER+*MpBe7Z}		,	O	r					!Dg9\'CCCCCCCCC~CC~~CC~~CC~~CFC~~CC~~CHC~~C2C~~CIC~~CC~~C1C~~CC~~CC~~CC~~CC~~CC~~CC~~CCBooks0.NewContElemBooks0.NewLocOberon16b.Scn.FntOberon12.Scn.FntOberon10.Scn.Fnt !Einleitung
+ 
+ 
+Dieses Toolkit stellt verschiedene Hilfsmittel zum Erstellen von Backdrops zur Verfgung. Backdrops sind beliebig replizierbare Hintergrundmuster und knnen in Gadgets fr Oberon System 3 einem Desktop zugewiesen werden. Dies geschieht mit dem Befehl Desktops.InstallBackdrop <filename>. Der Parameter filename ist das gewnschte Backdrop vom Typ Pictures.Picture. Das Backdrop wird im mit Stern (*) markierten Desktop installiert.
+Das Panel zum Erzeugen der Backdrops wird mit dem Befehl Desktops.OpenDoc Backdrops.Panel geffnet. Generiert wird das Backdrop in einem beliebig markierten Picture. Nach der Erstellung besteht die Mglichkeit, das Backdrop mit dem Rembrandt-Editor (siehe Tutorial Rembrandt.Book) beliebig weiter zu bearbeiten.
+
+BIERt"tdC!C!ACTextGadgets.NewStyleProcBooks0.NewLoc/bOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.Fnt/Setzen der Farben
+    
+
+Die meisten Backdrops erreichen ihren Effekt mit den eingestellten Farben. Diese Farben sollen eine Art Farbrampe bilden, d.h. es gibt Farbtne, die von einer Farbe in eine andere bergehen mit einer gewissen Anzahl Abstufungen. Diese Farbrampe kann mittels den 6 Sliders eingestellt werden: Die ersten drei (From) definieren die Startfarbe in den Anteilen rot, grn, blau (RGB) und die anderen drei (To) die Endfarbe. Mchte man beispielsweise eine Farbrampe von schwarz nach rot, so wren die Werte From 0,0,0 und To 1,0,0.
+Die Anzahl Abstufungen kann mit dem Slider Number of Colors eingestellt werden.
+Die Hintergrundfarbe kann mit dem Colorpicker ausgewhlt werden. Die ausgewhlte Farbe wird aber erst benutzt, wenn ein neues Backdrop generiert wird.
+Fr gewisse Backdrops sind spezielle Farben notwendig, d.h. keine Farbrampe. Um diese Farben aktivieren zu knnen, gibt es bei den entsprechenden Backdrops einen Button (z.B. Sky Colors).
+Standardmssig sind folgende Farben eingestellt: Schwarzer Hintergrund und 5 Farben mit Grauwerten.
+
+BIER"tdCTextGadgets.NewStyleProcOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.FntGenerierung eines Backdrops
+   
+
+Bevor ein neues Backdrop generiert werden kann, mssen die Farben und die Hintergrundfarbe gesetzt sein. Mit dem Button Clear Backdrop wird ein markiertes Picture gelscht. Falls keines markiert ist, wird ein neues Fenster mit leerem Picture geffnet. Dieses Fenster enthlt ein Picture einer bestimmten Grsse. Ist eine andere Grsse erwnscht, kann mit Hilfe des Rembrandt-Editors (Rembrandt.Panel) ein neues Picture beliebiger Dimension geffnet werden. Ist das Zielpicture markiert, werden als nchstes die Parameter des gewnschten Backdrops eingestellt, und mit dem entsprechenden Button wird die Generierung gestartet. Zu beachten gilt, dass die Generierung erst beendet ist, wenn der Mauscursor wieder erscheint. Bei einigen Backdrops kann dies je nach eingestellten Parametern recht lange dauern. Mchte der Prozess vorzeitig beendet werden, kann dies mittels Drcken der ESC-Taste oder einer Maustaste erfolgen. Zu beachten gilt, dass das Backdrop nun nicht in den gewnschten Farben angezeigt wird, sondern mit der gesetzten Farbpalette. Die Umwandlung geschieht mit dem Befehl Compute Colors. Dieser passt die eingestellte Farbpalette an die aktuelle Bildschirmpalette an. Diese Anpassung wird mit Dithering durchgefhrt, da zur Zeit maximal 256 verschiedene Farben auf dem Bildschirm darstellbar sind. Das umgewandelte Picture wird in einem neuen Fenster dargestellt. Ist man mit dessen Aussehen zufrieden, kann mit der Funktion Preview eine Flche mit dem aktuellen Backdrop ausgefllt werden, um die Wirkung von mehreren nebeneinanderliegenden zu sehen. Nun muss das Backdrop nur noch unter einem Namen abgespeichert werden, was mit dem Button Store aus dem entsprechenden Menubar geschieht. Der Name des Backdrops muss im Nameplate stehen und sollte die Endung .Pict tragen. Ist es abgespeichert, so kann es mit dem anfangs erwhnten Befehl (siehe 3.4.1. Einleitung) installiert werden.
+
+BIER9a"tdCAbCCTextGadgets.NewStyleProcBooks0.NewLocbOberon16b.Scn.Fnt&Oberon10.Scn.FntOberon12.Scn.FntFarbtransformationen auf ein Backdrop
+    
+
+Die erzeugten Backdrops besitzen nun meistens eine Vielzahl von Farben. Werden diese als strend empfunden, so kann die Sttigung und/oder die Helligkeit der Farbpalette verndert werden. Die Sttigung einer Farbe gibt an, wie stark die Farbe ist, d.h. hat ein Blauton die RGB-Werte 0,0,255, so ist die Farbe gesttigt. Ist der Blauanteil geringer (z.B. 0,0,230), so geht die Farbe Richtung Grauwert (im Extremfall schwarz). Mit dieser Funktion knnen die starken Farben etwas reduziert werden (Pastellfarben), oder es kann sogar aus einem Farbbild ein Schwarz-Weiss-Bild erstellt werden. Erreicht wird dies, indem man den Slider fr die Sttigung verndert. Standardmssig eingestellt ist 100%, d.h. Originalfarbtne aus der erstellten Farbrampe. Die andere Seite wre 0%, d.h. die Farbpalette wird auf Graustufen transformiert. Das Resultat wird jedoch erst sichtbar, nachdem der Button Compute Colors gedrckt wird.
+Die Helligkeit der Farbpalette wird mit dem zweiten Slider verndert. Standardmssig ist auch 100% eingestellt. Mchte man das Backdrop etwas heller, so wird mit dem Slider einen Wert grsser als 100 eingestellt. Ein dunkleres Backdrop erreicht man mit einem Wert kleiner als 100. Der kleinste Wert (5%) entspricht einer fast schwarzen Farbpalette, der grsste Wert (200%) einer weissen Farbpalette. Nach dem Einstellen des Sliders muss auch der Button Compute Colors bettigt werden, um die Transformation sichtbar werden zu lassen.
+
+
+BIERO$j$'$"tdCTextGadgets.NewStyleProcOberon16b.Scn.Fnt"Oberon12.Scn.Fnt#Oberon14b.Scn.FntOberon10.Scn.FntlOberon12i.Scn.Fnt?bZ{S)	`R&$	tI%%	K%	D#U%	y[&}l	yy	W$N%Erklrung der einzelnen Backdrops
+
+
+Die mglichen Backdrops sind in Form verschiedener Iconizer auf dem Panel angeordnet. Um ein Backdrop erstellen zu knnen, muss der gewnschte Iconizer geffnet werden, damit die entsprechenden Parameter eingestellt werden knnen und mit dem Button die Generierung gestartet werden kann.
+
+Fractal 
+
+Generiert fraktalhnliche Gebilde, ausgehend der komplexen Zahl beg und endend bei end. Eingegeben werden diese Zahlen in getrennten Real- und Imaginrteilen. Sie sind mit beg.r. fr den Realteil der Startzahl und beg.i. fr den entsprechenden Imaginrteil angegeben. Analog sind die Bezeichnungen der Endzahl. Die beiden weiteren Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl Schritte zwischen Start- und Endpunkt fest.
+
+Depth:	
+Legt die Anzahl Iterationen fest. Kleine Werte ergeben ungenaue Strukturen, grosse Werte geben genaue Strukturen.
+
+Tip fr Farben:
+Farbrampen mit vielen Abstufungen, d.h. Anzahl Farben gross, erzielen den grssten Effekt.
+Die Hintergrundfarbe sollte der Startfarbe der Rampe entsprechen.
+
+Beispiel:
+beg.r.:= -1.2; beg.i.:= 0.1; end.r.:= -0.8; end.i.:= 0.9; Number:= 64; Depth:= 10000
+(siehe Beispiel)
+
+Surface 
+
+Generiert oberflchen- oder gebirgshnliche Strukturen. Die drei Parameter bedeuten folgendes:
+
+Number:
+Legt die Dichte der Strukturen fest. Je grsser der Wert desto unruhiger die Struktur.
+
+Random:
+Legt die maximale Grsse der Erhebungen fest. Die effektive Grsse wird zufllig ausgewhlt mit dieser oberen Schranke.
+
+Size:
+Legt das Volumen der Erhebungen fest. Gibt die Grsse eines einzelnen Elementes einer Erhebung an.
+
+Tip fr Farben:
+Farbrampen geringer Grsse erzeugen eine bessere Wirkung (ca. 8 bis 12 Abstufungen).
+Die Hintergrundfarbe wird berechnet und entspricht dem Mittelwert der Farbrampe.
+
+Beispiel:
+Number:= 400; Random:= 100; Size:= 1
+(siehe Beispiel)
+
+Marble 
+
+Generiert marmorhnliche Strukturen. Die Namen der Parameter drfen nicht allzu wrtlich genommen werden, da eine treffende Bezeichnung schwierig ist. Die dazugehrigen Farben werden ber den vorhandenen Button gesetzt; Farbrampen machen hier wenig Sinn.
+Die drei Parameter bedeuten folgendes:
+
+Structure:
+Legt die Struktur des Marmors fest. Kleine Werte bedeuten weniger zufllige Strukturen, grosse Werte ergeben mehr zufllige Strukturen.
+
+Granularity:
+Legt die Grsse der Farbsektionen fest. Je kleiner der Wert desto grsser die Farbsektionen.
+
+Complexity:
+Legt die Komplexitt der Struktur fest.
+
+Tip fr Farben:
+Nur mit den eigenen Farben sinnvoll.
+
+Beispiel:
+Structure:= 33; Granularity:= 17; Complexity:= 123
+(siehe Beispiel)
+
+Textils 
+
+Generiert gewebehnliche Strukturen. Der einzige Parameter bedeutet folgendes:
+
+Granularity:
+Legt die Krnung der Struktur fest. Je grsser der Wert desto zuflliger die Struktur.
+
+Tip fr Farben:
+Beliebige Farben mglich
+
+Beispiel:
+Granularity:= 25
+(siehe Beispiel)
+
+Spirals 
+
+Generiert diverse Formen von Spiralen. Je nach eingestellten Parameter knnen sich mehr oder weniger sinnvolle Strukturen ergeben. Die fnf Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Spiralen fest.
+
+Radius:
+Legt die Grsse des Radius fest.
+
+Rotations:
+Legt die Anzahl Umdrehungen fest. Die Einheit ist Zehntelumdrehung, d.h. der Wert 10 entspricht einer Umdrehung.
+
+Lines:
+Legt die Anzahl Linien fest, die vom Zentrum einer Spirale aus gehen.
+
+Colors:
+0 entspricht einer einzigen Farbe, 1 entspricht einem Farbverlauf vom Zentrum nach aussen.
+
+Tip fr Farben:
+Beliebige Farben mglich
+
+Beispiel:
+Number:= 200; Radius:= 30; Rotations:= 20; Lines:= 1; Colors:= 1
+(siehe Beispiel)
+
+Bows 
+
+Generiert bogenfrmige Strukturen. Diese Strukturen werden mittels halber Ellipsen, die ausgefllt werden, erreicht. Die drei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der "Bogen" fest.
+
+Radius:
+Legt die Grsse der "Bogen" fest.
+
+Thickness:
+Legt die Dicke der "Bogen" fest. Der Wert 1 entspricht nur einer einzigen Linie.
+Grssere Werte ergeben dickere "Bogen".
+
+Tip fr Farben:
+Die Anzahl Farben soll ungefhr dem Wert des Parameters Thickness entsprechen.
+
+Beispiel:
+Number:= 200; Radius:= 80; Thickness:= 10
+(siehe Beispiel)
+
+Trees 
+
+Generiert verstelte Strukturen. Die drei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der "Bume" fest.
+
+Size:
+Legt die maximale Grsse fest. Die effektive Grsse wird zufllig ausgewhlt mit dieser oberen Schranke. Diesen Wert bezieht sich nur auf die Anfangsgrsse. Jede weitere Verstelungsgrsse wird aus der maximalen Grsse der vorangehenden Rekursion berechnet.
+
+Recursion:
+Legt die Anzahl Verstelungen fest. Je grsser der Wert desto dichter der "Baum".
+
+Tip fr Farben:
+Die Anzahl Farben soll ungefhr dem Wert des Parameters Recursion entsprechen.
+
+Beispiel:
+Number:= 1; Size:= 80; Recursion:= 6
+(siehe Beispiel)
+
+Cells 
+
+Generiert Zellstrukturen. Die zwei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Zellen fest
+
+Radius:
+Legt die Grsse der Zellen fest.
+
+Tip fr Farben:
+Die Hintergrundfarbe sollte der Startfarbe der Rampe entsprechen.
+
+Beispiel:
+Number:= 70; Radius:= 30
+(siehe Beispiel)
+
+Bricks 
+
+Generiert steinplattenhnliche Strukturen. Die vier Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Platten fest.
+
+Defective:
+Legt die Anzahl Defekte pro Platte fest. Defekte sind kleine Ecken, die aus der Platte herausgehauen wurden, was einer natrlicheren Darstellung von Platten entspricht.
+
+Width:
+Legt die maximale Breite einer Platte fest. Die effektive Breite wird zufllig ausgewhlt mit dieser oberen Schranke.
+
+Height:
+Legt die maximale Hhe einer Platte fest. Die effektive Hhe wird analog ausgewhlt.
+
+Tip fr Farben:
+Die Defekte sind bei einer geringeren Anzahl Farben besser sichtbar (ca. 6 bis 12)
+
+Beispiel:
+Number:= 100; Defective:= 30; Width:= 70; Height:= 50
+(siehe Beispiel	)
+
+Threads 
+
+Generiert faser- oder gewebehnliche Strukturen. Die zwei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der "Fasern" fest.
+
+Length:
+Legt die Lnge einer "Faser" fest.
+
+Tip fr Farben:
+Beliebige Farben mglich.
+
+Beispiel:
+Number:= 126; Length:= 400
+(siehe Beispiel)
+
+Clouds 
+
+Generiert wolkenartige Strukturen. Die dazugehrigen Farben werden ber  den vorhandenen Button gesetzt. Die zwei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Wolkenkerne fest. Jede Wolke hat ihren Kern, von dem aus die Wachstumsphase beginnt.
+
+Size:
+Legt die Lnge der Wachstumsphase fest. Je grsser der Wert desto grsser kann die Wolke werden.
+
+Tip fr Farben:
+Unter Umstnden erreichen auch Farbrampen geringer Grsse (ca. 5 Abstufungen) eine gute Wirkung.
+
+Beispiel:
+Number:=30; Size:= 8000
+(siehe Beispiel)
+
+Molecules 
+
+Generiert moleklartige Strukturen. Die Wirkung wird nur dank der Farbrampe erreicht. Die drei Parameter bedeuten folgendes:
+
+Size:
+Legt die maximale Grsse der Molekle fest. Die effektive Grsse wird zufllig ausgewhlt mit dieser oberen Schranke.
+
+Distance:
+Legt die Abstnde der Molekle im Raume fest. Ein grosser Wert entspricht grsseren maximalen Abstnden der Molekle.
+
+Precision:
+Legt die Genauigkeit der Molekle fest. Der Wert 1 entspricht der normalen Moleklform. Grssere Werte weichen strker von der Form eines Molekls ab.
+
+Tip fr Farben:
+Beliebige Farben mglich.
+
+Beispiel:
+Size:= 30; Distance:= 40; Precision:= 1
+(siehe Beispiel)
+
+Coins 
+
+Generiert verschiedenfarbig gefllte Kreise. Die zwei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Kreise fest.
+
+Radius:
+Legt die maximale Grsse der Kreise fest. Die effektive Grsse wird zufllig gewhlt mit dieser oberen Schranke.
+
+Tip fr Farben:
+Beliebige Farben mglich.
+
+Beispiel:
+Number:= 800; Radius:= 10
+(siehe Beispiel
+)
+
+Plasma 
+
+Generiert schwammartige Strukturen. Die zwei Parameter bedeuten folgendes:
+
+Number:
+Legt die Anzahl der Gebilde fest.
+
+Size:
+Legt die Grsse eines Gebildes fest.
+
+Tip fr Farben:
+Die Anzahl Farben eins grsser als der Wert des Parameter Number.
+
+Beispiel:
+Number:= 31; Size:= 5000
+(siehe Beispiel)
+
+
+BIERJJHHHI5IXI{IIIIJ*JMJpJJ"tdCbCCCCCC.C.JCJgCgCCCCCTextGadgets.NewStyleProcBooks0.NewLocOberon16b.Scn.Fnt,Oberon10.Scn.FntOberon12.Scn.Fnt0Oberon12i.Scn.FnttBZEG#Kurzanleitung zum Erstellen eines Backdrops
+ 
+
+1. 	Setzen der Farbrampe (oder der fr spezielle Backdrops notwendigen Farben)
+2. 	Festlegen der Anzahl Farben (Number of Colors)
+3. 	Wahl der Hintergrundfarbe
+4. 	Einstellen der Parameter
+5. 		- Falls in ein bestehendes Picture gezeichnet werden soll:
+			Lschen des markierten Picture mit dem Button Clear Backdrop
+   		- sonst wird automatisch ein neues Picture geffnet	
+6. 	Button des gewnschten Backdrops drcken.
+7. 	Button Compute Colors drcken (dient zum Anzeigen der tatschlichen Farben)
+8. 	Button Preview drcken fr einen ersten Gesamteindruck
+9. 	Geffnetes Fenster wieder schliessen (Button Close).
+10. 	Falls wnschenswert knnen nun die Farbtransformationen angewendet werden, d.h.:
+     	ndern der beiden Slider fr Helligkeit und Sttigung
+     	Button Compute Colors drcken.
+11. 	Falls andere Farbtransformation gewnscht ist, kann das neue Fenster wieder geschlossen werden
+		und bei Punkt 10 weitergemacht werden
+    	Falls das Aussehen des Backdrops gendert werden soll, kann bei Punkt 4 eingestiegen werden
+12. 	alles o.k.
+13. 	Dem Backdrop einen Namen geben (im Nameplate) und Button Store drcken
+14. 	Gespeichertes Backdrop in einem Desktop installieren mit Desktops.InstallBackdrop <filename>
+
+
+
+BIERPQP"tdCTextGadgets.NewStyleProcK7Oberon20b.Scn.FntOberon10.Scn.FntOberon16b.Scn.FntOberon12.Scn.Fnt	
+		KIndex
+
+B
+Backdrop
+Backdrop installieren
+Bows
+Bricks
+
+C
+Cells
+Clouds
+Coins
+Compute Colors
+
+D
+Dither	
+
+F
+Farben
+Farbrampe
+Farbtransformationen
+Fractal
+
+
+G
+Generierung
+Grsse
+
+H
+Helligkeit
+
+K
+Kurzanleitung
+
+M
+Marble
+Molecules
+
+P
+Plasma
+
+S
+Sttigung
+spezielle Farben
+Spirals
+Surface
+
+T
+Textils
+Threads
+Trees
+
+BIERYZV>VaVVVVVW3WVWyWWWWX(XKXnXXXXXY@YcYYYY"tdCCCCCCCC+C CCC(CNCCC*C.COCCC)CCQCC:CC7CTextGadgets.NewStyleProcBooks0.NewLoc#Oberon10.Scn.FntDesktops.OpenDoc Backdrops.Panel
+Desktops.OpenDoc Rembrandt.Book
+Desktops.OpenDoc Rembrandt.Panel
+Desktops.OpenDoc Fractal.Pict
+Desktops.OpenDoc Surface.Pict
+Desktops.OpenDoc Marble.Pict
+Desktops.OpenDoc Textils.Pict
+Desktops.OpenDoc Spirals.Pict
+Desktops.OpenDoc Bows.Pict
+Desktops.OpenDoc Trees.Pict
+Desktops.OpenDoc Cells.Pict
+Desktops.OpenDoc Bricks.Pict
+Desktops.OpenDoc Threads.Pict
+Desktops.OpenDoc Clouds.Pict
+Desktops.OpenDoc Molecules.Pict
+Desktops.OpenDoc Coins.Pict
+Desktops.OpenDoc Plasma.Pict
+OpenPlasmaCoinsMoleculesCloudsThreadsBricksCells1TreesBowsISpirals2TextilsHMarbleSurfaceFFractalnoccolor

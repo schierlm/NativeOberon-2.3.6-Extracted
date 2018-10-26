@@ -1,0 +1,19 @@
+[Mod]
+Compiler.Compile *
+Compiler.Compile *\s
+Compiler.Compile *\f
+TextDocs.SearchDiff \w
+---Files--------------
+<5 Recent Files>
+---Procs-------------
+<Procedures>
+---Types-------------
+<Types>
+
+[Text]
+TextDocs.SearchDiff \w
+--------------------
+<5 Recent Files>
+
+[Tool]
+<5 Recent Files>

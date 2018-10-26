@@ -1,0 +1,114 @@
+How to Use Oberon - A Quick Tutorial
+
+by Jrg Gutknecht, November, 1997
+
+This text gives a quick overview of how to use Oberon. In particular, short sections explain the use of the keyboard and mouse, text editing, programming and file handling (disk and diskette).
+
+<== Click left/right mouse button in bar to scroll up/down.
+
+In the following, references are made to mouse buttons left, middle and right. If your mouse is equipped with only two buttons, use the Ctrl-key as substitute for middle.
+
+Any viewer can be closed or grown by activating the command System.Close or System.Grow respectively in its title bar.
+
+Blue colored parts are sample commands. They can be activated by pointing at them with the mouse and then clicking the middle key.
+
+Keyboard
+
+The following table shows special key interpretations.
+
+Special interpretation	Key
+
+Mark viewer with *	F1
+Neutralize (remove marks)	F2
+Toggle display on/off	F5
+Initialize color palette	F7
+Redraw all viewers	F9
+Interrupt I/O	ctrl-break
+Interrupt anything	ctrl-break twice
+Reboot	ctrl-alt-del
+
+	alt-s
+	alt-a
+	alt-o
+	alt-u
+	shift-alt-a
+	shift-alt-o
+	shift-alt-u
+
+If the appropriate keyboard driver is installed, accented or special characters can also be typed directly.  Some drivers implement "dead keys" to generate all possible accents in combination with Alt, e.g. Alt-^ e will produce .
+
+Mouse Keys
+
+==> Left key to point at an object
+==> Middle key to execute a command
+==> Right key to select an object or group of objects
+
+Text Editing
+
+==> Execute command: Click the middle mouse key at any command of the form M.P to execute it. For example, click the middle key at System.Time and watch the System.Log.
+
+==> Change the size of a viewer: Press the left mouse key in the upper part of the viewer's title bar, move the mouse to the desired location and release the key. Try on this viewer.
+
+==> Change the location of a viewer: Press the left mouse key in the upper part of the viewer's title bar, move the mouse to the desired location, interclick with the middle mouse key and release all keys.
+
+==> Scroll up: Move the mouse into the scroll bar next to the line that you wish to move to the top of the viewer. Then click (press and release) the left mouse button.
+
+==> Scroll down: Click the right mouse button while the mouse is in the scroll bar.
+
+==> Position contents: Click the middle mouse button in the scroll bar at the desired relative position.
+
+==> Place caret: The caret is the point of (subsequent) insertion. To place it, press the left mouse key, move to the desired location and release the key. Try and set the caret in front of this word. Then type.
+
+==> Select text: Any contiguous piece of text can be selected by moving the mouse to the beginning of the piece, pressing the right key, moving the mouse to the end of the piece and then releasing the key. Double-clicking of the right mouse key extends the selection to the beginning of the current text line. Try and select this sentence and then this line.
+
+==> Select large amount of text: Use the System.Copy command in the menu bar to create a copy of the viewer.  Move to the end of the text to be selected in the bottom viewer.  Now select the start of the text in the top viewer and the end in the bottom viewer, while holding the SHIFT key.  As usual, selection can be combined with an interclick.
+
+==> Copy text: Set the caret to indicate the destination. Select (using the right key) and interclick with the middle key (without releasing the right key). Then, release all keys.
+
+==> Delete text: Select (using the right key) and interclick with the left key (without releasing the right key). Then, release all keys.
+
+==> Undo previous delete operation: Set caret and execute Edit.Recall .
+
+==> Open a text: Anywhere on the screen, select the name of the desired text and execute Edit.Open ^ (for simple line oriented text) or Script.Open ^ (for formatted text). "^" refers to the current selection. If no name is selected when calling Edit.Open ^, a new and empty text is opened. Alternatively, execute Edit.Open <name> or Script.Open <name>.
+
+==> Store text (after editing): Execute Edit.Store or Script.Store in the text viewer's title bar. If desired, the name of the text can be changed directly in the title bar.
+
+==> Undo previous close operation. Execute System.Recall .
+
+==> Print a text. Mark the desired text viewer with the marker (press the F1 key) and execute Edit.Print <printername> * or Script.Print <printername> * (the star refers to the marker). Alternatively, execute Edit.Print <name> ~ . "~" indicates the end of a (potential) list of text names.
+
+Programming
+
+==> Open a source program: Open any Oberon module text (module names typically end on .Mod). Use Edit.Open <modulename>.Mod to open any module of your choice. Use a non-existing modulname to open a new and empty module. Try Edit.Open Hello.Mod . 
+
+==> Compile a module: Mark the source module (by pressing F1) and execute Compiler.Compile * ("*" refers to the marked viewer). In case of a symbol file change use option "s" (allowing the old symbol file to be overwritten). Try Compiler.Compile *\s on Hello.Mod.
+
+==> Locate compilation errors: Mark the source module (by pressing F1), select the respective error line in the System.Log and execute Edit.Locate in the title bar of System.Log. Try on Hello.Mod.
+
+==> Execute a program: After successful compilation of a module, any of its commands can be called by clicking the middle mouse key at its name (followed by the list of its parameters). Try on Hello.World .
+
+==> Locate trapped statements: After a trap, select the respective line in the trap viewer containing the program count and recompile the trapped module with Compiler.Compile *\f (option "f" for find) to locate the failing statement in the source code.
+
+==> Load and execute a new version of a compiled module: First execute System.Free <name> ~ to unload any old version of the module with the given name and then simply call any command of the (new version of the) module. Note that modules must be unloaded hierarchically from top to bottom. For example, if module A imports module B then execute System.Free A B ~ to unload B.  As a shortcut, middle + left interclick can be used to reload a module and execute a command.
+
+Disk File Management
+
+==> List disk directory: Select a mask (pattern) and execute System.Directory ^. The mask may contain wildcards "*" at any place. For example, the masks *.Text , *B*M* and ProjectX.* specify the set of files ending with extension Text, containing a "B" and an "M" in this order and starting with prefix ProjectX respectively.
+
+==> Copy or rename files: Execute System.CopyFiles <pairlist> ~ or System.RenameFiles <pairlist> ~ respectively, where pairlist is a list of pairs of the form fromName => toName and "~" terminates the list.
+
+==> Delete files: Select a file name and execute System.DeleteFiles ^ or, alternatively, execute System.DeleteFiles <namelist> ~ , where namelist is a list of file names.
+
+Diskette File Management
+
+==> Open tool: Tools are texts containing collections of commands. In order to open a tool, select its name and execute System.Open ^ or, alternatively, execute System.Open <name>. For example, execute System.Open Backup.Tool to open the tool to load and store files from and to diskettes.
+
+==> Format and initialize diskettes: Both normal density (DD) and high density (HD) data and both standard DOS format and a private Oberon format are supported. Diskettes of either format must be formatted accordingly before they can be used. For standard DOS diskettes use any standard DOS formatter, Backup.Format\D (DD) or Backup.Format\H (HD), optionally followed by Backup.InitDOS name to add a volume label. For Oberon diskettes use any standard DOS formatter, Backup.Format\D (DD) or Backup.Format\H (HD), mandatorily followed by Backup.InitOberon <name> . Newly initialized diskettes can be made compatible with earlier Oberon versions by specifying the empty name as volume label. Note that before the formatting and initialization commands in the Backup tool can be executed, the protection guard "!" must be  removed.
+
+==> List diskette directory: Execute Backup.Directory or Backup.Directory\d (option d specifies extended information).
+
+==> Read files from diskette: Select a file name and execute Backup.ReadFiles ^ or, alternatively, execute Backup.ReadFiles <namelist> ~, where namelist is a list of file names and "~" terminates the list.
+
+==> Write files to diskette: Select a file name and execute Backup.WriteFiles ^ or, alternatively, execute Backup.WriteFiles <namelist> ~, where namelist is a list of file names and "~" terminates the list.
+
+==> Delete files on diskette: Select a file name and execute Backup.DeleteFiles ^ or, alternatively, execute Backup.DeleteFiles <namelist> ~, where namelist is a list of file names and "~" terminates the list.

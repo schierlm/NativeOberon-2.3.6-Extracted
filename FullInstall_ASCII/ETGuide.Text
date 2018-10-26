@@ -1,0 +1,357 @@
+The ET Text Editing Package
+
+The ET module extends the functionality of TextFrames and provides a
+complete set of commands for use in such TextFrames.  In addition
+to this it offers extensions to the execution of commands as well as
+to the LogText.
+
+
+Additional functions in TextFrames
+
+Automatic indentation:
+	When input is terminated by pressing Enter, the next line will
+	be indented automatically with the same number of Tab and
+	Space characters.  To prevent automatic indentation the input
+	must be terminated with a Linefeed.
+
+Selection of large section of text:
+	Text that is larger than the contents of one frame may be
+	selected in two frames, one below the other.  The start of the
+	selection is defined in the top frame, and the end of the
+	selection in the bottom one.  The large selection will be
+	highlighted.  Two points to bear in mind:  the frames must be
+	adjacent, and if the bottom selection is visible in the top
+	frame, it will not be regarded as one large selection, but a
+	new selection altogether.
+
+Scrolling: 
+	On the left-hand side of the text is an area called the
+	Scrollbar.  By clicking the mouse buttons on the Scrollbar, the
+	view on the text may be changed as follows:
+		- ML:	forwards (towards the end of the text)
+		- MR:	backwards (towards the start of the text)
+		- MM:	relative positioning
+		- MM + MR:	shows the start of the text
+		- MM + ML:	shows the end of the text
+
+Use of Popup Menus:
+	The ET module supports the use of popup menus.  To this end 
+	Menu.Obj must be available.  The ET.Popup command will
+	enable/disable popup menus.
+
+Automatic Name Registering:
+	If enabled, the date, time and filename is logged in
+	ET.Name.Log every time a file is stored.  This function is
+	disabled by default and can be enabled/disabled with the
+	ET.NameLog command.
+
+Text format support:
+	ET allows storage of a text in the following three formats:
+	as Oberon text, as Ascii text (lines end with CR LF) and as
+	characters only (lines end with CR).  Three corresponding
+	commands are available (ET.Store, ET.StoreAscii,
+	ET.StoreChar).
+
+
+Extension to LogText
+
+Visibility of messages:
+	When messages are added to the extended LogText, the view on
+	the text will adjust itself to show the added lines.  The
+	extended LogText can be opened with the ET.OpenLog command.
+
+Filtering warnings:
+	The Filter function allows the suppression of compiler
+	warnings.  This function is disabled after startup and can be
+	enabled/disabled with the ET.Filter command.
+
+Special extensions
+
+Execution of command files (macros):
+	ET.Do causes commands that appear in a text to be executed one
+	by one.  With this many operations can be performed with a
+	single mouse click (e.g. special screen setup,
+	initialization of a server).
+
+Application of a command to a list:
+	ET.Call processes the selected names according to the rules
+	given in the command.  It composes a list which it passes to
+	the command.  The processing of the selected names includes
+	the addition of both options and pre-/suffixes.
+
+ET Commands
+
+Most commands need a specification (e.g. the name of a text).  This
+is normally given directly after the command.  Certain ET commands
+also accept a selection if a valid specification is not found.  Such
+commands are marked with spec below.
+
+The commands listed below open TextFrames and may typically appear in
+a Tool text.
+
+ET.Open spec / ET.OpenSys spec
+	Opens a TextFrame in the User or System Track containing the
+	specified text.  If a number appears before the name in spec,
+	the frame is opened at that y-position.
+
+ET.OpenAscii spec / ET.OpenSysAscii spec
+	Opens a TextFrame in the User or System Track containing the
+	specified Ascii text (lines end with CR LF).  If a number appears
+	before the name in spec, the frame is opened at that y-position.
+
+ET.Show spec
+	Expects Module.Pattern as specification.  It opens a TextFrame
+	showing Module.Mod in the User track.  Furthermore, it
+	searches and highlights the first occurrence of Pattern.
+	Further occurrences may be found with ET.Search.
+
+ET.New spec / ET.NewSys spec
+	Opens an empty TextFrame in the User or System track.  spec is
+	optional and when present indicates the y-position where the
+	frame is opened.
+
+The following commands appear mostly in the MenuFrames of extended
+TextFrames:
+
+ET.Move
+	Moves the selection to the caret position.  The selection and
+	caret must be in the same frame.
+
+ET.Search
+	Searches through the text for a search expression.  If a
+	selection was made after the last search, that selection is
+	used as the new search expression.  The text is search from
+	the caret position or from the start of the text if the caret
+	is not placed.
+
+ET.Replace
+	Replaces the next occurrence of the most recent search
+	expression, which appears immediately in front of the caret,
+	with a  replace expression.  If a selection was made after the
+	last search, that selection is used as the new replace
+	expression.  After replacement the next occurrence of the
+	search expression is found.
+
+ET.ReplaceAll
+	Replaces all further occurrences of the most recent search
+	expression, which appears immediately in front of the caret,
+	with a  replace expression.  If a selection was made after the
+	last search, that selection is used as the new replace
+	expression.  After replacement the next occurrence of the
+	search expression is found.
+
+ET.Store
+	Stores the text on the disk under the name in the title bar.
+	If automatic name registering is enabled, the date, time and
+	name of the text is logged in the Ascii file ET.Name.Log.
+
+ET.StoreAscii
+	Behaves like ET.Store.  However, the text is stored as an
+	Ascii file (lines end with CR LF).
+
+ET.StoreChar
+	Behaves like ET.Store.  However, the text is stored as an
+	characters only (lines end with CR).
+
+Below are more commands for the handling of TextFrames.  They
+typically appear in a Tool text.
+
+ET.SearchDiff
+	Finds the difference between two texts.  The texts and starting
+	positions are determined by the last two selections.  If a
+	difference is found, the differing characters in each text are
+	highlighted.
+
+ET.Font name
+	Changes the font of the last selection to the font called
+	name.  This name must follow directly after the comand.  The
+	default extension ".Scn.Fnt" is appended if name does not end
+	with a fullstop.
+
+ET.Color value
+	Changes the color of the last selection to the color indicated
+	by value.
+
+ET.Right
+	Indents the most recent selection by adding a tab or space
+	character to the front of each line in the selection.  The
+	character used depends on the initial character of the first
+	selected line.
+
+ET.Left
+	Unindents the most recent selection by removing the initial
+	character of each selected line if it happens to be a tab or a
+	space.
+
+ET.Delete
+	Deletes the most recent selection and places the caret at the
+	point of deletion.
+
+ET.Recall
+	Inserts the most recently deleted selection at the caret
+	position.
+
+The following commands are typically used in connection with
+System.Log.
+
+ET.OpenLog
+	Opens an extended LogText that automatically advances the view
+	on the LogText to ensures that the latest messages are visible.
+
+ET.Locate
+	Advances the marked frame to the selected text position.
+	Leading non-numeric expressions in the selection are ignored.
+	This facilitates the location of errors reported by the Compiler.
+
+ET.Error
+	Opens the text "OberonErrors.Text" and searches for the error
+	specified by the most recent selection.  The selection is
+	scanned for "err".  After this an (error) number is expected.
+
+ET.Clear
+	Deletes all the text in a frame.  If the command appears in a frame
+	Menu, the text in that frame is deleted when the command is
+	executed.  Otherwise, the text in the marked frame is deleted.
+	ET.Recall may be used to restore the text.
+
+The following commands extend the ways of executing commands.  They
+allow execution of command sequences as well as the application of 
+commands to parameter lists.
+
+ET.Do spec
+	Permits the execution of an often used set of commands through a
+	single mouse click.  spec refers to a text which contains
+	lines of commands, together with their parameters, that are
+	to be executed.  For example, the following list may be
+	grouped in a text and then executed with ET.Do to set up the
+	screen after startup:
+		ET.ClearSysTrack
+		ET.OpenLog
+		ET.OpenSys 620 System.Tool
+		ET.OpenSys 440 Private.Tool
+		ET.NameLog on
+		ET.Remind Notes.Text
+	As another example, the following command sequence will open a
+	standard TextFrame and initialize it with the ET extension.
+		ET.Marker save system
+		System.Directory ^
+		ET.Init saved
+		ET.ExchangeMenu saved "System.Close System.Directory ^"
+ET.Call spec [spec = M.P {string} ~]
+	Processes the names in the selection according to spec and
+	then apply the given command to them.  This processing could
+	comprises the appending of options and pre-/suffixes.  The
+	processing action is given in a string delimited by
+	double-quotation marks and may contain a "*" character.  The
+	expansion of the specification will replace the "*" with each
+	name.  Each specification may contain many processingn
+	actions, which will be expanded left to right.
+	Examples:
+		- ET.Call Compiler.Compile "*\s" ~
+			The selection FaxIO.Mod Faxes.Mod will yield
+			Compiler.Compile FaxIO.Mod\s Faxes.Mod\s ~
+		- ET.Call System.CopyFiles "* => s.*.Old" ~
+			The selection T0 T1 will result in the
+			execution of System.CopyFiles T0 => s.T0.Old
+			T1 => s.T1.Old ~
+		- ET.Call Backup.WriteFiles "*.Mod" "*.Obj" "*.Sym" ~
+		- ET.Call Net.SendFiles "Ganymed" "*.Obj" "*.Sym" ~
+	To test the expansion of the selected names, ET.Call can be
+	called with a nonexistent command.  Afterwards the ET.Para
+	command will display the parameter list.
+
+ET.Marker save spec [spec = user | system]
+	Marks the position inside the given track where the Oberon
+	system will open a new frame.  The marked position can be used
+	with ET.Marker set saved, ET.Init saved and ET.ExchangeMenu
+	saved.
+
+ET.Marker set spec [spec = saved | this | x-number y-number]
+	Sets the marker (star pointer).  spec indicated the position.
+	- ET.Marker set saved
+		The frame, at the position marked with ET.Marker set
+		saved, will be marked with the star pointer.
+	- ET.Marker set this
+		Marks the frame in which the command was executed with
+		the star pointer.
+	- ET.Marker set 800 225
+		Marks the frame which contains the coordinate 800 255.
+
+ET.Init spec [spec = saved | marked | *]
+	Initializes the TextFrame indicated by spec with the ET
+	extensions.  saved indicates the frame at the position
+	previously marked with ET.Marker save user/system.  marked and
+	"*" indicates the marked frame.
+
+ET.ClearTrack / ET.ClearSysTrack
+	Closes all frames in the user or system track.
+
+ET.Remind spec
+	Appends the contents of the specified text to System.Log and writes
+	ET.Open spec below that.
+
+
+The following commands allows for the configuration of ET.
+
+ET.NameLog on/off
+	Enables/disables automatic name registering.  After startup,
+	this function is disabled.
+
+ET.Filter on/off
+	Enables/disables the filter function.  This allows for the
+	suppression of compiler warnings.
+
+ET.Popup on/off
+	Enables/disables Popup Menus.  After startup, this function is
+	disabled.  See "Popup Menu support" for more information.
+
+ET.SetMenu spec
+	This command connfigures the menu that appears in an ET frame.
+	The menu spec has the following form:
+		MenuDefinition = Keyword MenuCommand.
+		Keyword = user / system / log / userascii / systemascii.
+		MenuCommand = Command sequence in double quotation
+			marks, e.g., "System.Close System.Copy ET.Search ET.Store"
+
+
+Popup Menu support
+
+ET provides an interface to the Popup Menu Tool, which allows the use
+of two kinds of popup menus at the mouse position.  The menu commands
+are saved as texts.  Selected lines are interpreted as commands.
+
+Standard menu:
+	If a file named "ET.Popup.Menu" exists, ET will open this menu
+	whenever the middle mouse button is depressed inside an ET
+	frame, but not when pressed on a word.  This typically
+	contains frequently used ET commands.
+
+Custom popups:
+	When a word, immediatly prefixed with a ^, is clicked on, ET
+	interprets that word as the name of a Popup Menu text and
+	displays the contents at that spot.
+	For example: ^ET might denote a text named "ET" containing:
+		ET.OpenSys ^
+		Edit.Print Pluto % *
+		-----------
+		ET.ClearTrack
+		ET.Init
+
+Guidelines:
+1. A Popup Menu text comprises lines which consist of a command with
+	applicable parameters.  A line must start with a command (no
+	initial spaces).  The last line must not end with a RETURN to
+	prevent empty lines in the Popup Menu.  Empty lines, or any
+	text for that matter, may be included to liven up the menu.
+
+2. Menu saves the last four menu texts for efficiency which means that
+	changes do not come into effect immediatly.  Solution:
+	Menu.Reset empties the cache buffer.
+
+3. Commands, selected from a menu, behave as if they where clicked on
+	in the title bar (important for e.g. ET.Store), unless
+	immediately preceded by a "\" sign.  In this case the command
+	is executed as if it was activated in the main area.
+
+uh, Tue, 8-Jun-1993
+geld/pjm, Thu, 14-Apr-1994 (English translation)

@@ -1,0 +1,16 @@
+shape tree
+	points (-0.5 0.0 0.0) (0.5 0.0 0.0) (0.5 1.5 0.0) (-0.5 1.5 0.0)
+	points (0.0 0.0 -0.5) (0.0 0.0 0.5) (0.0 1.5 0.5) (0.0 1.5 -0.5)
+	
+	polygon texture transparent Tree1.Pict 0 0.0 0.0   1 1.0 0.0   2 1.0 1.0  3 0.0 1.0
+	polygon texture transparent Tree1.Pict 4 1.0 0.0   5 0.0 0.0   6 0.0 1.0  7 1.0 1.0
+
+	light (4 -2 1) 0.5
+end
+
+clear
+horizon yes
+translate (0 -0.5 -1)
+rotate 50 (0 1 0)
+diffuse 0.5
+add tree

@@ -1,0 +1,135 @@
+(*hot key for Native Oberon is INSERT - press it after entering the macro name to invoke the macro*)
+	\ #160
+
+(*built-in functions*)
+	(*taking a parameter*)
+	write (^0)	char (^1)	font (^2)	off (^3)	call (^4)	arg (^A)	exec (^B)	param (^C)
+	(*no parameter*)
+	keep (^5)	pick (^6)	caret (^7)	indent (^8)	freeze (^9)
+
+(*abreviations for built-in function calls*)
+	arg0 ("0" arg)	arg1 ("1" arg)	arg2 ("2" arg)	arg3 ("4" arg)
+	kwrite (keep write)	pwrite (pick write)
+
+(*some font preset macros*)
+	n ("Syntax10.Scn.Fnt" font)	i ("Syntax10i.Scn.Fnt" font)
+	m ("Syntax10m.Scn.Fnt" font) 	b ("Syntax10b.Scn.Fnt" font)
+	n2 ("Syntax12.Scn.Fnt" font)	i2 ("Syntax12i.Scn.Fnt" font)
+	m2 ("Syntax12m.Scn.Fnt" font)	b2 ("Syntax12b.Scn.Fnt" font)
+	n4 ("Syntax14.Scn.Fnt" font)	i4 ("Syntax14i.Scn.Fnt" font)
+	m4 ("Syntax14m.Scn.Fnt" font)	b4 ("Syntax14b.Scn.Fnt" font)
+	mono ("Courier10.Scn.Fnt" font)	mono2 ("Courier12.Scn.Fnt" font)
+	math2 ("Math12.Scn.Fnt" font)	math4 ("Math14.Scn.Fnt" font)
+	xmath2 ("XMath12.Scn.Fnt" font)	xmath4 ("XMath14.Scn.Fnt" font)
+
+(*some template macros for special characters*)
+	| ("\" write)	(*enable entry of hotkey character*)
+	tab ("9" char)	cr ("13" char)	qt ("34" char)	sp (" " write)
+	= (cr indent)	` (= tab)	del ("127" char)	lf ("10" char)
+
+	a` ("" pwrite)	a' ("" pwrite)	a^ ("" pwrite)	a" ("" pwrite)
+	e` ("" pwrite)	e' ("" pwrite)	e^ ("" pwrite)	e" ("" pwrite)
+	i` ("" pwrite)	i' ("i'" pwrite)	i^ ("" pwrite)	i" ("" pwrite)
+	o` ("" pwrite)	o' ("o'" pwrite)	o^ ("" pwrite)	o" ("" pwrite)
+	u` ("" pwrite)	u' ("u'" pwrite)	u^ ("" pwrite)	u" ("" pwrite)
+	c, ("" pwrite)	n~ ("" pwrite)
+
+	alpha ("a" kwrite)	beta ("b" kwrite)	gamma ("g" kwrite)
+	delta ("d" kwrite)	epsilon ("e" kwrite)	zeta ("z" kwrite)
+	eta ("h" kwrite)	theta ("q" kwrite)	iota ("i" kwrite)
+	kappa ("k" kwrite)	lambda ("l" kwrite)	mu ("m" kwrite)
+	nu ("n" kwrite)	xi ("x" kwrite)	omikron ("o" kwrite)
+	pi ("p" kwrite)	rho ("r" kwrite)	sigma ("s" kwrite)
+	tau ("t" kwrite)	ypsilon ("u" kwrite)	phi ("j" kwrite)
+	chi ("c" kwrite)	psi ("y" kwrite)	omega ("w" kwrite)
+
+	leq ("#" kwrite)	geq ("3" kwrite)	neq ("9" kwrite)
+	approx (";" kwrite)	about ("p" kwrite)
+	begc ("h" kwrite)	endc ("i" kwrite)	begf ("j" kwrite)	endf ("k" kwrite)
+	empty ("F" kwrite)	reals ("!" kwrite)
+	elem ("N" kwrite)	notelem ("O" kwrite)
+	subset ("M" kwrite)	truesubset ("L" kwrite)
+	dot ("7" kwrite)	cart ("4" kwrite)	power ("C" kwrite)
+	union ("H" kwrite)	sect ("G" kwrite)
+	not ("X" kwrite)	and ("Y" kwrite)	or ("Z" kwrite)
+	impl ("^" kwrite)	equiv (":" kwrite)
+	arrow ("." kwrite)
+	all ("R" kwrite)	ex ("S" kwrite)	qed ("U" kwrite)
+
+	forall ("(" write all sp caret sp ")" write)	exists ("(" write ex sp caret sp ")" write)
+
+(*some vertical offset preset macros*)
+	sup ("16" off)	sub ("-16" off)	norm ("0" off)
+	< (sub n)	> (sup n)	/ (norm n2)
+
+(*some macros for macro package personalization*)
+	initials ("jm" write)	Initials ("JM" write)	signature ("- Hannes" write)
+	JM (
+		"Hannes Marais" write cr
+		"Institute for Computer Systems" write cr
+		"ETH Zurich, Switzerland" write cr
+		"http://huxley.inf.ethz.ch/~marais" write)
+
+(*some macros calling Oberon commands*)
+	tool ("System.Open" arg0 param call)
+	d ("KeyCmds.DateStamp Syntax10.Scn.Fnt" call)
+	Cn ("EditTools.ChangeStyle ? => ." call)
+	Ci ("EditTools.ChangeStyle ? => i" call)
+	Cb ("EditTools.ChangeStyle ? => b" call)
+	Cm ("EditTools.ChangeStyle ? => m" call)
+	C ("EditTools.ChangeSize ? => 10" call)
+	C2 ("EditTools.ChangeSize ? => 12" call)
+	C4 ("EditTools.ChangeSize ? => 14" call)
+	C6 ("EditTools.ChangeSize ? => 16" call)
+	save ("KeyCmds.Save" call)
+	. ("KeyCmds.Paste" call)
+
+(*some macros to support various text elements*)
+	style ("TextGadgets.NewStyle" call)
+	fold ("Gadgets.Insert Outline" call)
+	button ("Gadgets.Insert Button" call)	
+	panel ("Gadgets.Insert Panel" call)
+	clock ("Gadgets.Insert Clock" call)
+	pop ("Popups.Insert" arg0 param call)
+	man ("Gadgets.Insert Sisiphus" call)
+	troup (man man man man man man )
+	
+	stamp ("Gadgets.Insert TimeStamp" call)
+
+(*some template macros for programming purposes*)
+	#40 ("(*" write caret " *)" write i)
+	#41 ("(** " write caret " **)" write i)
+	M ("MODULE " write arg0 write ";	(** " write Initials " " write stamp " **)" write cr  
+		caret cr "END " write arg0 write "." write cr)
+	I (cr "IMPORT" write cr tab tab caret ";" write cr)
+	P ("PROCEDURE " write arg0 write ";" caret write cr
+		indent "BEGIN" write cr
+		indent "END " write arg0 write ";" write)
+	pc ("(* " write arg0 write " -  *)" write cr cr
+		"PROCEDURE " write arg0 write ";" caret write cr
+		indent "BEGIN" write cr
+		indent "END " write arg0 write ";" write cr cr)
+	p ("PROCEDURE (" write caret ") " write arg0 write ";" write cr
+		indent "BEGIN" write cr
+		indent "END " write arg0 write ";" write)
+	R (arg0 write " = POINTER TO " write arg0 write "Desc;" write cr
+		indent arg0 write "Desc = RECORD" write caret cr
+		indent "END;" write)
+	WHILE ("WHILE " write caret " DO" write cr tab cr del "END;" write)
+	REPEAT ("REPEAT " write caret cr "UNTIL ;" write)
+	CASE ("CASE " write caret " OF" write cr "END;" write)
+	LOOP ("LOOP " write cr indent  tab cr indent del "END;" write)
+
+(*some template macros for maintenance purposes*)
+	=> (arg0 write " => " write caret arg0 write)
+
+(*some template macros for e-mail addresses*)
+	jg ("Gutknecht" write)	jm ("Marais" write)
+
+(*default macro taken when no match found*)
+	OTHERWISE ()
+
+(*install macro executed after initially loading EditKeys*)
+	INSTALL ()
+
+(*EditKeys 2.0	cas  9 May 92 / mh 3 Nov 93*)

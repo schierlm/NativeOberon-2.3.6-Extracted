@@ -1,0 +1,676 @@
+BookDocs.NewDocIcons.Note8"MOberon20b.Scn.Fnt$Oberon10.Scn.FntOberon16b.Scn.Fnt	Oberon14b.Scn.FntOberon12b.Scn.Fnt
+Tutorial to the Card Game Framework
+
+	Intro
+	How To Write A New Card Game
+	Solitaire
+	Spider
+		Freecell
+	The CardGames.Panel
+
+	Index
+	Intro
+	Data Structures
+	Procedures
+	Commands
+	Procedures On Card
+	Procedures On Stack
+	Procedures On Move
+	Basic Methods
+	Stack-Object Procedures 
+!	Intro"
+#	Rules$
+%	The Program&
+'	The Menu(
+)	Intro*
++	Rules,
+-	The Program.
+/	The Menu0
+1	Intro2
+3	Rules4
+5	The Program6
+7	The Menu8
+BIER.9@c5X{	*	M	p					Be7Z}	,Or!
+D
+g
+
+
+
+
+9\&CCCCC7dCCdCCCCCCCCC CCC7CK	C77C(C77C]C77C.C77ChC77CC77C"CddC
+CddCCddCDCddCCCCClCCCCCCCCCCCCCBooks0.NewContElemBooks0.NewLocOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.Fnt	0oZ	CIntro
+
+As every operating system has at least one solitaire to offer, I decided to write a framework that would permit anyone to develop such games for Oberon System 3.
+
+I began with Solitaire because it is a very simple game. Then I wrote Spider based on a native Amiga Oberon version I did some years ago. The latest (and maybe last) solitaire I did, was Freecell.
+
+I think these three examples suffice to show how to implement one's own, preferred solitaires. For a more or less complete overview of the functionality of this framework, refer to chapter "How To Write A New Card Game" and study the source codes.
+
+The three games are described in the corresponding chapters Solitaire, Spider and Freecell.
+
+Hope, you willl have a lot of fun with these three games
+
+	Pat
+
+
+BIERu)Lo"tdC+C+TCT{CCC	CCTextGadgets.NewStyleProcBooks0.NewLoc)Oberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.FntOberon14b.Scn.FntOberon12b.Scn.FntW
+
+A~g	Oberon10b.Scn.Fnt[			H\0W	I
+/~	a	H<	cQ,D5)How To Write A New Card Game
+
+
+Intro
+
+The module Cards provides three basic data structures, needed in every solitaire: Card, Stack and Move. It also contains some basic procedures that operate on these types. Two basic messages to control the games are defined in here as well.
+
+This chapter gives you first a description of the data structures and messages and then explains the functionality of each procedure provided by this module.
+
+
+Data Structures
+
+ Card
+	next, prev: Pointer to next, previous card in a list (stack)
+	face: suit of a card
+		 = 0 (clubs)	 = 1 (spades)	 = 2 (hearts)	 = 3 (diamonds)
+	nr: card number (0 = Ace, 12 = King)
+	visible: flag to indicate if card's surface is visible or not (TRUE = show card's surface)
+	
+ Stack
+	tail: list of cards in stack. 'tail' marks the end of a list and is not a valid card
+	'tail.next' is the top card and 'tail.prev' the last card in the list
+	do: a block of methods
+		canDrop: checks if 'card' can be dropped on stack 'S'
+		dropCard: drops the given card(s) on stack 'S'
+		moveCard: moves the given card(s) from stack 'self' to stack 'to' 
+		undoMove: recovers the latest action done by stack 'S'
+		restoreStack: redraws stack 'S'
+		trackMouse: tracks the mouse until all buttons are released
+	bgNr:	cards background in stack. Valid values are between [0..8]
+
+ Move
+
+Whenever an action (move, draw, flip, ...) is taken by a stack, you should remember this action. This way, will recover every step taken during the game.
+
+ SimpleMove
+	to: stack, cards have been moved to
+	card: card dropped on stack
+
+A simple move is used to indicate a drop of cards to another stack.
+
+ CollectMsg
+	tail: list of collected cards
+	
+This message is broadcast to collect all cards in a stack. Each stack has to append its cards to the tail of the message.  
+
+ UndoMsg
+	time: timestamp of the move
+	stack: stack that did the latest move
+	
+This message is broadcast to determine, which stack did the latest move. Each stack has to check the message timestamp. If the stack has a more recent move (move timestamp is greater than that of the message), it must set the stack field to itself and must assign the timestamp of its move to the time field.
+
+ BGMsg
+	bgNr: background number
+
+This message is broadcast to change the background of all the cards in a stack. Assign the background number to the corresponding field in the stack.
+
+
+Procedures
+
+First, three procedures not related to any data structure but often used to implement card games. 
+
+ Random
+	range: upper limit of range (not including this number)
+	return: random number
+
+Returns a random number in range [0..range[
+
+ Shuffle
+	tail: list of cards to shuffle
+	
+As the name implies, this procedure shuffles the given list of cards. Remember 'tail' is not a valid card and is only used as a sentinel.
+
+ TrackMove
+	M: Oberon.InputMsg received by stack's handler
+	x, y: lower left corner of top card (completely visible) in stack 'self'
+	self: stack, the selected cards belong to
+	card: first card in a list of cards the user want to move
+	draw, fade: procedures to draw, fade tracking rectangle
+
+This is a standard procedure to track the mouse pointer and a list of selected cards. While tracking, TrackMove calls the procedures draw and fade with the given parameters x, y and card. If the user releases all the mouse buttons, the procedure checks, only if the left mouse button was being pressed (this means the user wants to drop the cards on the stack right under the cursor's current position). It checks if it is possible to drop the given cards on this stack and if so, moves the cards from stack 'self' to this stack by calling method 'dropCard' of stack 'self'.
+
+
+Procedures On Card
+
+The following procedures are related to data structure Card. Card is not a very complex data structure, so there are not many procedures one can think of implementing.
+
+ DrawCard
+	R: Display3.Mask - contains clipping region
+	card: card to draw
+	x, y, w, h: rectangle to draw card in
+	bgNr: background number if card is not visible
+
+Draws the given card into the given rectangle (x, y, w, h)
+
+ NewCard
+	suit: card suit
+	nr: card number
+	visible: if card is visible or not 
+	return: returns the new allocated card
+
+Procedure to allocate a new card. The given parameter will be assigned to the corresponding fields in the card data structure.
+
+ CloneCard
+	card: card to clone
+	return: new, cloned card
+
+This procedures allocates a new card and copies the value of the given card.
+
+ WriteCard
+	R: file to write card values to
+	card: card to write to file
+
+Stores the values of the given card to the given file. IF card is NIL, the value -1 will be written to the file.
+
+ ReadCard
+	R: file to read card value from
+	card: read card
+
+Reads in a card from the file. If it reads -1, NIL will be returned; otherwise a new card is allocated.
+
+ NewTail
+	return: new allocated tail
+
+Allocates a new sentinel of a card list.
+
+
+Procedures On Stack
+
+The cards of a stack are stored in a double linked list. As their type of list is a bit more complex than simple linked list, I wrote three procedures that make the handling of cards and lists much easier. 
+A stack always has a tail to which all the cards are linked. Field 'tail.next' is the top card of a stack and field 'tail.prev' the last card in a list of cards. If you want to remove a list of cards, it is sufficient to give the last card in this list (you just can take cards from the top of a stack). Free cards (not belonging to any stack) are managed in a ring of reversed order. The top card can be reached by field 'card.prev'.
+
+
+This figure shows how cards are linked in a stack (left) and in a list of free cards (right)
+
+ IsEmpty
+	tail: list to check
+	return: TRUE if list is empty
+
+Checks if the given list is empty or not. Empty means the list consists only of the sentinel 'tail'.
+
+ RemoveCard
+	tail: list to remove card(s) from
+	card: last card in the list of cards to remove
+
+Removes all the cards in the given list (by tail). Returns a list of removed cards. The list starts with 'card' and ends with 'tail.next' and is of reversed order (stack's top card is now the last card in this list).
+
+ AppendCard
+	tail: list to append card(s) on
+	card: list of cards to append
+
+This procedure is the opposit of RemoveCard. It appends the cards in the list (specified by 'card') to the list (given by 'tail'). 'card.prev' will be the top card of the stack (= 'tail.next') and 'card' will be somewhere in the middle or at the end of the list (by 'tail').
+
+
+Procedures On Move
+
+There are two procedures to handle Moves. As Move covers fields to manage history, these procedures should be used to add, clear stacks actions.
+
+ AppendMove
+	S: stack the move belongs to
+	M: move to append to the stack
+
+Appends the given move to the list of moves of this stack and assigns actual time to the move's time field.
+
+ ClearMove
+	S: stack to clear move list of
+
+Clears all moves of the given Stack.
+
+
+Basic Methods
+
+Description of basic procedures assigned to the basic method block 'methods'. These procedures can (must) be written over, when you implement a new type of stack.
+
+ CanDropCard
+	S: stack the card should be dropped on
+	card: card you want to drop on stack
+	return: TRUE if card can be dropped on stack, FALSE otherwise
+
+This method is used by the framework to check if the user is allowed to drop the selected card(s) on this stack. The result depends on the solitaire's rules.
+
+ DropCard
+	S: stack top card on
+	card: card to drop on stack
+
+Appends all cards in list ('card') to stack 'S' and redraws the stack.
+
+ MoveCard
+	self: stack to take cards from
+	to: stack to put cards on
+	card: last card in list of cards to move (starts with top card of stack 'self')
+	undo: flag to indicate if move is an undo move
+
+This method is called to move cards from stack 'self' to stack 'to', where the list of cards to move is specified by 'card'. This implementation moves the cards and appends a SimpleMove to the move list of stack 'self' if flag 'undo' is set to FALSE.
+
+ UndoMove
+	S: stack to move cards to
+	M: move to recover
+
+This method is called to recover a move. This implementation handles only SimpleMove. Whenever you define new type of moves, you have to extend this method in your own module.
+
+ DrawSrack
+	S: stack to redraw
+	M: Display3.Mask - contains clipping region
+	x, y, w, h: rectangle to draw stack in
+
+This method is called whenever a stack needs to be redrawn (Display.DisplayMsg). This implementation draws a stack top card if the stack is not empty.
+
+ TrackMouse
+	S: stack that received Oberon.InputMsg
+	M: Oberon.InputMsg received by stack handler
+
+This method is called whenever the mouse pointer enters the stack. Set M.res to a value greater than -1, if you handled the message or left it, so the framework can take a default action. As this implementation does nothing, the default behavior will be applied.
+
+
+Stack-Object Procedures
+
+Now I would like to explain the standart procedures needed to implement an Oberon System 3 object. As a stack is nothing but a visible gadget, one must implement certain procedures.
+
+ CopyStack
+Copies all stack values as well as all cards linked to field 'tail'.
+
+ StackHandler
+The object handler does a lot of work for you and is the heart of the framework. I tried to react on messages in such a manner that you never have to spend a lot of time implementing your own handler (this work is delegated to the methods).
+A few messages cannot be handled efficiently in a global sense, so you have to react on some of them by yourself. These messages are Objects.AttrMsg and Objects.CopyMsg. You also have to implement the CollectMsg and Objects.FileMsg, if you have more than one list of cards in your stack.
+The whole rest of messages should be handled in a proper way, and if there's a malfunction, check your implementation of the methods first and be sure you understood their functionality. Never change this default handler & methods in this module. Should there be an error or functionality missing in Cards.Mod, please let me know, I will try to fix it.
+Printing is not handled by this framework, so if you want to print a stack, react on Display.PrintMsg, too. I might have time to work on this in future (may result in an additional method, I think).
+
+ InitStack
+Initialize fields of a default stack. Call this procedure within your own initialize procedure.
+
+ NewStack
+Allocates, initializes a new stack object and assigns it to 'Objects.NewObj'.
+
+
+Commands
+
+This module has two commands to offer: 
+
+ SetBG
+Takes the background number as parameter and broadcasts a BGMsg.
+
+ Undo
+Recovers latest action by broadcasting an UndoMsg.
+
+
+BIERcc
+"BJBBBB:CbCCCHGJLNQ"tdC6KBC6KBC	6KBC6KBC"XXC6KB`C```"XXC|utuu~u`wTextGadgets.NewStyleProcRembrandt.NewPictures.NewPictureOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.FntOberon14b.Scn.Fnt*kLZSolitaire
+
+
+Intro
+
+
+Solitaire for Oberon System3
+Release 1.3
+
+
+This is the maybe most famous solitaire game, wellknown from MS Windows TM (and other various platforms).
+
+
+Rules
+
+The object of the game is to use all fiftytwo cards in the deck to build up the four suit stacks from Ace to King. 
+
+The gameboard has three areas: the deck in the upper left corner, four suit stacks in the upper right and seven columns below the deck and suit stacks. The number of cards in each column increases from one to seven, from left to right. The top card of each column is face up, the rest are face down.
+
+To play the game, you draw cards from the deck and move them to the seven columns below or to the four suit stacks in the upper part. As you reach the end of the deck, you can turn it over and continue to draw cards. 
+
+The cards on the seven columns have to be descending (King to Ace) and  of alternating color (black and red). The cards on the four stacks in the upper part have to be ascending (Ace to King) and of same suit.
+
+The cards on one of the seven columns can be moved to another column, as long as they are face up and fit to the top card of the destination column.
+
+If you uncover a face down card on one of the seven columns, you can turn it face up.
+
+The only card allowed on an empty column is a King and the Ace on a suit stack.
+
+
+The Program
+
+To move cards from one place to another, just click with the left mouse button, drag the cards to their destination and release the button. The program moves the cards if it is a legal move or does nothing if the cards do not fit.
+
+To move a card to one of the four suit stacks, you can click with the middle mouse button on that card and the program moves the card to the according stack or does nothing if the card doesn't fit with any of the stack's top card.
+
+The program changes the mouse pointer to a 'pointing hand' as soon as you ae pointing on a card you are allowed to move.
+
+
+The Menu
+
+Menu
+ NEW:	Throws away the current game and starts a new one
+ UNDO:	Undo the last move
+
+
+Click to open the panel
+
+
+BIERmnmDmlmmm"tdC"XXC"XXC$XkXC#CTextGadgets.NewStyleProcBooks0.NewLocDOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.FntOberon14b.Scn.Fnt'/"ZDSpider
+
+
+Intro
+
+
+Spider for Oberon System3
+Release 1.1
+
+
+This is a version of the Spider game (coming with SUN's OpenLook) for Oberon System 3. The following helptext is an extract of the original text by Donald R. Woods (Sun Microsystems, Inc.).
+
+Spider is a more complex and so challangingdouble-stack solitaire than the solitaire known from MS Windows TM.
+
+
+Rules
+
+The object of the game is to build a stack of the same suit from King to Ace and remove the stack from the table to the stacks above. When all eight stacks have been built and removed, you have won the game. A more challenging version of this is to leave all eight stacks on the table until done instead of removing those that are complete to the stacks above.
+
+One may move the next lower card onto a card of the same or different suit; however, one may only move contiguous cards of the same suit as a group.  For example, one may move the five of spades into either a six of spades or a six of hearts. Moving the five of spades onto the six spades is a better move since now the five-six of spades group may be moved as a unit where the five of spades, six of hearts group may not.  Also, moving the four of spades onto the six of spades is not a legal move.  A King may only be moved into a space (or removed to the stacks above when the sequence King-Ace is complete) since there are no higher cards than a King.
+
+For general strategy, one wants to try to create a "space" since this is the most flexible way to move cards around.  A space is where all cards in the table have been removed.  Note:  before dealing the next round, all spaces have to have at least one card in them.
+
+
+THE HAND.  The fifty cards not dealt initially form the "hand".  Whenever you wish (typically, whenever you get stuck), you may deal a new row of ten cards from the hand face-up upon the piles.  NOTE: You are not allowed to do this if you have any spaces.  You must first fill them in.  Notice that these additional deals tend to introduce discontinuities in the piles; that is, you can get cards covering others that are not next-higher in rank.  If you get stuck after having dealt the last of the five additional deals, you have lost.
+
+
+The Program
+
+The stack of cards in the upper left of the Spider window represents the undealt cards (initially the full deck; later the "Hand").  The eight outlines to the right mark where the eight suits will go as you remove them from the tableau.  The rest of the window is the working tableau.
+
+If you press the middle mouse button anywhere within or below a column of cards, it says you want to move the top cards of that column (top cards: in a row and of same suit). The program looks for a destination column and then moves the cards from the first column to the second. If there is no such legal move, the program does nothing. The lookup strategy is defined as followed:
+	1. remove them if they form a completed suit
+	2. move them onto a card of the same suit
+	3. move them onto a card of a different suit
+	4. move them into a space
+
+If you instead use the left mouse button to select a card within a column, it says you want to move the card you are pointing at plus any cards covering it. (The program changes the mouse pointer to a 'pointing hand' as soon as you're pointing on a card you are allowed to move.) Then you must move the mouse to another column and release the button. The program moves the selected cards to the destination. The only time you need to use this method (instead of using middle) is if you're moving cards fewer than the maximum permitted.
+
+To deal a new round, click left button on the facedown stack in the upper left.  Remember that all spaces must be filled before you can deal a new round, except there is no possibility to fill them.
+
+
+The Menu
+
+Menu
+ NEW:	Throws away the current game and starts a new one
+ UNDO:	Undo the last move
+
+
+Click to open the panel
+
+
+BIERX~~~5"tdC"TTC"TTC$SlSC#CCTextGadgets.NewStyleProcBooks0.NewLocb	Oberon16b.Scn.Fnt	Oberon10.Scn.FntOberon14b.Scn.FntOberon12.Scn.Fnt(V(.Yb	Freecell
+
+
+Intro
+
+
+Freecell for Oberon System3
+Release 0.9
+
+
+This is another solitaire game, well known from MS Windows 32bit extension package.
+
+
+Rules
+
+The object of the game is to move all fiftytwo cards in the game to the four suit stacks, beginning with the Ace up to the King. To reach this, you play red on black cards (and vice versa), similar to other games you may have played.
+
+The gameboard has three areas; four free cells in the upper left corner, four suit stacks in the upper right and eight columns below the cells and suit stacks. At the beginning, all cards are dealt face-up at the eight columns in the lower part of the board (seven at each of the first four columns and six at the last four).
+
+Freecell knows three legal moves.
+1. You can move any card from the bottom of a column to an empty free cell.
+2. You can move any card from a free cell or from the bottom of a column to a suit stack if that card is  greater in rank than the card in the suit stack, and of the same suit. For example you can move a four of hearts onto a three of hearts in a suit stack. Aces can always be moved to an empty suit stack.
+3. You can move a card from a free cell or from the bottom of a column to the bottom of another column as long as the rank of the card is one less than the rank of the card you will place it on, and the colors of the cards are different. For example, you can move a black three onto a red four. Any card can be moved to an empty column.
+
+
+The Program
+
+To move a card from one place to another, just left click on the card you want to move (it will be highlighted) and then left click the area to which you want to move the card. To cancel a move just left click again on the highlighted card.
+
+You can move a stack of cards from one column to another if there are enough free cells open. To move a stack, left click the bottom card in the column, then left click the column that you want to move the stack to. The program assumes that you always want to move as much cards as possible to a free column. If you just want to move the top card of a stack to free column, middle click on the free column instead of left click on it.
+
+To quickly move a card from a free cell or a column to one of the four suit stacks, just middle click on that card you want to move.
+
+
+The Menu
+
+Menu
+ NEW:	Throws away the current game and starts a new one
+ UNDO:	Undo the last move
+
+
+BIERCk"tdC"TTC"TTC$SlSCTextGadgets.NewStyleProcOberon16b.Scn.FntOberon10.Scn.FntOberon12.Scn.FntLVThe CardGames.Panel
+
+BACKGROUND:	choose one of nine card backgrounds
+OPEN HELP:	opens this text
+
+	opens a Solitaire game
+	opens a Spider game
+	opens a Freecell game
+
+DRAWS:	number of cards to be drawn to the deck in Solitaire
+
+
+Click to open the panel
+
+
+
+BIER	4}I"tdC$SlSCFKBCNameSolitaire    CKBCNameSpider    KKBCCmdNameFreecell    CfCR  u
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+V  u
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  AAA  A      A     A AA A A a aA a a  A    A    A    A  AAAAAA A AA A AAAAAAAAAAaAaAAaAaAAAAAAAAAAAAAAAAAAAAaaAaaa a Aa a aAaAAaAaAaaaaAaaaaaaAaaaaAaaaaAaaaaAaaA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TextGadgets.NewStyleProcRembrandt.NewBooks0.NewLocPictures.NewPictureCOberon20b.Scn.FntOberon10.Scn.FntIndex
+
+BIERf"tdCTextGadgets.NewStyleProcf#Oberon10.Scn.FntffDesktops.OpenDoc Solitaire.Panel ~
+Desktops.OpenDoc Spider.Panel ~
+Desktops.OpenDoc CardGames.Panel ~
+{#Oberon10.Scn.Fnt{{Solitaire - MS Windows (TM) / by Wes CherrySpider - SUN Solaris / by Donald R. WoodsFreecell - Windows 32bit / by Jim HorneOpenFREECELL	SPIDERSOLITAIRE

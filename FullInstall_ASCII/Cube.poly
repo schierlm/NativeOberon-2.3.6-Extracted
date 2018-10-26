@@ -1,0 +1,25 @@
+shape cube
+	points (-0.5 -0.5 0.5) (0.5 -0.5 0.5) (0.5 0.5 0.5) (-0.5 0.5 0.5)
+	points (-0.5 -0.5 -0.5) (0.5 -0.5 -0.5) (0.5 0.5 -0.5) (-0.5 0.5 -0.5)
+	
+	polygon 0 1 2 3 
+	polygon 7 6 5 4
+	polygon 0 4 5 1
+	polygon 1 5 6 2
+	polygon 2 6 7 3
+	polygon 3 7 4 0 
+	
+	light  point (2 2 2) 1.0
+end
+
+clear
+shading gouraud
+smooth yes 
+dither yes
+horizon yes
+ambient 0.5
+diffuse 0.5
+translate (0 -0.8 -3.5)
+rotate 30 (0 1 0)
+color 1 0 0
+add cube

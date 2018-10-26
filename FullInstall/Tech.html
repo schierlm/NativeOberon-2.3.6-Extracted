@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+<HEAD>
+<TITLE> PC Native Oberon Technical Notes</TITLE>
+</HEAD>
+<BODY>
+<font size=-1>Site index: [ <A HREF="http://www.oberon.ethz.ch/native/">Native home</A> | <A HREF="History.html">Release History</A> | Technical Info | <A HREF="Screen.html">Screenshots</A> | <A HREF="Installation.html">Installation</A> | <A HREF="Registry.html">Registry</A> ]
+<P>
+Page index: [ <A HREF="#sys">Module SYSTEM</A> | <A HREF="#disp">Writing a display driver</A> | <A HREF="#disk">Writing a disk driver</A> | <A HREF="#traps">Trap information</A> | <A HREF="#trace">Low-level tracing</A> | <A HREF="#boot">Creating a boot diskette</A> | <A HREF="#config">Setting configuration strings</A> | <A HREF="#defs">Configuration string definitions</A> | <A HREF="#obj">Object file format</A> | <A HREF="#heap">Heap format</A> | <A HREF="#rec">Recommendations</A> ]</font>
+<P>
+<H1>PC Native Oberon: Technical Notes</H1>
+<P>
+This page contains Native Oberon technical information.  Feel free to mail <A HREF="mailto:muller@inf.ethz.ch">muller@inf.ethz.ch</A> for further information or to contribute something.
+<P>
+PC Native Oberon <A HREF="http://www.cs.inf.ethz.ch/~reali/compiler/">Compiler information</A>.
+<H2><A NAME="sys">Module SYSTEM</A></H2>
+The SYSTEM module contains definitions used to program low-level operations referring directly to resources particular to a given computer and/or implementation.  These include, for example, facilities for accessing devices that are controlled by the computer, and facilities to break the type compatibility rules otherwise imposed by the language definition.  It is recommended that their use be restricted to specific low-level modules.  Such modules are inherently non-portable, but are easily recognised due to the identifier SYSTEM appearing in their import lists.  SYSTEM is implemented directly in the compiler.
+<P>
+The following definitions are available in the Native Oberon SYSTEM module.
+<UL>
+<LI> TYPE BYTE.  Compatible with CHAR and SHORTINT.  If a formal parameter is of type ARRAY OF BYTE then the corresponding actual parameter may be of any type.
+<LI> TYPE PTR.  Compatible with any pointer type.  Can be used in a type guard or type test.
+<LI> PROCEDURE ADR(VAR v: AnyType): LONGINT.  Return address of variable v.
+<LI> PROCEDURE GET(a: IntOrPtrType;  VAR v: BasicType).  v := Mem[a].  Number of bytes transferred depend on size of v.
+<LI> PROCEDURE PUT(a: IntOrPtrType;  v: BasicType).  Mem[a] := v.  Number of bytes transferred depend on size of v.
+<LI> PROCEDURE BIT(a: IntOrPtrType;  n: IntType): BOOLEAN.  Return bit n of Mem[a].
+<LI> PROCEDURE MOVE(s, d: LONGINT;  n: IntType).  Mem[d..d+n-1] := Mem[s...s+n-1].  Result of copy is undefined if source and destination overlap.  Basic copy unit is undefined.
+<LI> PROCEDURE PORTIN(p: IntType;  VAR v: BasicType).  v := Port[p].  Number of bytes transferred depend on size of v.
+<LI> PROCEDURE PORTOUT(p: IntType;  v: BasicType).  Port[p] := v.  Number of bytes transferred depend on size of v.
+<LI> PROCEDURE GETREG(r: IntType;  VAR v: BasicType).  v := Reg[r].  Number of bytes transferred depend on size of v.  Reg[0] = EAX/AX/AL. Reg[1] = ECX/CX/CL. Reg[2] = EDX/DX/DL. Reg[3] = EBX/BX/BL.  Reg[4] = ESP/SP/AH.  Reg[5] = EBP/BP/CH.  Reg[6] = ESI/SI/DH.  Reg[7] = EDI/DI/BH.  r must be constant.
+<LI> PROCEDURE PUTREG(r: IntType;  v: BasicType).  Reg[r] := v.  Number of bytes transferred depend on size of v.  Register numbers are with GETREG.  r must be constant.
+<LI> PROCEDURE NEW(VAR v: PtrType;  n: IntType).  Allocate storage block of n bytes, assign its address to v.
+<LI> PROCEDURE LSH(x: IntByteCharOrSetType;  n: IntType): TypeOfX.  Logical shift.  n > 0 => shift left, n < 0 => shift right.
+<LI> PROCEDURE ROT(x: IntByteCharOrSetType;  n: IntType): TypeOfX.  Rotation.  n > 0 => rotate left, n < 0 => rotate right.
+<LI> PROCEDURE VAL(AnyType,  x): Type.  Returns x interpreted as of type T.  Type cast, generates no conversion code.  If size of Type is larger than size of x, the missing bits are undefined.
+<LI> PROCEDURE CLI.  Generates CLI instruction.  Disable interrupts.
+<LI> PROCEDURE STI.  Generates STI instruction.  Enabled interrupts.
+</UL>
+ADR, BIT, LSH, ROT, VAL, GET, PUT, MOVE, NEW and BYTE are defined in "Programming in Oberon" by Reiser and Wirth.  They should be available on most Oberon implementations.  CC is defined in the book, but not in Native Oberon.
+<P>
+Importing the SYSTEM module also enables the <A HREF="http://www.cs.inf.ethz.ch/~reali/compiler/assemblerupd.html">built-in assembler</A>.
+<H2><A NAME="disp">Writing a display driver</A></H2>
+Here are some guidelines when writing a new display driver.
+<UL>
+<LI> The driver is contained in a module called Display.  The source code of existing Display modules in the Source1.Arc archive can be used as a starting point, e.g. SVGA.Display.Mod (generic) or S3Trio.Display.Mod (accelerated).
+<LI> Extending the generic SVGA driver (SVGA.Display.Mod) is a relatively simple programming exercise if bank switching and BIOS mode setting information is available for a card.  This information for most cards is available in vgadoc (see <A HREF="#rec">Recommendations</A>).
+<LI> Empty.Display.Mod contains a skeleton of a display driver.  It includes the canonical comments about the display module definition.
+<LI> Also see Trace.Display.Mod, an null display module that displays trace code of all display operations.  It is available in the standard release.  To try it out, enter the config strings "Init=90", "Display=Trace." and "TraceBPS=-1".
+<LI> The new display driver must have exactly the same interface as the existing module.  Never use the \s switch when compiling a new Display module!  Leaving this switch out will prevent the compiler from ever overwriting the definition file, thus avoiding problems.
+<LI> If you compile your Display module, it will overwrite Display.Obj.  This is ok, because the loader will normally load the Display module from a file called xxxDisplay.Obj, where the xxx prefix is what has been configured with the Display="xxx" configuration string during installation.
+<LI> To test your module, the Display configuration string has to be set to the empty string (see Configuration Strings below).  You can boot the system and temporarily change the string by entering "Display=" at the OBL> prompt.
+<LI> Another testing strategy when developing an accelerated driver is to install one of the framebuffer-based drivers (e.g. SVGA.Display) on your development system.  Because this driver performs all rastering directly in the frame buffer, and does almost no other communication with the display card, it will be possible to develop and test your accelerated driver as a normal Oberon module, without interfering with the framebuffer-based driver.  When your driver is completely tested, you can rename it to Display and do final testing.
+<LI> The display mode setting can be done in the boot loader before Oberon has booted.  It is therefore not always necessary to write Oberon code to set the display mode.  You can use the real-mode video BIOS to do this, via the Init configuration string (see below).  However, the video BIOS on most cards conservatively set the refresh rate very low.  If you want a more ergonomic rate, you might have to resort to some register programming.  In this case a technical reference for the card is required.
+<LI> From version 2.3.4 onwards the Display module definition supports optional fast framebuffer access via the TransferBlock procedure.  The minimum support is to simply program a HALT statement in TransferBlock, and make TransferFormat return "unknown".  However, your driver will then not support newer tools like the new Magnifier or Gfx library based on TransferBlock.  Writing a TransferBlock procedure is very similar to writing a DisplayBlock procedure, except that the former also has to be able to read from the display.
+<LI> From version 2.3.4 onwards the Display module definition also supports optional Truecolor support.  The minimum support is to write a TrueColor function that always returns FALSE, indicating that the driver does not support truecolor.  However, your driver will then not completely support newer truecolor-capable tools like the Gfx library.  Note that although the module definition uses 24-bit truecolor values and 8-bit indexed color values, the actual display mode can be 15-bit, 16-bit, 32-bit or anything.  Your driver just has to translate the truecolor values on-the-fly to the display format.  It is even possible to write a truecolor driver that maps the colors to a fixed 8-bit palette.  In addition, you can select the TransferFormat (for TransferBlock) that is most convenient to you.
+</UL>
+This table summarizes the capabilities of the current display drivers:
+<P>
+<TABLE CELLPADDING=3> 
+<TR BGCOLOR=#BEBEBE> 
+<TH><FONT COLOR=#000000>Driver</FONT></TH> 
+<TH><FONT COLOR=#000000>Truecolor</FONT></TH> 
+<TH><FONT COLOR=#000000>TransferBlock</FONT></TH> 
+</TR> 
+<TR BGCOLOR=#DFDFDF> <TD>GD54xx</TD> <TD>no</TD> <TD>no</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>Permedia2 (new beta)</TD> <TD>yes</TD> <TD>yes</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>S3C805</TD> <TD>no</TD> <TD>no</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>S3C924</TD> <TD>no</TD> <TD>no</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>S3Trio</TD> <TD>yes</TD> <TD>yes</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>SVGA</TD> <TD>no</TD> <TD>no</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>VGA</TD> <TD>no</TD> <TD>no</TD> </TR> 
+<TR BGCOLOR=#DFDFDF> <TD>W32</TD> <TD>no</TD> <TD>no</TD> </TR> 
+</TABLE>
+<H2><A NAME="disk">Writing a disk driver</A></H2>
+This is similar to writing a new display driver, except that the Disk driver is statically linked with the boot image.  Lets assume you are writing a new SCSI driver.
+<UL>
+<LI> Development of a SCSI disk driver is best done on a system with both an IDE and a SCSI disk in it (Alternatively, you can use a second IDE-based PC for cross-development).  You install Oberon on the IDE disk, and develop and test the SCSI module using this IDE installation.
+<LI> The source code of existing drivers can be used for reference, e.g. IDEDisk.Mod and AHA1520Disk.Mod in Source1.Arc.  Your disk driver module (e.g. MyDisk) must have an Install command, which installs the GetBlocks, PutBlocks and GetParams procedures in module Disk.
+<LI> While developing the driver, you can use all facilities of the Oberon system (Texts, etc.), but in the final version you are not allowed to import modules higher than Disk in the module hierarchy.
+<LI> Once your module is working, it can be integrated in the system for final testing.  One way to do this is to make an exact copy of your installed Oberon partition from the IDE disk to the SCSI disk.  This can be done by writing a disk block copying command that imports Disk (with the IDE driver installed) and MyDisk (the SCSI driver).
+<LI> To statically link your new module (MyDisk.Obj) with the inner core of the system, use the command:  
+BootLinker.Link test.bin \list \refs \integrate 1000H Kernel Disk MyDisk FileDir Files Modules ~.  A static image test.bin and a log file test.bin.Link are produced.
+<LI> To write the new inner core to a boot diskette, use the command:  FDInstall.CreateBootFloppy test.bin MT="PS2" TracePort="1" TraceBPS="19200" Display="VGA." Init="b81200cd10" \ ~.  Replace the config strings with relevant values for your setup.  Booting this diskette will load the new inner core, which will then proceed to load the system from the SCSI partition using the new MyDisk module.
+<LI> Please contribute your source to the ETH for integration in the release.
+</UL>
+<H2><A NAME="traps">Trap information</A></H2>
+When a run-time error is detected, the system generates a numbered trap.  The information included with the trap can be used to diagnose the problem.  Especially useful is the module and procedure name and PC location where the trap occured.  This allows a programmer to find the exact location in the source code using the \f option of the compiler.  Here is an example of a trap viewer:
+<P>
+<PRE>TRAP 7  Index out of range 
+TestHalt2.Index  PC =   352 
+  a = "" 
+  i = 3 
+Oberon.Call  PC =  4646 
+etc...</PRE>
+<P>
+It can be interpreted as follows:
+<UL>
+<LI> Trap number 7 is an index out of range trap.  This means some array index expression was out of range in the program.  This could be the cause of incorrect input, or an error in the program.  Well-written programs should not generate traps, but rather should check their input, display an informative message, and exit cleanly when a problem is found.
+<LI> The error occured in module "TestHalt2", procedure "Index", at offset 352 in the module.  A programmer can use the command Compiler.Compile *\f to find the error in the source code of the module (TestHalt2.Mod).
+<LI> The values of some local variables in the procedure are displayed with the trap.  This information may be useful to a programmer.
+<LI> A stack traceback is displayed.  This shows how the procedure "TestHalt2.Index" was reached.  In this case it was called from the procedure "Oberon.Call".
+</UL>
+Trap numbers fall into the following ranges:
+<UL>
+<LI> Traps -39 to -32 are generated by the floating-point unit of the processor.  By default floating-point checks are disabled and the special overflow and error values INF and NaN are generated (see module Reals).
+<LI> Traps -31 to 0 are generated by the processor.
+<LI> Traps 1 to 10 are generated by compiler-inserted checks.
+<LI> Traps 11 to 19 are generated by system modules.
+<LI> Traps 20 and above are generated by HALT or ASSERT statements.
+</UL>
+More detailed information about specific traps:
+<UL>
+<LI> TRAP -35 Floating-point stack fault: The floating-point unit made an incorrect memory reference.
+<LI> TRAP -34 Floating-point operation invalid: The floating-point stack overflowed or underflowed, or an invalid arithmetic operand was encountered (disabled by default).
+<LI> TRAP -33 Floating-point overflow: Caused by an arithmetic overflow (disabled by default).
+<LI> TRAP -32 Floating-point division by 0: Caused by an attempt to divide by 0 (disabled by default).
+<LI> TRAP -16 Floating-point error:  Generic floating-point error.
+<LI> TRAP -14 NIL reference / Stack overflow / Page fault:  An incorrect memory reference occured.  This could be the result of a NIL pointer reference or a stack overflow.
+<LI> TRAP -13 General protection fault:  This is a generic exception generated by the processor.  Refer to the processor documentation for more information.
+<LI> TRAP -12 Stack overflow:  An incorrect memory reference occured in a stack segment.
+<LI> TRAP -6 Invalid instruction:  An invalid machine instruction was encountered.  This could be the result of a corrupted module in the heap.
+<LI> TRAP -4 Overflow:  An integer overflow.  These checks are disabled by default and can be enabled with the \v switch of the compiler.
+<LI> TRAP 0 Division by zero:  A DIV (or MOD) by 0 occured, or the result of a divide was too big for the destination type.
+<LI> TRAP 1 WITH guard failed:  The type guard in a WITH statement failed (can be disabled with the \t compiler switch).
+<LI> TRAP 2 CASE invalid:  A CASE expression evaluated to a value that has no label, and the CASE has no ELSE clause.
+<LI> TRAP 3 RETURN missing:  A function procedure ended without a RETURN statement.
+<LI> TRAP 4 Overflow:  See TRAP -4.
+<LI> TRAP 5 Implicit type guard failed:  An implicit type guard generated as part of an assignment failed (can be disabled with the \t compiler switch).
+<LI> TRAP 6 Type guard failed:  An explicit type guard failed (can be disabled with the \t compiler switch).
+<LI> TRAP 7 Index out of range:  An array index was out of range (can be disabled with the \x compiler switch).
+<LI> TRAP 8 ASSERT failed:  A programmed ASSERT statement failed (can be disabled with the \a compiler switch).
+<LI> TRAP 9 Array dimension error:  A dynamically computed array dimension was incorrect (e.g. negative dimension in a NEW).
+<LI> TRAP 13 Keyboard interrupt:  A keyboard interrupt was generated with Ctrl-Break.
+<LI> TRAP 14 Out of memory:  The requested memory allocation (NEW) could not be fulfilled.
+<LI> TRAP 15 Bad sector number:  An incorrect sector number was detected.  This could be the result of an error with on-disk file system structures, or memory corruption.
+<LI> TRAP 16 Disk full:  The disk is almost full.  Reboot to have the disk garbage collector run during startup.
+<LI> TRAP 17 Disk error:  The disk driver encountered a hardware error.  The local variable "err" or "res" contains further information.
+<LI> TRAP 18 File too large:  A file was generated that is too large for the file system.
+<LI> TRAP 19 Buffer overflow:  Generated by Files.ReadBytes and WriteBytes if the supplied buffer is too small.
+</UL>
+<H2><A NAME="trace">Low-level tracing</A></H2>
+Native Oberon provides Kernel.Write* procedures, which can be used to trace low-level code like device drivers.  This trace output can be displayed on a serial terminal connected to the PC (this could be a second PC running the V24.Panel in Oberon).  Set configuration string TracePort to the number of the serial port (1 or 2) and TraceBPS to the speed (default 19200 bps).  After version 2.3.0 the trace information is also stored in a buffer that can be retrieved with the System.OpenKernelLog command.  See Configuration Strings below for more information.
+<H2><A NAME="boot">Creating a boot diskette</A></H2>
+<UL>
+<LI> To create a different boot diskette, you need the BootLinker and FDInstall modules.
+<LI> Creating a new inner core: BootLinker.Link Temp.bin \refs \integrate 1000H Kernel Disk PCI ATADisk FileDir Files Modules ~
+<LI> Creating a boot diskette (insert your own config strings): FDInstall.CreateBootFloppy Temp.bin MT="PS2" Keyboard="US" Init="b81200cd10" Display="VGA." \ ~
+</UL>
+<H2><A NAME="config">Setting configuration strings</A></H2>
+Native Oberon uses configuration strings for setting low-level configuration options.  These strings are (name, value) ASCII string pairs which are stored in a table on the boot device (diskette or hard disk).  Permanent values for these strings are normally set during installation using the Install or FDInstall programs in Oberon-0.  The strings are read by low-level modules in the system using the Kernel.GetConfig procedure.  Higher-level modules should use the more flexible Oberon.Text and the Oberon.OpenScanner procedure for configuration information.
+<P>
+Sometimes it is necessary to temporarily override the setting of some configuration strings.  The OBL bootstrap loader provides a facility for doing this:
+<P>
+When booting the system, before the message "Oberon Bootstrap Loader" appears, activate ScrollLock, or hold down any shift key.  The "OBL>" prompt should appear and the current values of the configuration strings are displayed.  There are some options at this prompt:
+<UL>
+<LI> Enter "c" to continue booting.
+<LI> Enter a string of the form "name=val" (without quotes) to set a new configuration string, or to modify an existing one.  Strings can be deleted by setting them to empty values.  Since version 2.23 the name strings are no longer case sensitive.
+<LI> Enter "W" (upper case) to write the new configuration to the configuration table on the boot diskette or hard disk.
+<LI> Anything else will result in a short help display.
+</UL>
+The DOS-based boot loader, noboot.exe, uses a DOS file for the configuration information.  The latest version of the boot loader also supports the ScrollLock or shift key method of changing the configuration strings.  Instead of a built-in editor, it invokes any DOS editor, using the command line specified by the EDITOR environment variable (default "edit").  When invoking the editor, noboot.exe appends the name of the configuration file to the command line.
+<H2><A NAME="defs">Configuration string definitions</A></H2>
+The following are the configuration strings currently defined (note the version numbers displayed below; some strings are only defined for some versions of the system).
+<P>
+<H3>Display drivers</H3>
+<UL>
+<LI> "Display":  Defines the prefix string used when loading Display.Obj.  Common values are "VGA.", "W32.", "ET4000.", "S3C805." and "S3C924.".  Used in the module Modules.
+<LI> "Init":  For display mode initialisation.  A list of 8-bit hexadecimal numbers (up to 75 bytes) with no spaces in between.  This string is interpreted at boot time, when the processor is still in 16-bit mode.  The values are interpreted as machine code and executed.  This is a powerful (if crude) way to set the display mode by setting up registers, writing to the low-memory setup area, and doing BIOS calls.  Used in boot loader (since version 2.06).  As a convenience when tracing installation problems, setting Init=9090 will implicitly set Display="Empty." and TraceBPS="-1" (in modules Kernel and Modules since version 2.3.4).
+<LI> "DWidth":  Sets the screen width.  Valid values are 320, 640, 800, 1024 and 1280.  The screen must be set into a compatible mode using Video.  Used in most display drivers.
+<LI> "DHeight":  Sets the screen height.  Valid values are 200, 480, 600, 768 and 1024.  The screen must be set into a compatible mode using Video.  Used in most display drivers.
+<LI> "DDepth":  Sets the screen depth.  Valid values are 8, 16 and 32 (depending on driver).  Used in truecolor display drivers.
+<LI> "DMem":  Sets the amount of display memory.  Valid values are 1024, 2048 etc.  Used in most display drivers.
+<LI> "DRefresh":  Sets the refresh rate (default 80).  Used in Permedia 2 driver.
+<LI> "DReset": If # 0, reset the card at startup.  Used in Permedia 2 driver.
+</UL>
+<H3>Input drivers</H3>
+<UL>
+<LI> "Keyboard":  Defines the keyboard type.  Valid values are "US" for the US 101-key keyboard, or a file name to load a specific keyboard table file.  Note that the Oberon fonts do not contain all keys printed on the keyboard, so some keys are not available.  Used in module Input.
+<LI> "NumLock":  Set startup state of NumLock.  Default value is "1".  Set to "0" to disable NumLock on startup.  Used in module Input (from version 2.2.7).
+<LI> "MT":  Defines the type of mouse protocol used.  Options are PS2, LM1, LM2, LM3, MS1, MS2, MS3, MS4, MSM, MSI (respectively PS/2-built-in, Logitech 1-3, Mouse Systems Corp 1-4, Microsoft 2-button, Microsoft IntelliMouse serial).  This setting overrides the setting of MouseType.  Used in module Input (from version 2.3.0).
+<LI> "MouseType":  Defines the type of mouse protocol used.  Valid values are the numbers from 0 to 6, with the following meaning: 0=Microsoft Mouse protocol, 1=Mouse Systems protocol 1, 2=Logitech MMseries protocol, 3=Logitech protocol (old), 4=Mouse Systems Protocol 2, 5=Logitech MouseMan/TrackMan (new), 6=PS/2 mouse on auxillary port, 7=Mouse Systems Protocol 3, 8 = Mouse Systems Protocol 4.  Mouse types 0 to 5 and 7 to 8 are all for mice on the serial port.  Used in module Input.  Types 7 & 8 introduced in version 2.2.9.
+<LI> "MP":  Shorter, overriding, name for MousePort.  Used in module Input (from version 2.3.0).
+<LI> "MousePort":  For serial mice, defines to which port the mouse is connected.  Valid values are 1 and 2 for the first and second serial port.  Not required for the PS/2 mice.  Used in module Input.
+<LI> "Buttons":  Defines how many buttons are available on the mouse.  If this value is 2, the Ctrl key on the keyboard will emulate the mouse middle button.  If the value is 3, the Ctrl key will have only its usual function.  Since version 2.2.7: Values -2 or -3 will also use the Ctrl key, in addition to the actual middle button state (useful on laptops with a two-button and a three-button mouse).  Since version 2.3.0: Value -3 is the default, and will now switch to value 3 as soon as a real mouse middle button is seen.  Used in module Input.  Alias "MB" since version 2.3.4.
+<LI> "MouseMap":  Rearranges mouse buttons.  Value is exactly three digits, with each digit from 0-2.  Defines the bit values returned by Input.Mouse in the following way:  MR=digit0, MM=digit1, ML=digit2.  Default value is "012".  Set to "210" for left-handed use, or "021" for Logitech cordless mouse.  Used in module Input (from version 2.2.7).  Alias "MM" from version 2.3.4.
+<LI> "Threshold":  Defines when mouse speedup is activated.  If the mouse is moved faster than this value (in pixels), the cursor is speeded up or slowed down according to the value of "Speedup".The default threshold value is 5.  Set it to 9999 to disable speedup.  Used in module Input (from version 2.06).
+<LI> "Speedup":  Defines mouse speedup value.  If the mouse is moved faster than the threshold, the cursor moves at "speedup/10" the rate of the mouse.  I.e. if the speedup value is 10, the cursor moves at the same speed as the mouse, and if it is 15 (the default), the cursor moves 1.5 times as fast as the mouse.  Used in module Input (from version 2.06).
+<LI> "EscCompat":  ESC key compatibility option.  Valid values are "1" for yes (default) and "0" for no.  If yes, the ESC key will be interpreted as neutralise, as in other Oberon distributions.  The ESC character can be generated in this mode using F3, Shift-ESC or the Alt-keycode technique.  Used in module Input (from version 2.07).
+</UL>
+<H3>File system and disk driver</H3>
+<UL>
+<LI> "FileSystem":  Defines the file system location for the FAT-based file system.  If empty, a native partition is used.  Used in Disk and InstDisk (in Oberon-0).  Since version 2.2.8 this is called "FileSystem" in module InstDisk, and "DiskFile" in module Disk.
+<LI> "Disk0":  (IDEDisk only, not ATADisk!) Defines the parameters for hard disk 0.  The value is three or six ","-separated integers.  The first three integers define the number of cylinders (1-65535), heads (1-16) and sectors per track (1-63) respectively.  For IDE disks the actual values are not that important, but the product of these three numbers divided by two should be equal to or less than the size of the disk in kilobytes.  To avoid booting problems when sharing the disk with other operating systems, the values should be the same as the values used by the BIOS.  If six integers are specified, the last three define the write precompensation value (normally 65535) and overriding values for the number of cylinders and number of heads returned in the Disk.GetParams call.  These values are only used in exceptional cases when sharing a large disk with other operating systems.  "Disk1" is the same as "Disk0", but for drive 1.  Used in module IDE.Disk and IDE.InstDisk (in Oberon-0).  From version 2.22 onwards, it is possible to specify "auto" as the value.  This autodetects the parameters of the disk by reading the partition table.  This is only useful if the disk is already partitioned.  Otherwise, it is possible to specify only the size of the disk in Mb by specifying the value following directly by the letters "Mb".
+<LI> "IDE": Defines the parameters for the IDE disk driver.  Default value 14,1F0H,3F6H.  First value is IRQ, second the control port and third the register port.  Other common value 15,170H,376H.  Used in module Disk and InstDisk (from version 2.21) and also ATADisk (from version 2.3.0).  ATADisk also supports IDE1, IDE2, IDE3 and IDE4 for up to four controllers (after version 2.3.0).
+<LI> "ATABM": If set to "0", the ATADisk driver does not attempt to detect bus-mastering capabilities.  Used in module ATADisk (after version 2.3.0).
+<LI> "SingleBlocks": If set to "1", IDE disk driver only reads and writes only one disk block at a time.  Used in module Disk and InstDisk (from version 2.2.7).
+<LI> "AHA1520": Defines parameters for AHA1520 SCSI disk driver.  Value is 6 ","-separated numerical values: irq (11), portbase (340H), hostid (7), bios (DC000H), parity (0), disconnect (0).  Default values indicated in parenthesis, hex values are suffixed with "H".  Used in module AHA1520 (from version 2.25).
+<LI> "DiskCache": default 100.  Size of disk cache in 2k sectors.  100 gives good cache performance and takes about 200k of memory.  A size of 0 disables caching.  System.State Disk may be used to look at cache performance.  Look at variables Creads, Cwrites, Creadhits and Cwritehits.  Used in module Disk (from version 2.2).  Since version 2.2.7 a second parameter ("i" or "p") may be specified seperated with a comma from the size.  "i" specifies a "write-in" cache, i.e. all writes are only stored in the cache, and not on disk.  "p" specifies a "write-in-primed" cache, which is similar to a write-in cache, but at boot time the complete disk is read into the cache (that must be big enough) and then no further reads or writes are made to the disk.
+<LI> "PartType":  Defines the partition type for Native Oberon.  Default 79.  Values from 70-79 should be used.  Used in module Disk and InstDisk (in Oberon-0).
+<LI> "DiskGC":  10-100, default 10.  Defines whether disk garbage collection should take place at startup.  If less than x% of the disk is available, perform garbage collection.  If less than a megabyte is available, or if the system was not shut down cleanly, GC is performed in any case.  Used in module FileDir (from version 2.07).
+<LI> "RamDiskSize": default (min) 400.  Size of ram disk used in Oberon-0.  Used in module Ram.Disk (from version 2.2 till version 2.2.8).
+<LI> "Prefix":  Defines the default file prefix.  Used when bootstrapping a new system.
+<LI> "Diskette0":  Defines the type of diskette drive 0.  Valid values are 720, 1440 and 2880 for 720k, 1.44M and 2.88M drives respectively.  Can be used to override the automatic checking, if it does not work on your hardware.  "Diskette1" is the same, but for drive 1.  Used in module Diskette0 (available from version 2.05).
+</UL>
+<H3>Memory management</H3>
+<UL>
+<LI> "StackSize":  Defines how many bytes are allocated for the stack.  The default value is 131072, i.e. 128k.  Used in module Kernel.
+<LI> "DMASize":  Defines how many bytes are available for allocation with Kernel.NewDMA.  The default value is 18k (4800H).  Used in module Kernel (from version 2.07).
+<LI> "MapAdr#" and "MapLen#":  Define range of physical addresses to map into the virtual address space.  For experimental use.  # is a number from 0 to 9.  Addresses can be specified in hex using a "H" postfix.  Used in Kernel module (from version 2.2).
+<LI> "MapVesa":  Map a special range of physical addresses into the virtual address space.  Specifically for the Vesa 2.0 linear framebuffer display driver.  If set to "1", will map 4Mb at DX:CX.  DX:CX is the value of the DX and CX registers after the display "Init" string has been executed by the bootstrap loader.  Used in Kernel module (from version 2.2).
+<LI> "=0" and "=1":  For VESA display initialization.  Returns a 32-bit value encoded as a hex number with a "H" postfix.  The value returned is BX:AX or DX:CX respectively.  These are the values of the specified registers after the display "Init" string has been executed by the bootstrap loader.  Used in Vesa 2.0 display module (from version 2.2).
+<LI> "PageHeap": Number of low memory kilobytes to reserve for page heap (default 16).  Used by MapPhysical to allocate page tables.  Every 4Mb area mapped requires one 4k page.  Used in Kernel module (after version 2.2.9).
+<LI> "ExtMemSize": Number of megabytes of extended memory available (overrides automatic detection).  Used in Kernel module (after version 2.2.9).
+</UL>
+<H3>Compatibility</H3>
+<UL>
+<LI> "CPU":  Override processor detection.  Can be set to "3", "4" or "5" to indicate a 386, 486 or Pentium respectively.  Any other value will cause an autodetect to be performed.  Used in Kernel module (from version 2.07).
+<LI> "APM":  Override Automatic Power Management (APM) detection.  Can be set to "0" to disable APM detection.  Used in Kernel module (from version 2.2).
+<LI> "Copro":  Override coprocessor detection.  If set to "1", coprocessor is always used, and if set to "0", the emulator is always used, regardless if a coprocessor is present or not.  Used in Kernel module (from version 2.06).
+<LI> "ClockMode":  Configure how the real-time clock is read.  Default mode "0" means the RT clock is programmed to generate 1s interrupts.  Mode "1" means the clock is polled, which is about 40 times slower.  This mode will also be used automatically when no clock interrupt is detected within 3 seconds during startup.  Used in Kernel module (from version 2.2.10).
+</UL>
+<H3>Customization</H3>
+<UL>
+<LI> "FontConv":  If set to "0", the Syntax font will not be mapped to the Oberon font automatically.  Used in module Objects until version 2.2.7 and module Fonts afterwards.
+<LI> "Color":  If set to "0", the basic system will come up in black & white.  May be useful on old PCs without colour screens.  Note that only the basic system will be in black & white.  Gadgets will still be in colour.
+<LI> "PowerSave":  Set to "0" to disable HLT instructions in the Oberon idle loop.  HLT instructions are executed by default to save power.  Used in module Oberon (from version 2.2.7) and module Kernel (after version 2.2.9).
+</UL>
+<H3>Tracing</H3>
+<UL>
+<LI> "TracePort":  This value is very useful to device driver writers.  It can be used to send the output of the five Kernel.Write procedures (WriteString, WriteChar, WriteInt, WriteHex, WriteMemory) to a serial port.  By connecting a terminal or serial printer to the port, trace output (even from interrupt handlers) can be viewed.  Valid values are 1 and 2 for the first and second serial port.  Used in module Kernel.
+<LI> "TraceBPS":  This value defines the speed of the serial connection set up with TracePort.  Common values are 9600 or 19200.  Setting this to -1 will cause the trace output to be sent to the screen memory.  The screen must be in a 80x25 text mode for this to be visible (e.g. Init=90).  Used in module Kernel.
+<LI> "TraceDiskette":  If set to "1", the diskette driver in the Diskette0 module will output some trace information.  This may be used to find problems with the diskette driver.
+<LI> "TraceHeap":  The integer value is interpreted bitwise as flags to switch on various heap tracing statements.  The actual flags may differ from release to release.  First used in Kernel in version 2.05.
+<LI> "TraceModules":  If set to "1", trace module names and addresses as they are loaded.  Used in module Modules (from version 2.21).
+<LI> "ModExt": Default object file extension.  Used in module Modules (from version 2.3.3).
+<LI> "Beeps":  If set to "0", morse code beeps during a kernel trap are disabled.  Used in module Kernel (from version 2.3.0).
+</UL>
+<H3>Obsolete</H3>
+<UL>
+<LI> "Video":  For display mode initialisation (obsoleted by the "Init" string since version 2.06).  A list of ","-separated hexadecimal numbers (up to 16 digits each, i.e. 64 bits).  This string is interpreted at boot time, when the processor is still in 16-bit mode.  An INT 10H BIOS call is executed for every number specified.  The registers AX, BX, CX and DX are set up according to the number specified.  AX is set from the value of bits 0-15, BX from bits 16-31, CX from bits 32-47 and DX from bits 48 to 63.  Example: "Video=12,3F001001" will execute two INT 10H calls.  The first with AX=12H, BX=0, CX=0, DX=0 and the second with AX=3F00H, BX=1001H, CX=0, DX=0.  Used in the bootstrap loader to initialise the display card for Display modules while the video BIOS is still available (16-bit mode).
+<LI> "DiskIRQ":  Defines the IRQ for the IDE disk driver.  Default value 14.  Used in module Disk and InstDisk (from version 2.07, replaced by IDE from version 2.21).
+<LI> "DiskCtrl":  Defines the control port for the IDE disk driver.  Default value 01F0H.  Used in module Disk and InstDisk (from version 2.07, replaced by IDE from version 2.21).
+<LI> "DiskReg":  Defines the register port for the IDE disk driver.  Default value 03F6H.  Used in module Disk and InstDisk (from version 2.07, replaced by IDE from version 2.21).
+<LI> "AHA1520Base": Defines port base address for Adaptec 1520 controller.  Default value 340H.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+<LI> "AHA1520BIOS": Defines bios address for Adaptec 1520 controller.  Default value 0DC000H.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+<LI> "AHA1520IRQ": Defines irq for Adaptec 1520 controller.  Default value 0BH.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+<LI> "AHA1520HostID": Defines host ID for Adaptec 1520 controller.  Default value 7.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+<LI> "AHA1520Parity": Defines if Adaptec 1520 controller does parity checking.  Default value 0.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+<LI> "AHA1520Discon": Defines if Adaptec 1520 controller can do disconnect.  Default value 0.  Used in module AHA1520 (from version 2.1, replaced by AHA1520 from version 2.25).
+</UL>
+<H2><A NAME="obj">Object file format</A></H2>
+The reference block part of the .Obj file format of Native Oberon is documented here.  The reference block is used by System.Trap and System.State to display information on variables for debugging purposes.  The format was extended in such a way that existing object files in the old format remain compatible with the trap handler.  The "Proc" type was added for procedure variables.  Bit 7 of "VarType" now indicates if an array dimension, "dimNum", is present for arrays of simple types.  For open array parameters, "dimNum" is zero.  "String" is deprecated.  As the reference block is only intended for simple debugging, and has to be compact, more complicated structured types are not supported.
+<P>
+In the following BNF syntax non-terminal symbols start with an upper case letter and terminal symbols start with a lower-case letter.  Non-terminals ending in "Str" are 0X-terminated strings and those ending in "Num" are numbers in Files.WriteNum format.  The meaning of a symbol should be apparent from its name.
+<P>
+<PRE>References = 08BX &#123; ProcRef } . 
+ProcRef = 0F8X ofsNum nameStr &#123; VarMode VarType [ dimNum ] ofsNum nameStr } . 
+VarMode = Direct | Indirect . 
+Direct = 1X . 
+Indirect = 3X . 
+VarType = Byte | Bool | Char | SInt | Int | LInt | Real | LReal | Set | Pointer | Proc | String . 
+Byte = 1X | 81X . 
+Bool = 2X | 82X . 
+Char = 3X | 83X . 
+SInt = 4X | 84X . 
+Int = 5X | 85X . 
+LInt = 6X | 86X . 
+Real = 7X | 87X . 
+LReal = 8X | 88X . 
+Set = 9X | 89X . 
+Pointer = 0DX | 8DX . 
+Proc = 0EX | 8EX . 
+String = 0FX .</PRE>
+<H2><A NAME="heap">Heap format</A></H2>
+In ETH Oberon systems there are three main types of heap blocks: RecBlk, ArrBlk and SysBlk.  RecBlks are used for POINTER TO RECORD variables allocated with NEW.  ArrBlks are used for POINTER TO ARRAY OF Type variables allocated with NEW, where type is a pointer type, or a record type containing pointers.  SysBlks are used for blocks allocated with SYSTEM.NEW, or for POINTER TO ARRAY OF Type variable allocated with NEW, where Type does not contain any pointers.  Special SysBlks are also used for the type descriptors and modules.
+<P>
+The mark phase of the garbage collector distinguishes heap blocks by the address alignment of the pointers pointing to them, and the tag word in front of them.  RecBlk and ArrBlk pointer addresses are always directly divisible by 32 (adr MOD 32 = 0).  SysBlk pointer addresses have a remainder of 8 when divided by 16 (adr MOD 16 = 8).  A RecBlk has a tag word at adr-4, with bit 1 clear.  An ArrBlk also has a tag word at adr-4, but with bit 1 set.  Bit 0 is the mark bit, and is set by the mark phase when a block is reached.  It is cleared by the Sweep phase.  A SysBlk has an indirect tag at adr-4, which points to the real tag of the block.  Type descriptors are special SysBlks.
+<P>
+The heap block format was originally documented in an unpublished diagram by R&eacute;gis Crelier at the ETH.  The diagram was redrawn by <A HREF="http://www.cs.inf.ethz.ch/group/gutknecht/stud_work/1996WS_03/">Thomas Burri</A> and is available as <A HREF="http://www.oberon.ethz.ch/native/HeapBlks.ps.gz">gzipped PostScript</A> or <A HREF="HeapBlks.gif" TARGET="_self">GIF</A>.
+<H2><A NAME="rec">Recommendations</A></H2>
+The following software and documentation may be useful when installing the system or writing device drivers.
+<UL>
+<LI> PartitionMagic from <A HREF="http://www.powerquest.com/">PowerQuest</A> can resize and move existing FAT and NTFS disk partitions.
+<LI> For SVGA display controller technical information see <A HREF="ftp://sunsite.cnlab-switch.ch/mirror/simtelnet/msdos/vga/vgadoc4b.zip">vgadoc4b.zip</A>.  This includes the whatvga.exe program, that can identify many display controllers.
+<LI> To add Native Oberon to the Windows NT boot menu, use <A HREF="http://ourworld.compuserve.com/homepages/gvollant/bootpart.htm">bootpart</A>.
+</UL>
+The following firms are generous with providing technical information:<A HREF="http://www.s3.com/">  S3</A>, <A HREF="http://www.3com.com/">3Com</A>, <A HREF="http://www.chips.com/">Chips & Technologies</A> (<A HREF="ftp://ftp.chips.com/pub/pdf/">ftp</A>), <A HREF="http://www.atitech.ca/">ATI Technologies</A>, <A HREF="http://www.intel.com/">Intel</A>.
+<P>
+The following firms provided technical information to us under non-disclosure agreement: <A HREF="http://www.3dlabs.com/">3DLabs</A>, <A HREF="http://www.adaptec.com/">Adaptec</A>.
+<HR>
+<ADDRESS> 
+<A HREF="mailto:muller@inf.ethz.ch">Pieter Muller</A> 
+April 28, 1999 (page created with HTML.Tool on Oberon)<br> 
+ETH Z&uuml;rich: Departement of Computer Science<br> 
+</ADDRESS>
+<HR>
+</BODY>
+</HTML>

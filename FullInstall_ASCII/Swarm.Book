@@ -1,0 +1,506 @@
+BookDocs.NewDocIcons.Note&K&JKOberon20b.Scn.FntOberon10.Scn.FntOberon16b.Scn.Fnt
+Oberon14b.Scn.FntContents of Swarm: 
+
+	About Swarm
+	Behind the Scenes
+	Swarm Configuration
+	Swarm Gadgets
+		Index
+	Acknowledgements
+
+	Installation
+	Removal
+	Screensaver
+BIER.Qt#Fi;^kCkCCCCCCCCCCCCCCC)CC|CBooks0.NewContElemBooks0.NewLocOberon16b.Scn.FntOberon12.Scn.FnttOberon12i.Scn.Fnt+Oberon14b.Scn.Fnt,Oberon10.Scn.FntAbout Swarm
+
+Most of the popular operating systems feature screensavers. So far there has only been one screensaver, the famous Sisiphus which has to be envoked explicitly. Therefore it was time that there was a real screensaver for Oberon System 3 that activates itself after a specified idle period.
+And so it came that Swarm was born...
+
+Of course a screensaver doesn't make much sense in such a lean system as Oberon System 3 since one could just as well switch off the computer and restart it when it's needed again, but I'm a big fan of such little playthings and that's probably the reason why I wrote Swarm in first place.
+
+I sure hope you enjoy it
+	Bruno
+
+
+Acknowledgements
+This version of Swarm is based on the famous xswarm by Jeff Butterworth. (butterwo@ncsc.org).
+
+
+BIER0Y		
+"tCC CTextGadgets.NewStyleProcBooks0.NewLoc08Oberon16b.Scn.FntOberon12.Scn.FntOberon14b.Scn.FntOberon12i.Scn.FntiOberon10.Scn.Fnt)T(k&Ln* 
+0Behind the Scenes
+
+Installation
+In order to have Swarm as a constant companion it has to be activated at startup. You can either do this manually by executing
+
+	Swarm.Install
+
+or you can modify the configuration text Oberon.Text and include a call to the Swarm installation procedure there. The blue text in the sample of the system section of Oberon.Text below denotes the text to be inserted:
+
+	System = {
+		LoadGadgets = Yes
+		InitCommands = {
+			{ System.OpenLog }
+			{ System.Open System3.Tool }
+			{ Swarm.Install }
+		}
+		DarkPalette = No
+	}
+
+Removal
+To uninstall Swarm simply remove the Swarm.Install statement from the system section of Oberon.Text. Swarm will then no longer be activated automagically at startup.
+
+To disable the Swarm screensaver use
+
+	Swarm.Remove
+
+The screensaver will then no longer be activated automatically. You can however still execute it manually.
+
+Screensaver
+To start the Swarm screensaver manually use
+
+	Swarm.Screensaver
+
+For information on how to configure the Swarm screensaver have a look at the Configuration section.
+
+BIER:c	"Eh"tCC+C+HCHVCVsCsCCCTextGadgets.NewStyleProcBooks0.NewLocOberon16b.Scn.FntOberon12.Scn.Fnt3-Oberon12i.Scn.Fnt
+];
+rOberon10.Scn.FntSwarm Configuration
+
+The Swarm screensaver can be configured using the Swarm.Panel
+
+	
+
+The following options are available in the Swarm.Panel:
+Start screensaver after ...
+Number of minutes the system has to be idle (i.e. no mouseclicks and no keyboard input) until the screensaver kicks in.
+Default is 5 minutes
+Blank screen
+If checked then the screen is first blanked out before the screensaver starts.
+Default is on
+Color settings...
+The swarm changes its color everytime it moves a bit, here you can enter the first and the last color used to draw the swarm with. If you use the same color for first and last color then the swarm will only use this color (as e.g. in the Swarm.Panel).
+Default is 15..255
+Swarm settings...
+Here you can enter the size and the speed of the swarm. The sizes defines how many bees swarm around the wasp and the the speed defines how fast the swarm moves, 0 being the slowest and 10 being the fastest a swarm can move.
+Defaults are 100 for size, and 8 for the speed
+Wasp settings...
+The wasp settings define the maximum velocity and acceleration of the wasp. In addition a border can be set which defines the minumum distance the wasp will keep to the screen border. As a general rule the wasp should always have a slower velocity than the bees but a higher acceleration to produce interesting effects, otherwise the bees will quickly catch up with the wasp and the swarm will only be a moving cloud...
+Defaults are 10 for velocity, 5 for acceleration, and 20 for the border
+Bee settings...
+Here you can define the maximum velocity and acceleration of the bees.
+Defaults are 12 for velocity, and 2 for acceleration
+
+The Swarm.Panel also contains a few buttons with the following functions:
+ Undo changes
+ Save settings
+ Start screensaver
+	 Open help
+
+In addition there's also a Swarm gadget in the panel. And as you would expect this gadget inserts a new gadget at the caret position if it is executed:
+
+ Swarm Gadget
+
+BIER`11AdA*M"#D''O,,$1"tCC&Swarm.PanelCCCCB
+* CColor
+CmdFieldYesValB* CColor
+CmdFieldYesValS* CColor
+CmdSwarm.ScreensaverFieldYesValB(CColor
+CmdFieldYesValCHd2ddCCmdGadgets.Insert Swarm.New ~;AAAA  A      A     A AA A A a aA a a  A    A    A    A  AAAAAA A AA A AAAAAAAAAAaAaAAaAaAAAAAAAAAAAAAAAAAAAAaaAaaa a Aa a aAaAAaAaAaaaaAaaaaaaAaaaaAaaaaAaaaaAaaA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6KBC&AAAA  A      A     A AA A A a aA a a  A    A    A    A  AAAAAA A AA A AAAAAAAAAAaAaAAaAaAAAAAAAAAAAAAAAAAAAAaaAaaa a Aa a aAaAAaAaAaaaaAaaaaaaAaaaaAaaaaAaaaaAaaA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<KBCCmdAAAA  A      A     A AA A A a aA a a  A    A    A    A  AAAAAA A AA A AAAAAAAAAAaAaAAaAaAAAAAAAAAAAAAAAAAAAAaaAaaa a Aa a aAaAAaAaAaaaaAaaaaaaAaaaaAaaaaAaaaaAaaA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+	
+
+
+	
+
+
+	
+
+
+	
+
+	
+
+	
+
+	
+
+		
+
+		
+
+		
+
+
+
+		
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<KBCCmdAAAA  A      A     A AA A A a aA a a  A    A    A    A  AAAAAA A AA A AAAAAAAAAAaAaAAaAaAAAAAAAAAAAAAAAAAAAAaaAaaa a Aa a aAaAAaAaAaaaaAaaaaaaAaaaaAaaaaAaaaaAaaA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAAA  A  AAAAAaaAaaAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6KBCTextGadgets.NewStyleProcBooks0.NewLocPanelDocs.NewDocBasicGadgets.NewButtonSwarm.NewPictures.NewPictureRembrandt.NewHOberon16b.Scn.FntOberon12.Scn.FntDOberon12i.Scn.FntA
+-\3\.Oberon10.Scn.FntHSwarm Gadgets
+
+Since I am (as already mentioned) a big fan of playthings I decided to also make swarm gadgets. I doubt that they're of any real use but they're nice to watch anyway...
+
+
+
+Swarm Gadgets have the following attributes that can be set using Columbus:
+(For a detailed description of the attributes have a look at the Configuration section.)
+Name, Cmd
+Basic attributes with their default meaning.
+Swarm Size
+Size of the swarm, i.e. number of bees following the wasp.
+Default is 50, 10 <= size <= 200
+Swarm Speed
+Speed of the swarm.
+Default is 5, 0 <= speed <= 10
+First Color, Last Color
+Minimum and maximum color used to draw swarm.
+Default is 15..255, First Color <= Last Color
+Bee Acceleration, Bee Velocity
+Maximum acceleration and velocity of the bees in the swarm.
+Defaults are 2 for acceleration, and 6 for velocity, 1 <= Acceleration <= 10, 2 <= Velocity <= 20
+Wasp Acceleration, Wasp Velocity, Wasp Border
+Maximum acceleration, velocity, and border of the wasp.
+Defaults are 3 for acceleration, and 5 for velocity, 1 <= Acceleration <= 10, 2 <= Velocity <= 20, 0 <= Border
+
+BIER91:l7777	878n88C99"tC)
+CCC(d2dxC1	
+r~t|Cf$Oberon12i.Scn.Fnt,,Click on the gadget to
+start the screensaver|Cc$Oberon12i.Scn.Fnt))select it to inspect it
+using columbus...qC62CCmdColumbus.Inspect<$Oberon12i.Scn.FntorCTextGadgets.NewStyleProcPanels.NewPanelBooks0.NewLocSwarm.NewTextFields.NewCaptionBasicGadgets.NewButtonColumbus.Lib53Oberon20b.Scn.FntOberon10.Scn.FntOberon16b.Scn.FntOberon12.Scn.Fnt,
+	
+
+5Index
+
+A
+Attributes
+Attributes, Bee Acceleration
+Attributes, Bee settings
+Attributes, Bee Velocity
+Attributes, Cmd
+Attributes, Colors
+Attributes, First Color
+Attributes, Last Color
+Attributes, Name	
+Attributes, Swarm Size
+Attributes, Swarm Speed
+Attributes, Wasp Acceleration
+Attributes, Wasp border
+
+Attributes, Wasp settings
+Attributes, Wasp Velocity
+Automagical installation of Swarm at startup
+
+B
+Bee settings
+Blank screen
+
+C
+Color settings
+Configuration
+
+D
+Disabling Swarm
+
+G
+Gadget Attributes
+
+I
+Idle time
+Installation
+
+M
+Manually installing Swarm
+Manually starting Swarm
+
+R
+Removing Swarm
+
+S
+Screensaver
+Sisiphus
+Starting Swarm manually
+Swarm
+Swarm Gadget Attributes 
+Swarm Gadgets!
+Swarm size"
+Swarm speed#
+Swarm.Panel$
+Swarm.Panel buttons%
+
+U
+Uninstalling Swarm&
+
+W
+Wasp settings'
+
+BIERGH(`BBBBBC7CZC}CCCC	D,DODrDDDDD!EDEgEEEEEF9F\FFFFFG.GQGtGGG"tCCCCCdCACACACdCCCrCrCrCrCCC<CC/C)CCCCC)C)C|CC|C CCCCC/CtC)CCTextGadgets.NewStyleProcBooks0.NewLocOberon12i.Scn.FntOberon12.Scn.FntOberon10.Scn.FntSwarm.Install
+Desktops.OpenDoc Oberon.Text
+Desktops.OpenDoc Oberon.Text
+Swarm.Install
+Desktops.OpenDoc Oberon.Text
+Swarm.Remove
+Swarm.Screensaver
+Desktops.OpenDoc Swarm.Panel
+Desktops.OpenDoc Swarm.Panel
+Desktops.OpenDoc Swarm.Panel
+Desktops.OpenDoc Swarm.Panel
+Columbus.Inspect
+ XOberon12.Scn.FntOberon12i.Scn.Fnt
+ 
+Sisphus at work
+Swarm at workBIERK KJJ44C(d244CSisiphus.NewSwarm.NewOpenConfiguration|Screensaver)RemoveInstall

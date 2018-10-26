@@ -1,0 +1,107 @@
+Native Oberon System
+
+Niklaus Wirth & Jrg Gutknecht - Project Oberon for Ceres.
+Jrg Gutknecht - Oberon System 3 project.
+Hannes Marais & Patrick Saladin - Gadgets.
+Hannes Marais, Mathias Hausner & Emil Zeller - Windows Oberon System 3.
+Michael Franz & Thomas Kistler - MacOberon System 3.
+Andreas Disteli - DOS Oberon System 3.
+Johan de Villiers & Pieter Muller - Oberon System 3 on Hybrid.
+Josef Templ, Peter Januschke & Jaco Geldenhuys - SPARC Solaris Oberon System 3.
+Markus Dtwyler & Patrick Saladin - Linux Oberon System 3.
+Peter Matthias - Linux Native Oberon System 3.
+Edgar Schwarz - HPUX Oberon System 3.
+Gnter Feldmann - PowerPC Linux & Solaris Oberon System 3.
+Rgis Crelier - DEC-Oberon.
+Emil Zeller - Gadgets Network and other tools.
+Hans Meier - Oberon and Syntax fonts.
+
+Native Oberon Compiler
+
+Niklaus Wirth - Oberon compiler for Ceres.
+Rgis Crelier - Portable Oberon compiler.
+Niklaus Mannhart - Intel 386/387 backend.
+Patrik Reali - Intel 386/387 Assembler.
+Patrik Reali - Active Oberon extensions.
+Roberto Morelli - Oberon-X extensions.
+
+Packages & Tools
+
+Martin Gitsels - TCP/IP & NetSystem.
+Andr Fischer - Tutorials & The Oberon Companion.
+Erich Oswald - Leonardo.
+MJ de Villiers de Wet - Static Linker, Scope & FATFiles.
+Wolfgang Pircher - ET4000 driver.
+Peter Matthias - ET4000 & S3 Trio driver.
+Jrg Derungs - GD54xx driver.
+Ott Hans-Werner & Andreas Disteli - VGA driver.
+Andreas Disteli - S3 & W32 display drivers.
+Martin Pirker - Vesa driver.
+Francis Bogsanyi - ATAPI CD driver.
+Thomas Burri - SoundBlaster driver.
+Jrg Derungs - LayLa.
+Bruno Essmann - DOS-based bootloader.
+MJ de Villiers de Wet - FATFiles and DOS tool.
+Peter Ryser - NCR 810 SCSI driver.
+Wolfgang Ibl - Adaptec 1520 SCSI driver.
+Bernd Msli - Reals, scanning.
+David Ulrich - JPEG converter & Dim3.
+Ralph Sommerer - Script editor, on-line documents.
+Patrick Saladin - Hex editor.
+Daniel Ponti - Rembrandt & Backdrops.
+Josef Templ & Jacques Supcik - PostScript printer driver.
+Lajos Truszek - HP Laserjet driver.
+Beat Heeb & Karl Rege - HP 550C printer driver.
+Robert Griesemer & Wolfgang Weck - VT100 emulator.
+Thomas Nauer - Pictures.
+Ivan Posva & Martin Gitsels - Telnet.
+Clemens Szyperski & Hanspeter Mssenbck - EditTools.
+Clemens Szyperski - EditKeys.
+Ralph Sommerer & Andreas Disteli - TextMail.
+Robert Griesemer - Sisiphus.
+Karl Rege & Andreas Disteli - Server system & client printer.
+Ralph Sommerer - V4 to System 3 text convertor.
+Urs Hiestand & Ralph Sommerer - ET editor & Popup menus.
+Stefan Ludwig - Analyzer.
+Luca Balestra - CU-SeeMe receiver.
+Patrick Saladin - Outlines, Freecell, Solitaire, Spider, Shanghai.
+Markus Dtwyler & Patrick Saladin - MineSweeper.
+Wolfgang Ibl - Tetris, Asteroids & Calculator.
+Emil Zeller - Sokoban & Scramble.
+David Mller & Martin Gitsels - SLIP.
+Urs Hiestand - LEDA.
+Patrik Reali - HPCalc.
+Clyde Knaus - LayoutPanels.
+Andreas Margelisch - RX.
+Christoph Kleiner - Three Dimensional Dreams (TDD).
+Edgar Schwarz, Martin Aeschlimann & Claude Knaus - PPP.
+Necati Ecevit - Turkish keyboard table.
+Reto Strobl - 3Com509B driver.
+Christian Plattner - ATA driver.
+Christoph Kleiner - Three Dimensional Dreams (TDD).
+Rgis Crelier & Edgar Schwarz - Floating-point emulator.
+Alan Webber - Dvorak keyboard table.
+Stanislaw Ciszewski - Polish keyboard table.
+Bruno Essmann - Swarm screensaver.
+Hal Weaver - Trident 9xxx bank switching in SVGA.Display.
+Grard Meunier - French keyboard table.
+Fabian Kuhn, Patrik Reali, Pieter Muller - Permedia2 accellerated truecolor display driver.
+Paul Reed - Hicolor SVGAH.Display.
+Andreas Signer - Bitmaps module.
+
+Beta Testers (in order of appearance)
+
+Jrg Gutknecht, Patrik Reali, Andreas Disteli, Peter Ryser, Francis Bogsanyi, 
+Wolgang Pircher, Wolfgang Ibl, Peter Matthias, Jrg Derungs, Bernd Msli, 
+Hannes Marais, Frank Hrebabetzky, Emil Zeller, Erich Oswald, Andr Fischer, 
+Jacques Supcik, Jaco Geldenhuys, Henk Roux, Alan Webber, Doug Danforth, 
+Philipp Heuberger, George Fankhauser, J.T. Utne, Necati Ecevit, J. Sedlacek, 
+Aubrey McIntosh, Brian Hawley, Daniel Vogelheim, Gotthard Schmidt, 
+Robert Lichtenberger, Beat Christen, Steve Adams, Paul Floyd, Alan Freed, 
+Erik Hill, Jan de Kruyf, Vesna Velickovic, Guy Laden, Patrick Saladin, 
+Markus Dtwyler, et al.
+
+Apologies to anyone who have accidentally been left out.
+
+Pieter Muller
+May, 1999

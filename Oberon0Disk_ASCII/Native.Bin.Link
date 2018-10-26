@@ -1,0 +1,398 @@
+refsize =  00001561H
+nofEntries =  0000002EH
+nofCmds  =  00000002H
+nofPtrs  =  00000005H
+nofTds  =  00000013H
+nofImps  =  00000000H
+nofDataLinks  =  00000001H
+nofLinks  =  00000003H
+dataSize  =  00003FB4H
+conSize  =  00000764H
+codeSize  =  00007023H
+name  = Kernel
+ 0000103CH -- +28  Kernel
+ 0000E18CH -- +12  entries
+ 0000E18CH -- +12  cmds
+ 0000E18CH -- +12  ptrs
+ 0000E18CH -- +12  imports
+ 0000E18CH -- +12  data
+ 000051A0H -- + 0  const
+refsize =  00000834H
+nofEntries =  00000009H
+nofCmds  =  00000001H
+nofPtrs  =  00000002H
+nofTds  =  00000004H
+nofImps  =  00000001H
+nofDataLinks  =  00000001H
+nofLinks  =  00000002H
+dataSize  =  000000DCH
+conSize  =  000001A0H
+codeSize  =  000031C7H
+name  = Disk
+ 0000F4BCH -- +28  Disk
+ 000134FCH -- +28  entries
+ 000134FCH -- +28  cmds
+ 000134FCH -- +28  ptrs
+ 000134FCH -- +28  imports
+ 000134FCH -- +28  data
+ 0000F688H -- + 8  const
+refsize =  00000B2AH
+nofEntries =  0000000DH
+nofCmds  =  00000000H
+nofPtrs  =  00000000H
+nofTds  =  00000003H
+nofImps  =  00000001H
+nofDataLinks  =  00000001H
+nofLinks  =  00000001H
+dataSize  =  00000018H
+conSize  =  0000001CH
+codeSize  =  00000F88H
+name  = PCI
+ 0001397CH -- +28  PCI
+ 000157FCH -- +28  entries
+ 000157FCH -- +28  cmds
+ 000157FCH -- +28  ptrs
+ 000157FCH -- +28  imports
+ 000157FCH -- +28  data
+ 00013A70H -- +16  const
+refsize =  000008A8H
+nofEntries =  00000006H
+nofCmds  =  00000001H
+nofPtrs  =  00000006H
+nofTds  =  00000006H
+nofImps  =  00000003H
+nofDataLinks  =  00000005H
+nofLinks  =  00000002H
+dataSize  =  00000024H
+conSize  =  00000208H
+codeSize  =  00002754H
+name  = ATADisk
+ 00015DFCH -- +28  ATADisk
+ 000193ECH -- +12  entries
+ 000193ECH -- +12  cmds
+ 000193ECH -- +12  ptrs
+ 000193ECH -- +12  imports
+ 000193ECH -- +12  data
+ 00015F10H -- +16  const
+refsize =  000003CEH
+nofEntries =  00000006H
+nofCmds  =  00000001H
+nofPtrs  =  00000001H
+nofTds  =  00000007H
+nofImps  =  00000002H
+nofDataLinks  =  00000001H
+nofLinks  =  00000002H
+dataSize  =  00000038H
+conSize  =  000000C0H
+codeSize  =  00002ABEH
+name  = FileDir
+ 0001989CH -- +28  FileDir
+ 0001CBDCH -- +28  entries
+ 0001CBDCH -- +28  cmds
+ 0001CBDCH -- +28  ptrs
+ 0001CBDCH -- +28  imports
+ 0001CBDCH -- +28  data
+ 000199B0H -- +16  const
+refsize =  000004EBH
+nofEntries =  00000022H
+nofCmds  =  00000000H
+nofPtrs  =  00000001H
+nofTds  =  00000004H
+nofImps  =  00000003H
+nofDataLinks  =  00000001H
+nofLinks  =  00000002H
+dataSize  =  00000004H
+conSize  =  00000020H
+codeSize  =  00001F0CH
+name  = Files
+ 0001D51CH -- +28  Files
+ 0001FD2CH -- +12  entries
+ 0001FD2CH -- +12  cmds
+ 0001FD2CH -- +12  ptrs
+ 0001FD2CH -- +12  imports
+ 0001FD2CH -- +12  data
+ 0001D650H -- +16  const
+refsize =  00000613H
+nofEntries =  00000004H
+nofCmds  =  00000000H
+nofPtrs  =  00000000H
+nofTds  =  00000006H
+nofImps  =  00000004H
+nofDataLinks  =  00000003H
+nofLinks  =  00000004H
+dataSize  =  00000168H
+conSize  =  0000019CH
+codeSize  =  00003017H
+name  = Modules
+ 0002035CH -- +28  Modules
+ 0002402CH -- +12  entries
+ 0002402CH -- +12  cmds
+ 0002402CH -- +12  ptrs
+ 0002402CH -- +12  imports
+ 0002402CH -- +12  data
+ 00020590H -- +16  const
+Building image : Native.Bin  
+ 00001000H image start, 28+32 bytes for alignment and header
+
+
+--------- MODULE Kernel
+ 0000103CH -- +28  Base
+---------  0000E480H image size 
+---------  000000A0H moduleDesc size 
+---------  00000C00H typeTable size 
+---------  000006A0H exp size 
+---------  0000D124H size 
+---------  sys block td header (28 bytes) 
+ 00001068H -- + 8  entries
+ 00001138H -- +24  cmds
+ 00001198H -- +24  ptrs
+ 000011C8H -- + 8  imports
+ 000011E8H -- + 8  data
+ 000051A0H -- + 0  SB
+ 000051A0H -- + 0  const
+ 00005918H -- +24  code
+ 00005918H -- +24  codeadr
+ 0000C958H -- +24  tdescs
+ 0000C9B8H -- +24  refs
+ 0000C9B8H -- +24  refBase
+ 0000DF38H -- +24  import
+ 0000E058H -- +24  struct
+ 0000E0F8H -- +24  reimp
+ 0000E17CH -- +28  padding
+ 0000E178H -- +24  effective
+ 0000E17CH -- +28  effective
+ 0000E17CH -- +28  expAdr
+ 0000E820H -- + 0  tds
+ 0000E81CH -- +28  m.typeTableAdr
+ 0000E81CH -- +28  effective
+ 0000F41CH -- +28  mdesc
+ 0000F420H -- + 0  desc Adr
+--------- END Kernel 0000103CH 000051A0H 00005918H 0000F4BCH
+
+--------- MODULE Disk
+ 0000F4BCH -- +28  Base
+---------  000044C0H image size 
+---------  000000A0H moduleDesc size 
+---------  00000280H typeTable size 
+---------  00000160H exp size 
+---------  00004024H size 
+---------  sys block td header (28 bytes) 
+ 0000F4E8H -- + 8  entries
+ 0000F528H -- + 8  cmds
+ 0000F568H -- + 8  ptrs
+ 0000F588H -- + 8  imports
+ 0000F5A8H -- + 8  data
+ 0000F688H -- + 8  SB
+ 0000F688H -- + 8  const
+ 0000F848H -- + 8  code
+ 0000F848H -- + 8  codeadr
+ 00012A28H -- + 8  tdescs
+ 00012A58H -- +24  refs
+ 00012A58H -- +24  refBase
+ 000132A8H -- + 8  import
+ 000133C8H -- + 8  struct
+ 00013468H -- + 8  reimp
+ 000134ECH -- +12  padding
+ 000134E8H -- + 8  effective
+ 000134FCH -- +28  effective
+ 000134FCH -- +28  expAdr
+ 00013660H -- + 0  tds
+ 0001365CH -- +28  m.typeTableAdr
+ 0001365CH -- +28  effective
+ 000138DCH -- +28  mdesc
+ 000138E0H -- + 0  desc Adr
+--------- END Disk 0000F4BCH 0000F688H 0000F848H 0001397CH
+
+--------- MODULE PCI
+ 0001397CH -- +28  Base
+---------  00002480H image size 
+---------  000000A0H moduleDesc size 
+---------  000001E0H typeTable size 
+---------  00000380H exp size 
+---------  00001E64H size 
+---------  sys block td header (28 bytes) 
+ 000139A8H -- + 8  entries
+ 000139F8H -- +24  cmds
+ 00013A18H -- +24  ptrs
+ 00013A38H -- +24  imports
+ 00013A58H -- +24  data
+ 00013A70H -- +16  SB
+ 00013A70H -- +16  const
+ 00013AA8H -- + 8  code
+ 00013AA8H -- + 8  codeadr
+ 00014A48H -- + 8  tdescs
+ 00014A68H -- + 8  refs
+ 00014A68H -- + 8  refBase
+ 000155A8H -- + 8  import
+ 000156C8H -- + 8  struct
+ 00015768H -- + 8  reimp
+ 000157ECH -- +12  padding
+ 000157E8H -- + 8  effective
+ 000157FCH -- +28  effective
+ 000157FCH -- +28  expAdr
+ 00015B80H -- + 0  tds
+ 00015B7CH -- +28  m.typeTableAdr
+ 00015B7CH -- +28  effective
+ 00015D5CH -- +28  mdesc
+ 00015D60H -- + 0  desc Adr
+--------- END PCI 0001397CH 00013A70H 00013AA8H 00015DFCH
+
+--------- MODULE ATADisk
+ 00015DFCH -- +28  Base
+---------  00003AA0H image size 
+---------  000000A0H moduleDesc size 
+---------  000003C0H typeTable size 
+---------  00000060H exp size 
+---------  000035C4H size 
+---------  sys block td header (28 bytes) 
+ 00015E28H -- + 8  entries
+ 00015E58H -- +24  cmds
+ 00015E98H -- +24  ptrs
+ 00015EC8H -- + 8  imports
+ 00015EE8H -- + 8  data
+ 00015F10H -- +16  SB
+ 00015F10H -- +16  const
+ 00016138H -- +24  code
+ 00016138H -- +24  codeadr
+ 000188A8H -- + 8  tdescs
+ 000188D8H -- +24  refs
+ 000188D8H -- +24  refBase
+ 00019198H -- +24  import
+ 000192B8H -- +24  struct
+ 00019358H -- +24  reimp
+ 000193DCH -- +28  padding
+ 000193D8H -- +24  effective
+ 000193DCH -- +28  effective
+ 000193DCH -- +28  expAdr
+ 00019440H -- + 0  tds
+ 0001943CH -- +28  m.typeTableAdr
+ 0001943CH -- +28  effective
+ 000197FCH -- +28  mdesc
+ 00019800H -- + 0  desc Adr
+--------- END ATADisk 00015DFCH 00015F10H 00016138H 0001989CH
+
+--------- MODULE FileDir
+ 0001989CH -- +28  Base
+---------  00003C80H image size 
+---------  000000A0H moduleDesc size 
+---------  00000460H typeTable size 
+---------  00000440H exp size 
+---------  00003324H size 
+---------  sys block td header (28 bytes) 
+ 000198C8H -- + 8  entries
+ 000198F8H -- +24  cmds
+ 00019938H -- +24  ptrs
+ 00019958H -- +24  imports
+ 00019978H -- +24  data
+ 000199B0H -- +16  SB
+ 000199B0H -- +16  const
+ 00019A88H -- + 8  code
+ 00019A88H -- + 8  codeadr
+ 0001C568H -- + 8  tdescs
+ 0001C598H -- +24  refs
+ 0001C598H -- +24  refBase
+ 0001C988H -- + 8  import
+ 0001CAA8H -- + 8  struct
+ 0001CB48H -- + 8  reimp
+ 0001CBCCH -- +12  padding
+ 0001CBC8H -- + 8  effective
+ 0001CBDCH -- +28  effective
+ 0001CBDCH -- +28  expAdr
+ 0001D020H -- + 0  tds
+ 0001D01CH -- +28  m.typeTableAdr
+ 0001D01CH -- +28  effective
+ 0001D47CH -- +28  mdesc
+ 0001D480H -- + 0  desc Adr
+--------- END FileDir 0001989CH 000199B0H 00019A88H 0001D51CH
+
+--------- MODULE Files
+ 0001D51CH -- +28  Base
+---------  00002E40H image size 
+---------  000000A0H moduleDesc size 
+---------  000002A0H typeTable size 
+---------  00000300H exp size 
+---------  000027E4H size 
+---------  sys block td header (28 bytes) 
+ 0001D548H -- + 8  entries
+ 0001D5E8H -- + 8  cmds
+ 0001D608H -- + 8  ptrs
+ 0001D628H -- + 8  imports
+ 0001D648H -- + 8  data
+ 0001D650H -- +16  SB
+ 0001D650H -- +16  const
+ 0001D688H -- + 8  code
+ 0001D688H -- + 8  codeadr
+ 0001F5A8H -- + 8  tdescs
+ 0001F5D8H -- +24  refs
+ 0001F5D8H -- +24  refBase
+ 0001FAD8H -- +24  import
+ 0001FBF8H -- +24  struct
+ 0001FC98H -- +24  reimp
+ 0001FD1CH -- +28  padding
+ 0001FD18H -- +24  effective
+ 0001FD1CH -- +28  effective
+ 0001FD1CH -- +28  expAdr
+ 00020020H -- + 0  tds
+ 0002001CH -- +28  m.typeTableAdr
+ 0002001CH -- +28  effective
+ 000202BCH -- +28  mdesc
+ 000202C0H -- + 0  desc Adr
+--------- END Files 0001D51CH 0001D650H 0001D688H 0002035CH
+
+--------- MODULE Modules
+ 0002035CH -- +28  Base
+---------  00004200H image size 
+---------  000000A0H moduleDesc size 
+---------  000003C0H typeTable size 
+---------  000000E0H exp size 
+---------  00003CA4H size 
+---------  sys block td header (28 bytes) 
+ 00020388H -- + 8  entries
+ 000203B8H -- +24  cmds
+ 000203D8H -- +24  ptrs
+ 000203F8H -- +24  imports
+ 00020428H -- + 8  data
+ 00020590H -- +16  SB
+ 00020590H -- +16  const
+ 00020748H -- + 8  code
+ 00020748H -- + 8  codeadr
+ 00023778H -- +24  tdescs
+ 000237A8H -- + 8  refs
+ 000237A8H -- + 8  refBase
+ 00023DD8H -- +24  import
+ 00023EF8H -- +24  struct
+ 00023F98H -- +24  reimp
+ 0002401CH -- +28  padding
+ 00024018H -- +24  effective
+ 0002401CH -- +28  effective
+ 0002401CH -- +28  expAdr
+ 00024100H -- + 0  tds
+ 000240FCH -- +28  m.typeTableAdr
+ 000240FCH -- +28  effective
+ 000244BCH -- +28  mdesc
+ 000244C0H -- + 0  desc Adr
+--------- END Modules 0002035CH 00020590H 00020748H 0002455CH
+Init block at  0002455CH
+Init code at  00024578H
+Body at  00005918H
+Body at  0000F848H
+Body at  00013AA8H
+Body at  00016138H
+Body at  00019A88H
+Body at  0001D688H
+Body at  00020748H
+Main code at  00020748H
+
+PatchHeaders:
+  link base:  00001000H
+  image size:  000235BCH
+  heap start:  000245BCH
+  entry point:  00023573H
+  heap start:  000245BCH
+
+new is Kernel.NewRec 00008C67H
+sysnew is Kernel.NewSys 00008DE6H
+newarr is Kernel.NewArr 00008F41H
+list is Kernel.modules 00322B44H
+modDesc is Kernel.ModuleDesc 0000EA78H
+expDesc is Kernel.ExportDesc 0000E938H

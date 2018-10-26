@@ -1,0 +1,10 @@
+{ The Oberon Text (Minimal installation version) }
+
+System = {
+	InitCommands = {
+		{ System.OpenLog }
+		{ System.Open Install.Tool }
+		{ Install.Safe }
+		{ ConfigMouse.Configure }
+	}
+}

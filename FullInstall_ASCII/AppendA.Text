@@ -1,0 +1,199 @@
+
+Appendix A
+
+Configuring the System
+
+
+
+
+
+A.1	Introduction
+
+A personal computer needs to be configured and tailored to a given environment and to a personal profile. For this purpose, special tools are available in Oberon. They are described in the following sections separately for each implementation. Further platform-dependent details must be obtained from the specific installation guides.
+
+
+A.2	PC Native Oberon
+
+For PC Native Oberon, the configuration tool is a simple text called Oberon.Text that can be edited freely. The configuration data is structured according to a simple, self-explanatory and recursive syntax whose formal definition in EBNF (Extended Backus Naur Form) is as follows:
+
+Configuration =  Group.
+Group = { Entry } { Token }.
+Entry = [ Name "=" ] Value.
+Value = Token | "{" Group "}".
+Token = any token from Texts.Scanner, where "{" and "}" must occur pairwise.
+
+Example:
+
+{ The Oberon Configuration Text }
+
+System = {
+	InitCommands = {
+        { System.OpenLog }
+        { System.Open System.Tool }
+    }
+}
+
+Printer = {
+	Resolution = 300
+	Layout = {
+		Width = {210 mm}
+		Height = {297 mm}
+	}
+}
+
+NetSystem = {
+	Hosts = { 
+		Domain = { "domain", "" }
+		DNS1 = { "", "" }
+    }
+	NewsFont=Courier10.Scn.Fnt
+}
+
+SLIP = {
+	Host = { "<slipserver>" }
+	Init = { COM1 19200 }
+	Dial = {
+		"ATZ" 
+		10 "OK" 
+		"ATD <phonenumber>" 
+		60 "CONNECT" 
+		10 "login:" 
+		USER 
+		20 "password" 
+		PASSWORD 
+		20 "enabled" 
+		START }
+}
+
+	For programmed access to Oberon.Text a single procedure Oberon.OpenScanner in combination with the standard text scanning facility suffices.
+
+	PROCEDURE OpenScanner (VAR S: Texts.Scanner; entry: ARRAY OF CHAR);
+
+This procedure is used within programs to position the text scanner at any desired entry in the Oberon.Text. It takes two parameters, a scanner and an entry name, where the name actually denotes a path and may be arbitrarily nested by qualification.
+	For example, the name Printer.Layout.Width positions the scanner to the width specification "210 mm" and SLIP.Dial positions it to the dial-in code sequence.
+	Note that this concept of system configuration is open in many senses. Not only can new entries be added freely but the local syntax of entries (within group braces "{" "}") is completely open as well. Also note that there are a few low-level configuration data that are used on levels below the text system and therefore cannot make use of it in the mentioned way. For these cases (that users never have to care about) a low-level extension of the above explained mechanism is provided. It is based on a set of pairs (name, value) that are stored in some initial part of the boot file.
+
+
+A.2	Oberon System 3 for Windows
+
+The registry provides a consistent interface for programs to store configuration data. The data is organized in a two-level hierarchy. The first level is called "section", the second level is called "key". The registry serves to associate a value with a (section, key) pair and its data has the format:
+
+	[Section1]
+	Key1=Value1
+	Key2=Value
+
+	[Section2]
+	Key1=Value
+	...
+
+For Windows 95, 98 and NT, the registry data is kept in the Windows registry under the key:
+
+		HKEY_CURRENT_USER/Software/Oberon System 3/Release 2.x/
+
+The registry data is accessed when Oberon is started.
+	This data can be accessed and maintained by the user in various ways. The first and most expeditive way is by executing the commands System.Get and System.Set (described in Chapter 2) to retrieve and respectively update the registry data. Second, using the IniEdit.Panel, a graphical user interface for maintaining that data.
+
+		
+
+Third, with the commands provided by the RegistryTools module for storing and loading the Oberon specific registry data in a file, which can be edited as an ASCII file in Oberon. The name of the registry file is the user's choice. Such a file Oberon.reg is delivered with the system for prompting the system after its installation without user intervention.
+
+RegistryTools.Version
+Display software and version information for the currently running version. Example:
+
+		Software: Oberon System 3
+		Version: Release 2.3
+
+RegistryTools.Store [ \V version ] filename
+Store all the entries in [HKEY_CURRENT_USER\Software\<software>\<version>] in the named registry file. By default, the registry data of the currently running version is stored. To store the data of another version use the V option. This file is best edited after opening it with EditTools.OpenAscii and after that it should be stored back with EditTools.StoreAscii. Such a file can serve as backup copy.
+
+Example: RegistryTools.Store \V "Release 2.21" old.reg ~
+
+RegistryTools.Load [ \V version ] filename
+Load the registry entries in the named registry file to [HKEY_CURRENT_USER\Software\<software>\<version>]. By default the registry of the currently running version is overwritten. To overwrite  entries of another version use the V option.
+
+Fourth, from outside of Oberon, by running the Windows Regedit.exe program and by editing the data via the Edit menu. After updating, Oberon must be restarted to apply the new values.
+	For programmed access, four procedures are provided in the module Registry:
+
+	(* Associates a value with a (section, key) pair. *)
+	PROCEDURE Set (section, key, value: ARRAY OF CHAR);
+
+	(* Retrieves the value associated with a (section, key) pair. *)
+	PROCEDURE Get (section, key: ARRAY OF CHAR; VAR value: ARRAY OF CHAR);
+
+	(* Enumerates all keys and their values in a section. *)
+	PROCEDURE Enumerate (section: ARRAY OF CHAR; handler: EntryHandler);
+
+	(** Enumerates all sections. *)
+	PROCEDURE EnumerateSections*(handler: SectionHandler);
+
+	A section called [SystemInfo] contains the following details depending on the host operating system:
+
+Key	Windows 95/NT	Windows 3.1
+
+OS	Windows	Windows
+Processor	Intel	Intel
+FileSystem	VFAT/NTFS	FAT
+HostFilenamePrefix	empty	_ (underscore)
+
+Remark: The registry is mostly of use to modules low in the module hierarchy, and its extensive use is discouraged.
+	The registry data consists of user specific, critical data that can be backed up in two different ways. First, inside of Oberon, using the RegistryTools commands described above. Second, by running the Regedit.exe program and by selecting "Export Registry File..." in the Registry menu. Restoring is carried out with an Import operation. This is particularly needed when upgrading an installed Oberon version. Also, when an Oberon is shared by different users, users have to import their personalized registry data, prior to using the system.
+
+	For Windows 3.1, the registry data is kept in the oberon.ini file. The registry file is accessed when Oberon is started. If no explicit path is specified in the command
+		oberon.exe [-i path\oberon.ini]
+starting the Oberon application, the file is searched for in the following directories:
+		(1) current directory,
+		(2) Windows system directory,
+		(3) Windows directory,
+		(4) in all directories listed in the PATH environment variable.
+
+	This file can be edited directly with an ASCII text editor or with an Oberon editor. In the latter case, care must be taken to preserve the ASCII format by using the commands EditTools.OpenAscii and EditTools.StoreAscii. Also make sure to access the oberon.ini file in the root directory of your Oberon system and to store it back there, and not in some other current directory! It is much safer to retrieve or update the registry data directly from Oberon with the commands System.Set and System.Get which are described in Chapter 2. Finally, the IniEdit.Panel provides a graphical user interface for maintaining the configuration data. After updating, Oberon must be restarted to apply the new values.
+
+
+A.3	Oberon System 3 for Linux
+
+The registry provides the same consistent interface for programs to store configuration data as is described in the previous section. There are however a few differences:
+
+o	there is no "Directories" key in the registry section [System]. Instead, the directories to search are defined in an environment variable "OBERON".
+
+o	Oberon is started with the command oberon. The oberon.ini file is searched in the directories named in "OBERON".
+
+	A section called [SystemInfo] returns the following details:
+
+Key	Value
+
+OS	Linux / X Windows
+Processor	Intel
+
+
+A.3	MacOberon System 3 
+
+The configuration data is kept in the resource fork of the Oberon application. In principle the users do not have to edit this data themselves. Data is retrieved and updated directly from Oberon with the commands System.Set and System.Get which are described in Chapter 2. Changes are applied immediately.
+
+	A section called [SystemInfo] returns the following details:
+
+Key	Value
+
+OS	MacOS
+Processor	PowerPC (or MC680x0)
+
+
+A.4	Information which all systems have in common 
+
+Even if configuration data is stored in Oberon.Text for PC Native Oberon and in the registry for the other implementations, all these systems have a common need for a stock of information. This central information is located in the following registry sections (or in their equivalent group under PC Native Oberon):
+
+[Aliases]	list of aliases for the generator procedures
+[Documents]	list of document extensions with their associated generator
+[FinderTemplates]	list of document names to appear in a Finder
+
+The 3 former section names are prefixed "Gadgets." in Windows 95, 98 and NT.
+
+[NetSystem]	list of networking specifications
+[PictureConverters]	list of acceptable graphical information formats
+[System]	list of local system specifications
+[SystemInfo]	list of system values
+
+Two keys are of particular interest in the [System] section. They are:
+		DateFormat	and
+		TimeFormat
+which influence the representation of the TimeStamp gadget and of the text string generated by the commands Clocks.InsertDate and Clocks.InsertTime. The default values are DD.MM.YY and HH:MM:SS. The section contains further details on the format specifications in the form of comments.
+

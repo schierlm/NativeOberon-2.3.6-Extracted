@@ -1,0 +1,864 @@
+
+Chapter Six
+
+Applications and Examples
+
+
+
+
+
+6.1	Introduction
+
+In this chapter, we present:
+
+	- an application of interest to graphical user interface designers,
+	- an application for assisting software developers in their daily work,
+	- the complete source code of an application serving as yet another example,
+	- an overview of the applications delivered with the system.
+
+
+6.2	Composing Gadgets with the Layout Language LayLa
+
+LayLa is a functional layout language for constructing arbitrarily complex gadgets. The gadgets can be placed at specific x- and y-coordinates or can be arranged automatically in containers. Layouts saved as text files can be reused in new layout texts.
+	Each text describes one object. Such a description is a list enclosed in parentheses. The list type is defined by its first element, the operator. The following elements are the operator's arguments which can be lists themselves. All characters between "{" and "}" are comments. Comments may be nested.
+
+Example:
+
+	(HLIST Panel
+		(LAYOUT (SET border 8))
+				{ a border of 8 pixels in width must be left free of components }
+		(ATTR (SET Locked TRUE))
+		(NEW Button
+			(LAYOUT (SET w 50) (SET h 20))
+			(ATTR (SET Caption "Open") (SET Cmd "Desktops.OpenDoc &File.Value"))
+		)
+		(NEW TextField (ATTR (SET Name "File")))
+	)
+
+The outermost list consists of the operator "HLIST" and its arguments "Panel", "(LAYOUT ... )", "(ATTR ... )", "(NEW Button ... )" and "(NEW TextField ... )". All these arguments except for "Panel" are lists too.
+
+
+6.2.1	Simple Objects: NEW
+
+A new object is generated with the operator NEW. The first argument of NEW is a generator of the form Module.NewProcedure defining the object type. Usually the alias is used instead.
+	The subsequent arguments are: the list of layout parameters with the operator LAYOUT, the list of attributes with the operator ATTR (or ATTRIBUTES) and the list of links with the operator LINKS. Each of these operators takes as arguments assignment lists of the form (SET name val). In a list of layout parameters the parameter name is set to val, in a list of attributes, the attribute name is set to val, and in a list of links the object val is inserted as link name.
+	A simple object has the following layout parameters (the type "Size" is explained in section 6.1.1.4)
+
+name	type	description	default
+w	Size	gadget width	the width and height set in the generator
+h	Size	gadget height	or [1] for virtual objects
+
+Example:
+
+	(NEW BasicGadgets.NewButton	{ <- or    NEW Button }
+		(LAYOUT (SET w 50))				{ <- or    w=50 }
+		(ATTR (SET Caption "Guide") (SET Cmd "Desktops.OpenDoc LayLa.Guide.Text"))
+	)
+
+
+6.2.1.1	Syntactic Sugar
+
+"(SET name val)" can be written as "name=val". Also the operator LAYOUT is optional. Thus, (LAYOUT (SET name1 val1) (SET name1 val2)) can be shortened to (name1 = val1 name2 = val2).
+
+
+6.2.1.2	Virtual Objects: VIRTUAL
+
+If you don't want to build a new container for a list or a table, or if you want some blank space (e.g. an empty cell in a table), then you need virtual objects. A virtual object is generated with the generator VIRTUAL. VIRTUAL as an argument (not as a generator) stands short for (NEW VIRTUAL (LAYOUT (SET w []) (SET h []))) or also (NEW VIRTUAL (w=[] h=[])).
+
+Example:
+
+	(HLIST Panel (border=4 dist=0)
+		(NEW Button (h=[]) (ATTR Caption="One"))
+		(NEW VIRTUAL (w=10))
+		(VLIST VIRTUAL (sameSize=TRUE dist=0)
+			(NEW Button (ATTR Caption="Two"))
+			VIRTUAL
+			(NEW Button (ATTR Caption="Three"))
+		)
+	)
+
+
+6.2.1.3	Using Public Library Objects: SCOPY, DCOPY and L.O
+
+SCOPY makes a shallow copy and DCOPY a deep copy of a public object. The first argument is the object's name of the form L.O. The following arguments are, as for the operator NEW, the list of layout parameters, the list of attributes and the list of links. A public object L.O may be used also directly in an argument of a list of links.
+
+Example:
+
+	(VLIST Panel (border=10 hjustify=CENTER)
+		(NEW Icon (w=50 h=50)
+			(ATTR Caption="Diskette")
+			(LINKS Model=Icons.Diskette2)
+		)
+		(SCOPY LayLaTest.Slider (w=75 h=15))
+	)
+
+
+6.2.1.4	Size
+
+The width "w" and the height "h" of a gadget are of the type:
+
+	Size = [ ( Integer | "DEFAULT" ) ] "[" [ Integer ] "]" | Integer.
+
+When no width or no height value is specified, these values are assigned by the generator. DEFAULT may also be used instead.
+"[" [ Integer ] "]" is called the expansion factor. When it is omitted, 0 is assumed, meaning that the gadget has a fixed width or height (w=50 is the same as w=50[0]). When it is simply "[]", 1 is assumed ([] is equivalent to [1]). For a virtual object, the expansion factor is assumed to be [].
+
+Example:
+
+w=50 [3] : Here 50 is the minimal width of the gadget and 3 the expansion factor. This means that the gadget gets at least 50 pixels wide. If the gadget is located in a wider container, the gadget is expanded according to the expansion factor value. The expansion factor's function is best shown with an example:
+
+	(HLIST Panel (w=120 dist=0 vjustify=CENTER)
+		(NEW Button (w=30[]))
+		(NEW TextField (w=[2]))
+	)
+
+Since "Button" has the expansion factor 1 and "TextField" has the expansion factor 2, "TextField" gets twice as wide as "Button" and both expand to occupy the full width of 120 pixels in a 1 to 2 ratio.
+
+	(HLIST Panel (w=120 dist=0 vjustify=CENTER)
+		(NEW Button (w=50[]))
+		(NEW TextField (w=[2]))
+	)
+
+If "TextField" was twice as wide as "Button" here, "Button" would become smaller than its minimal size. However, "Button" is at least 50 pixels wide, and "TextField" gets only the remaining 70 pixels. "Button" starts to grow only when "Panel" is more than 150 pixels wide (and the size of "TextField" is twice the size of "Button").
+	The expansion factor of a row or of a column in a container (see below) is the largest expansion factor of all the gadgets in that row or respectively column. The expansion factor in a row is zero, if any gadget inside the row has a fixed width. The expansion factor in a column is zero, if any gadget inside the column has a fixed height.
+
+
+6.2.2	Containers
+
+The operators HLIST, VLIST, TABLE and PLACE generate containers. Each of these operators defines a particular way of inserting the components. As with simple objects, the first argument is the generator, followed by the list of layout parameters, the list of attributes and the list of links. The description of the components, which may be simple objects or containers, terminates the argument list.
+	The default width and height of a container are as big as the bounding box of its components plus the border defined by the container's layout parameters:
+
+name	type	description	default
+hborder	Integer	left and right border size	0
+vborder	Integer	top and bottom border size	0
+border	Integer	border size	0
+
+
+6.2.2.1	Lists: VLIST and HLIST
+
+VLIST inserts components in a vertical list and HLIST inserts components in a horizontal list. Besides the vborder, hborder and border parameters introduced above, these operators accept further layout parameters:
+
+name	type	description	default
+hdist	Integer	horizontal distance between components	5
+		ignored in VLIST
+vdist	Integer	vertical distance between components	5
+		ignored in HLIST
+dist	Integer	common value for hdist and vdist	5
+sameWidth	Boolean	TRUE: all components are made as wide as the widest	FALSE
+sameHeight	Boolean	TRUE: all components are made as high as the highest	FALSE
+sameSize	Boolean	common value for sameWidth and sameHeight	FALSE
+hgrid	STATIC	STATIC: all columns are made as wide as the widest	DYNAMIC
+	DYNAMIC	(not the components themselves)
+vgrid	see hgrid	STATIC: all rows are made as high as the highest	DYNAMIC
+grid	see hgrid	common value for hgrid and vgrid	DYNAMIC
+hjustify	LEFT	the components are placed at the left	LEFT
+	RIGHT	at the right
+	CENTER	in the middle (horizontal placement)
+vjustify	TOP	the components are placed at the top	BOTTOM
+	BOTTOM	at the bottom
+	CENTER	in the middle (vertical placement)
+
+The hjustify and vjustify parameter values assigned to a container can be overridden locally by a component with:
+
+name	type	description	default
+hjustifyMe	= hjustify	overrides the hjustify of this gadget's container	hjustify
+vjustifyMe	= vjustify	overrides the vjustify of this gadget's container	vjustify
+
+Example:
+
+	(HLIST Panel (border=5 vjustify=TOP hgrid=STATIC)
+		(NEW Button)
+		(NEW List)
+		(NEW Button (vjustifyMe=CENTER hjustifyMe=CENTER))
+		(NEW TextGadget)
+		(NEW Button)
+	)
+
+
+
+6.2.2.2	Tables: TABLE
+
+TABLE inserts components row-wise in a horizontally oriented table (HOR), and column-wise in a vertically oriented table (VER). The number of rows in a horizontally oriented table is determined by counting the components to align in each row (cols). Equally, the number of columns in a vertically oriented table is determined automatically. The layout parameters of VLIST and HLIST also apply to TABLE and are extended by:
+
+name	type	description	default
+orientation	HOR	horizontally oriented table	HOR
+	VERT	vertically oriented table
+cols	Integer	number of columns (ignored in VERT table)	1
+rows	Integer	number of rows (ignored in HOR table)	1
+
+
+6.2.2.3	Breaking the Formatting of Tables: SPAN und BREAK
+
+The formatting of tables can be broken with SPAN and BREAK. (SPAN rows cols Object) reserves rows rows and cols columns for the object Object.
+	If the components are inserted row-wise, (BREAK Object) replaces the distance to the following row with the single object Object. The next component of the table appears at the beginning of the next line. In a vertically oriented table, BREAK replaces the distance to the next column with the single object Object. If the table is empty except for a BREAK, the container is made empty. SPAN and BREAK can also be used in lists generated with the operators VLIST and HLIST.
+
+Example:
+
+	(TABLE Panel (border=8 cols=3)
+		(ATTR Locked=TRUE)
+		(BREAK (HLIST Panel (border=8) (NEW Caption (ATTR Value="Break 1"))))
+		(NEW Button (ATTR Caption = "1"))
+		(SPAN 2 1 (NEW Button (w=[1] h=[1]) (ATTR Caption = "2")))
+		(NEW Button (ATTR Caption = "3"))
+		(NEW Button (ATTR Caption = "4"))
+		(NEW Button (ATTR Caption = "5"))
+		(NEW Button (ATTR Caption = "6"))
+		VIRTUAL
+		(NEW Button (ATTR Caption = "7"))
+		(BREAK (HLIST Panel (h=44 w=[1] border=8)
+			(NEW Caption (vjustifyMe=CENTER) (ATTR Value="Break 2"))
+			(NEW Button (hjustifyMe=RIGHT) (ATTR Caption="hello"))
+		))	
+		(NEW Button (ATTR Caption = "8"))	
+		(NEW Button (ATTR Caption = "9"))
+		(BREAK (HLIST Panel (border=8) (NEW Caption (ATTR Value="Break 3"))))	
+	)))
+
+which results in:	
+
+
+6.2.2.4	Placing the Components by Hand: PLACE
+
+Experience has shown that ordering components in horizontal or vertical lists or in tables covers all practical needs required for designing containers. However, in very special cases, components can be placed "by hand" in a container using the PLACE operator, though such non-regular ordering is not recommended. The position at which PLACE inserts a component in a container is defined by a vector specified in the component itself. The vector's origin is the lower left corner of the container. The size of the border is automatically taken into account. The position of the lower left corner of the component is specified by two further layout parameters:
+
+name	type	description	default
+x	Integer	x-coordinate	0
+y	Integer	y-coordinate	0
+
+Example:
+
+	(PLACE Panel
+		( border = 5 )	{ without syntactic sugar: (LAYOUT (SET border 5)) }
+		(ATTR Locked=TRUE)	{ (ATTRIBUTES (SET Locked TRUE)) }
+		(NEW List (y=30 w=70 h=100))
+		(NEW Button (x=80 y=80 (SET w 60) h=20) (ATTR Caption="Press Me"))
+	)
+
+
+6.2.3	Configurations: CONFIG
+
+CONFIG defines values and objects which can be used repeatedly inside a LayLa description. For example, you can define an Integer object and use it in two gadgets as a shared model in LINKS lists.
+	The last argument of the CONFIG operator is the object to construct; all the other arguments are definitions of the form (DEF name value), where value is optional. name can be used in subsequent definitions and also in the object to construct. For example, if value is an object and name is used twice, the same object is inserted twice. This can cause serious problems and should be done in LINKS lists only!
+	If value is an object, (NEW name) makes a deep copy of value. In this context, no  list of layout parameters, list of attributes or list of  links may appear. However, if value is a configuration, its definition can be modified by means of a parameter list starting with the operator PARAMS. This parameter list is an additional argument of the operator NEW. The operator PARAMS, like LAYOUT,  is optional.
+
+Example:
+
+	(CONFIG
+		(DEF IntGadget	{ The value of IntGadget is a configuration }
+				(CONFIG
+					(DEF Int (NEW Integer (ATTR Value=25)))	{ The value of Int is an object }
+					(VLIST VIRTUAL (dist=0)
+						(NEW Slider (w=100 h=20) (LINKS Model=Int))
+						(NEW TextField (w=100 h=20) (LINKS Model=Int))
+					)
+				)
+		)
+		(HLIST Panel (border=10 dist=10)
+			(NEW IntGadget)
+			(NEW IntGadget (PARAMS Int = (NEW Integer (ATTR Value=75))))
+		)
+	)
+
+
+6.2.4	Reusing Layouts: INCLUDE
+
+INCLUDE reads the file whose name is given as the first argument and inserts it in the text. If the object in this file is a configuration, parameters can be passed to it as a second argument.
+
+Example:
+
+	(CONFIG
+		(DEF int1 (NEW Integer (ATTR Value=75)))
+		(HLIST Panel (border=8)
+			(VLIST VIRTUAL (border=4)
+				(NEW Slider (w=100 h=20) (LINKS Model=int1))
+				(NEW TextField (w=100 h=20) (LINKS Model=int1)))
+			(INCLUDE LayLa.Include.Config (PARAMS (SET int int1) (SET MyBorder 4)))
+			(INCLUDE LayLa.Include.Config (MyBorder=4))
+		)
+	)
+
+
+6.2.5	LayLa tool
+
+The LayLa tool interprets a description text written in the LayLa language, glues gadgets together and inserts these gadgets in the display space or in a public library. The interpreter is written in basic Oberon, without the need for defining new object extensions requiring new messages and handlers.
+
+The LayLa.Insert command inserts a gadget at the caret. The gadget is constructed according to the description supplied.
+
+LayLa.Insert ^
+reads the description starting at the most recent selection.
+
+LayLa.Insert *
+reads the description from marked text.
+
+LayLa.Insert @ fileName
+reads the description from the named file.
+
+LayLa.Insert descriptionText
+reads the description which follows the command.
+
+In the same fashion:
+
+LayLa.OpenAsDoc ^
+LayLa.OpenAsDoc *
+LayLa.OpenAsDoc @ fileName
+LayLa.OpenAsDoc descriptionText
+reads the description and places the new gadget in an unnamed PanelDoc, even if the top-most container is VIRTUAL.
+
+LayLa.AddToLibrary L.O ^
+LayLa.AddToLibrary L.O *
+LayLa.AddToLibrary L.O @ fileName
+LayLa.AddToLibrary L.O descriptionText
+reads the description and inserts it into the library L under the name O. If an object with that name already exists, it is replaced. The object's Name attribute is assigned the value O. If the top-most container is VIRTUAL, only the first gadget is inserted.
+
+Most Panel documents delivered with this release have been constructed using the LayLa tool.
+
+
+6.2.6	LayLa Description Debugging
+
+The LayLa parser issues an error message in the Oberon log when it detects an error. Here is an example:
+
+		pos 179  err SET operator expected
+
+Very much like for an Oberon compiler error, the log line starting with pos indicates an error at approximately that character position in the description, followed by an error indication. To set the caret at that position, mark the description text, select the entire error line and use the [Locate] button in the log menu bar.
+	The parser's function is to detect syntactical errors only. It does not recognize all semantical errors.
+
+
+6.2.7	Customized Menu Bar Example
+
+Customized menu bars may be created for the various document classes provided with the system (refer to Chapter 3). The following LayLa description text mimics the default menu bars. Use the LayLa.AddToLibrary command to store your own creations in the ad-hoc public libraries under the correct names.
+
+LayLa.AddToLibrary TextDocs.SystemMenu ^
+LayLa.Insert ^
+
+(CONFIG
+	(DEF BW 39)	{ Button width }
+	(DEF BH 18)	{ Button height }
+	(DEF BW2 80)	{ Button width in Panel }
+	(DEF Popup
+		(NEW Iconizer (w=BW h=16)
+			(ATTR Popup=TRUE Pin=FALSE)
+			(LINKS
+				Closed=(HLIST Panel (w=BW h=16 hjustify=CENTER)
+						(NEW Caption (ATTR Value="Menu")))
+				Open=(NEW TextNote)								{ later replaced by a Panel }
+			)
+		)
+	)
+	(HLIST Panel (border=0 dist=0 w=384 h=21 vjustify=CENTER) (ATTR Border=0)
+		(NEW NamePlate (w=110 h=20))
+		(NEW Button (w=BW h=BH) (ATTR Caption="Close" Cmd="Desktops.CloseDoc"))
+		(NEW Button (w=BW h=BH) (ATTR Caption="Hide" Cmd="Finder.Minimize"))
+		(NEW Button (w=BW h=BH) (ATTR Caption="Grow" Cmd="Desktops.Grow"))
+		(NEW DigitalClock (w=BW h=BH))
+		(NEW Popup)
+	)
+)
+
+This menu bar features three classical Buttons, a DigitalClock and a pop-up menu implemented in an Iconizer (refer to the description in Chapter 4). It is not possible to further define the menu text under LayLa. To proceed with the implementation of the TextNote one has to use the Libraries.Panel and Columbus.
+
+1 - Select the (CONFIG line
+2 - Execute the LayLa command to add the defined object to the ad hoc library
+3 - Open the Libraries.Panel
+4 - Display the Directory of libraries in Memory
+5 - MM click on the library name (in the example TextDocs)
+6 - MM click on the object name (in the example SystemMenu)
+7 - MM click on "Reference"
+8 - Set the caret at any convenient place and retrieve the object
+9 - Edit the pop-up menu with Columbus
+10 - Store the library
+
+The new customized menu bar is ready for use.
+	To get around the difficulty of finalizing the text in the TextNote (or TextGadget) one can choose to place a Panel on the "Open" side with the advantage that the construction can be finalized with the help of LayLa.
+
+				Open=(VLIST Panel (w=84 hjustify=CENTER vjustify=TOP vdist=1 border=1)
+							(ATTR Locked=TRUE)
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="SearchDiff ^^" Cmd="TextDocs.SearchDiff \w"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="RecallText" Cmd="TextDocs.Recall"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="RecallDoc" Cmd="Desktops.Recall"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="Columbus" Cmd="Columbus.Inspect ~"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="Count *" Cmd="EditTools.Words *"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="Controls *" Cmd="TextDocs.Controls *"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="DeleteObjs *" Cmd="EditTools.RemoveObjects *"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="OpenMod ^" Cmd="TextDocs.Show ^"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="OpenUnix ^" Cmd="EditTools.OpenUnix ^"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="OpenAscii ^" Cmd="EditTools.OpenAscii ^"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="StoreUnix" Cmd="EditTools.StoreUnix"))
+					(NEW Button (w=BW2 h=BH)
+							(ATTR Caption="StoreAscii" Cmd="EditTools.StoreAscii"))
+				)
+
+Since the entire menu bar is based on a Panel, one can infer that it is quite feasible to reshape the conventional menu bars provided to one's wildest compositions whilst limited by one's own imagination.
+
+
+6.3	The TextPopups tool
+
+The module TextPopups uses the ListGadget, linked to a ListModel, to display a simple popup menu of Oberon commands, document names, procedure names and type names in TextDocs. This facility is particularly interesting for Oberon software developers: it allows rapid access to text pieces of interest in a source text. The popup menu is controlled by a menu description stored in the TextPopups.Text file which may be edited and customized at will. When a new system is installed, this file contains the following text:
+
+	[Mod]
+	Compiler.Compile *
+	Compiler.Compile *\f
+	Compiler.Compile *\s
+	Analyzer.Analyze *
+	--------------------
+	<5 Recent Files>
+	--------------------
+	<Procedures>
+
+	[Text]
+	TextDocs.SearchDiff \w
+	--------------------
+	<5 Recent Files>
+
+	[Tool]
+	<5 Recent Files>
+
+The text is divided into sections identified by the suffix of the document names to which the specifications must apply. The previous text contains three sections. A section may contain the following optional elements:
+
+	- an enumeration of Oberon commands
+	- <i any text> where i is an integer specifying a number of file names
+		The "Recent Files" used above is nothing more than a user hint.
+	- <Procedures>
+	- <Types>
+	- a separation line "-------------"
+
+The menu pops up when the MM key is pressed, but only if the mouse focus is positioned outside of text or positioned on a space, a carriage return or a tab. The mouse focus is then automatically positioned approximately in the menu middle. The menu items are made of Oberon commands, the names of the i last document names recently opened (the most recent appears on top), procedure names alphabetically ordered and type names also ordered. Dragging on the MM key places the focus on other menu items which are underlined. When the key is released, if the focus is on a:
+
+	- command: the command is executed
+	- file name: the corresponding document is opened
+	- procedure name: the text is re-positioned to make the name visible
+	- type name: the text is re-positioned to make the name visible.
+
+Commands defined in TextPopups.Mod
+
+TextPopups.Install
+activates the facility. It is convenient to add this command on a line in the Configuration.Text file (or in the System.InitCommands section of the PC Native Oberon Oberon.Text file).
+
+TextPopups.Remove
+removes the facility without unloading the module.
+
+
+6.4	The ColorSystem tool
+
+
+	
+Figure 6.1	The ColorSystem
+
+The ColorSystem tool is provided for editing the color palette, for saving a palette to a palette file and for loading a palette from a file. You edit the current color palette from the ColorSystem.Panel. The tool uses the RGB method for defining the colors that appear on the computer monitor. For that purpose, it calls the central procedures Display.GetColor and Display.SetColor exported by the Display module. A number of colors are preset and cannot be modified. This number varies with the platform. When Oberon is started, the palette is set by loading the Default.Pal file.
+
+MODULE ColorSystem (*JM/ JG 10.8.94/JM 27.4.95*);
+
+IMPORT Desktops, Display, Display3, Documents, Effects, Files, Gadgets,
+  Input, Oberon, Objects, Out, Printer, Printer3, Strings, Texts;
+
+TYPE
+  Color* = POINTER TO ColorDesc;
+  ColorDesc* = RECORD (Gadgets.ObjDesc)
+    col*: INTEGER
+  END;
+
+  Frame* = POINTER TO FrameDesc;
+  FrameDesc* = RECORD (Gadgets.FrameDesc)
+    col*: INTEGER;
+  END;
+
+VAR NC, SC: INTEGER;
+
+PROCEDURE HandleObj* (obj: Objects.Object; VAR M: Objects.ObjMsg);
+  VAR obj1: Color; red, green, blue: INTEGER;
+BEGIN
+  WITH obj: Color DO
+    IF M IS Objects.AttrMsg THEN
+      WITH M: Objects.AttrMsg DO
+        IF M.id = Objects.get THEN
+          IF M.name = "Gen" THEN
+            M.class := Objects.String; COPY("ColorSystem.NewObj", M.s); M.res := 0
+          ELSIF M.name = "col" THEN M.class := Objects.Int; M.i := obj.col; M.res := 0
+          ELSIF M.name = "red" THEN Display.GetColor(obj.col, red, green, blue);
+            M.class := Objects.Int; M.i := red; M.res := 0
+          ELSIF M.name = "green" THEN Display.GetColor(obj.col, red, green, blue);
+            M.class := Objects.Int; M.i := green; M.res := 0
+          ELSIF M.name = "blue" THEN Display.GetColor(obj.col, red, green, blue);
+            M.class := Objects.Int; M.i := blue; M.res := 0
+          ELSE Gadgets.objecthandle(obj, M)
+          END
+        ELSIF M.id = Objects.set THEN
+          IF M.name = "col" THEN obj.col := SHORT(M.i); M.res := 0
+          ELSIF M.name = "red" THEN Display.GetColor(obj.col, red, green, blue);
+            IF M.class = Objects.String THEN Strings.StrToInt(M.s, M.i) END;
+            Display.GetColor(obj.col, red, green, blue);
+            Display.SetColor(obj.col, SHORT(M.i), green, blue); M.res := 0
+          ELSIF M.name = "green" THEN Display.GetColor(obj.col, red, green, blue);
+            IF M.class = Objects.String THEN Strings.StrToInt(M.s, M.i) END;
+            Display.GetColor(obj.col, red, green, blue);
+            Display.SetColor(obj.col, red, SHORT(M.i), blue); M.res := 0
+          ELSIF M.name = "blue" THEN Display.GetColor(obj.col, red, green, blue);
+            IF M.class = Objects.String THEN Strings.StrToInt(M.s, M.i) END;
+            Display.GetColor(obj.col, red, green, blue);
+            Display.SetColor(obj.col, red, green, SHORT(M.i)); M.res := 0
+          ELSE Gadgets.objecthandle(obj, M)
+          END
+        ELSIF M.id = Objects.enum THEN
+          M.Enum("col"); M.Enum("red"); M.Enum("green"); M.Enum("blue");
+          Gadgets.objecthandle(obj, M)
+        END
+      END
+    ELSIF M IS Objects.CopyMsg THEN
+      WITH M: Objects.CopyMsg DO
+        IF M.stamp = obj.stamp THEN M.obj := obj.dlink	(* copy msg arrives again *)
+        ELSE (* first time copy message arrives *)
+          NEW(obj1); obj.stamp := M.stamp; obj.dlink := obj1;
+          obj1.handle := obj.handle; obj1.col := obj.col;
+          M.obj := obj1
+        END
+      END
+    ELSE Gadgets.objecthandle(obj, M)
+    END
+  END
+END HandleObj;
+
+PROCEDURE NewObj*;
+VAR obj: Color;
+BEGIN
+  NEW(obj); obj.handle := HandleObj; obj.col := Display.FG; Objects.NewObj := obj
+END NewObj;
+
+PROCEDURE LoadColors*;
+  VAR obj: Objects.Object; M: Objects.AttrMsg;
+    T: Texts.Text; S: Texts.Scanner;
+    f: Files.File; R: Files.Rider;
+    beg, end, time: LONGINT;
+    col: INTEGER; red, green, blue: CHAR;
+BEGIN
+  M.id := Objects.get; M.name := "Value";
+  obj := Gadgets.FindObj(Gadgets.context, "PalName");
+  obj.handle(obj, M);
+  IF (M.id # Objects.String) OR (M.s[0] = 0X) THEN
+    Oberon.GetSelection(T, beg, end, time);
+    IF time >= 0 THEN
+      Texts.OpenScanner(S, T, beg); Texts.Scan(S); COPY(S.s, M.s)
+    END
+  END;
+  f := Files.Old(M.s); Files.Set(R, f, 0);
+  IF f # NIL THEN col := 0;
+    REPEAT
+      Files.Read(R, red); Files.Read(R, green); Files.Read(R, blue);
+      Display.SetColor(col, ORD(red), ORD(green), ORD(blue));
+      INC(col)
+    UNTIL col = NC
+  END
+END LoadColors;
+
+PROCEDURE StoreColors*;
+  VAR obj: Objects.Object; M: Objects.AttrMsg;
+    T: Texts.Text; S: Texts.Scanner;
+    f: Files.File; R: Files.Rider;
+    beg, end, time: LONGINT;
+    col: INTEGER; red, green, blue: INTEGER;
+BEGIN
+  M.id := Objects.get; M.name := "Value";
+  obj := Gadgets.FindObj(Gadgets.context, "PalName");
+  obj.handle(obj, M);
+  IF (M.class # Objects.String) OR (M.s[0] = 0X) THEN
+    Oberon.GetSelection(T, beg, end, time);
+    IF time >= 0 THEN
+      Texts.OpenScanner(S, T, beg); Texts.Scan(S); COPY(S.s, M.s)
+    END
+  END;
+  IF M.s # "" THEN
+    Out.String("ColorSystem.StoreColors ");
+    f := Files.New(M.s); Files.Set(R, f, 0);
+    IF f # NIL THEN col := 0;
+      REPEAT
+        Display.GetColor(col, red, green, blue);
+        Files.Write(R, CHR(red));
+        Files.Write(R, CHR(green));
+        Files.Write(R, CHR(blue));
+        INC(col)
+      UNTIL col = NC
+    END;
+    Files.Register(f);
+    Out.String(M.s); Out.Ln
+  END
+END StoreColors;
+
+PROCEDURE HandleAttributes (F: Frame; VAR M: Objects.AttrMsg);
+BEGIN
+  IF M.id = Objects.get THEN
+    IF M.name = "Gen" THEN
+      M.class := Objects.String; COPY("ColorSystem.NewFrame", M.s); M.res := 0
+    ELSIF M.name = "Color" THEN
+      M.class := Objects.Int; M.i := F.col; M.res := 0
+    ELSE Gadgets.framehandle(F, M)
+    END
+  ELSIF M.id = Objects.set THEN
+    IF M.name = "Color" THEN
+      IF M.class = Objects.Int THEN
+        F.col := SHORT(M.i); M.res := 0
+      END
+    ELSE Gadgets.framehandle(F, M);
+    END
+  ELSIF M.id = Objects.enum THEN
+    M.Enum("Color"); M.Enum("Cmd"); Gadgets.framehandle(F, M)
+  END
+END HandleAttributes;
+
+PROCEDURE Restore (F: Frame; Q: Display3.Mask; x, y, w, h: INTEGER);
+  VAR model: Color; col, i, j, xcur, ycur, wfld, hfld, wmarg, hmarg: INTEGER;
+BEGIN
+  model := F.obj(Color);
+  Display3.ReplConst(Q, F.col, x, y, w, h, Display.replace);
+  wfld := (w - (SC + 1)*2) DIV SC; wmarg := (w - SC*(wfld + 2) - 2) DIV 2;
+  hfld := (h - (SC + 1)*2) DIV SC; hmarg := (h - SC*(hfld + 2) - 2) DIV 2;
+  col := 0; j := 0; ycur := y + hmarg + 2;
+  REPEAT i := 0; xcur := x + wmarg + 2;
+    REPEAT
+      Display3.ReplConst(Q, col, xcur, ycur, wfld, hfld, Display.replace); INC(col);
+      INC(i); xcur := xcur + wfld + 2
+    UNTIL i = SC;
+    INC(j); ycur := ycur + hfld + 2
+  UNTIL j = SC;
+  i := model.col MOD SC; j := model.col DIV SC;
+  Display3.Rect(Q, Display.FG, Display.solid,
+    x + wmarg + i*(wfld + 2), y + hmarg + j*(hfld + 2), wfld + 4, hfld + 4, 2,
+    Display.invert);
+  IF Gadgets.selected IN F.state THEN
+    Display3.FillPattern(Q, Display3.white, Display3.selectpat, x, y, x, y, w, h,
+    Display.paint)
+  END
+END Restore;
+
+PROCEDURE Print (F: Frame; VAR M: Display.DisplayMsg);
+  VAR Q: Display3.Mask;
+
+  PROCEDURE P (x: INTEGER): INTEGER;
+  BEGIN RETURN SHORT(x * LONG(10000) DIV Printer.Unit)
+  END P;
+
+BEGIN
+  Gadgets.MakePrinterMask(F, M.x, M.y, M.dlink, Q);
+  Printer3.ReplConst(Q, F.col, M.x, M.y, P(F.W), P(F.H), Display.replace)
+END Print;
+
+PROCEDURE Copy* (VAR M: Objects.CopyMsg; from, to: Frame);
+BEGIN to.col := from.col; Gadgets.CopyFrame(M, from, to)
+END Copy;
+
+PROCEDURE SelectColor (F: Frame; VAR M: Oberon.InputMsg; Q: Display3.Mask;
+											x, y, w, h: INTEGER);
+  VAR model: Color; keysum: SET;
+    i, j, k, l, x0, y0, w0, h0, wfld, hfld, wmarg, hmarg, col: INTEGER;
+BEGIN
+  model := F.obj(Color);
+  wfld := (w - (SC + 1)*2) DIV SC; wmarg := (w - SC*(wfld + 2) - 2) DIV 2;
+  hfld := (h - (SC + 1)*2) DIV SC; hmarg := (h - SC*(hfld + 2) - 2) DIV 2;
+  x0 := x + wmarg; y0 := y + hmarg; w0 := wfld + 2; h0 := hfld + 2;
+  keysum := M.keys;
+  REPEAT
+    i := (M.X - x0) DIV w0; j := (M.Y - y0) DIV h0;
+    IF i < 0 THEN i := 0 ELSIF i >= SC THEN i := SC - 1 END;
+    IF j < 0 THEN j := 0 ELSIF j >= SC THEN j := SC - 1 END;
+    col := i + j*SC;
+    IF (model.col < 0) OR (col # model.col) THEN
+      Oberon.FadeCursor(Oberon.Mouse);
+      IF model.col >= 0 THEN
+        k := model.col MOD SC; l := model.col DIV SC;
+        Display3.Rect(Q, Display.FG, Display.solid, x0 + k*w0, y0 + l*h0, w0 + 2, h0 + 2,
+        2, Display.invert)
+      END;
+      Display3.Rect(Q, Display.FG, Display.solid, x0 + i*w0, y0 + j*h0, w0 + 2, h0 + 2, 2,
+      Display.invert);
+      model.col := col
+    END;
+    Oberon.DrawCursor(Oberon.Mouse, Oberon.Mouse.marker, M.X, M.Y);
+    Input.Mouse(M.keys, M.X, M.Y);
+    keysum := keysum + M.keys
+  UNTIL M.keys = {};
+  Oberon.RemoveMarks(x, y, w, h);
+  Gadgets.Update(model)
+END SelectColor;
+
+PROCEDURE HandleFrame* (F: Objects.Object; VAR M: Objects.ObjMsg);
+  VAR x, y, w, h: INTEGER; F1: Frame; Q: Display3.Mask;
+BEGIN
+  WITH F: Frame DO
+    IF M IS Display.FrameMsg THEN
+      WITH M: Display.FrameMsg DO
+        IF (M.F = NIL) OR (M.F = F) THEN (* message addressed to box *)
+          x := M.x + F.X; y := M.y + F.Y; w := F.W; h := F.H;
+          IF M IS Display.DisplayMsg THEN
+            WITH M: Display.DisplayMsg DO
+              IF M.device = Display.screen THEN
+                IF (M.id = Display.full) OR (M.F = NIL) THEN
+                  Gadgets.MakeMask(F, x, y, M.dlink, Q);
+                  Restore(F, Q, x, y, w, h)
+                ELSIF M.id = Display.area THEN
+                  Gadgets.MakeMask(F, x, y, M.dlink, Q);
+                  Display3.AdjustMask(Q, x + M.u, y + h - 1 + M.v, M.w, M.h);
+                  Restore(F, Q, x, y, w, h)
+                END
+              ELSIF M.device = Display.printer THEN Print(F, M)
+              END
+            END
+          ELSIF M IS Oberon.InputMsg THEN
+            WITH M: Oberon.InputMsg DO
+              IF (M.id = Oberon.track) & Gadgets.InActiveArea(F, M) & (M.keys # {}) THEN
+                Gadgets.MakeMask(F, x, y, M.dlink, Q);
+                Oberon.RemoveMarks(x, y, w, h);
+                SelectColor(F, M, Q, x, y, w, h);
+                M.res := 0
+              ELSE Gadgets.framehandle(F, M)
+              END
+            END
+          ELSIF M IS Oberon.ControlMsg THEN Gadgets.framehandle(F, M)
+          ELSIF M IS Display.ModifyMsg THEN Gadgets.framehandle(F, M)
+          ELSIF M IS Display.SelectMsg THEN Gadgets.framehandle(F, M)
+          ELSIF M IS Display.ConsumeMsg THEN Gadgets.framehandle(F, M)
+          ELSE Gadgets.framehandle(F, M)
+          END
+        END
+      END
+    ELSIF M IS Objects.AttrMsg THEN HandleAttributes(F, M(Objects.AttrMsg))
+    ELSIF M IS Objects.FileMsg THEN
+      WITH M: Objects.FileMsg DO Gadgets.framehandle(F, M) END
+    ELSIF M IS Objects.CopyMsg THEN
+      WITH M: Objects.CopyMsg DO
+        IF M.stamp = F.stamp THEN M.obj := F.dlink (* msg arrives again *)
+        ELSE (* first time msg arrives *)
+          NEW(F1); F.stamp := M.stamp; F.dlink := F1;
+          Copy(M, F, F1); M.obj := F1
+        END
+      END
+    ELSE Gadgets.framehandle(F, M)
+    END
+  END
+END HandleFrame;
+
+PROCEDURE NewFrame*;
+VAR F: Frame;
+BEGIN
+  NEW(F); F.W := 50; F.H := 50; F.col := Display.FG; F.handle := HandleFrame;
+  NewObj; F.obj := Objects.NewObj; Objects.NewObj := F
+END NewFrame;
+
+BEGIN
+  IF Display.Depth(0) >= 8 THEN NC := 256; SC := 16
+  ELSE NC := 16; SC := 4
+  END
+END ColorSystem.
+
+
+6.5	The Oberon System 3 Applications Collection
+
+Oberon System 3 is delivered with a collection of applications which are either already installed or, for the majority of them, contained in archives (application packages).
+
+
+6.5.1	PC Native Oberon Applications
+
+All the applications are contained in one package compressed with Compress. It suffices to install this package to install all the applications.
+
+Application name	Description
+
+ASCIITab	ASCII table gadget
+Backdrops	Wallpaper generator
+Calc	Simple calculator
+Coco	Scanner and parser generator
+CUSeeMe	CUSeeMe video receiver (requires Net)
+Diff	Text difference tool
+Dim3	3D-engine
+EditKeys	Keyboard macro utility for TextGadgets
+Find	String searcher
+FontEditor	Oberon raster font editor
+Games	A collection of games: Asteroids, Freecell, MineSweeper,
+	Scramble, Shanghai, Sokoban, Solitaire, Spider, Tetris
+Hex	Binary file editor
+Histogram	Histogram gadget (see Chapter 4)
+HPCalc	RPN calculator
+HTML	Simple text to HTML converter
+LayLa	Layout language (see section 6.1)
+LayoutPanels	LayoutPanels with formatting constraints
+LPRPrinter	Remote (LPR) printer utility (requires Net)
+Magnifier	Pixel magnifier
+PictConverters	Picture format converters
+RX	Regular expression searcher
+Snapshot	Makes snapshot of gadget, viewer, document, screen
+Sort	Line-based sorter
+Sound	Sound and CD tool (Soundblaster)
+TextPopups	Popup menu for TextDocs (see  section 6.2)
+V24Terminal	Simple V24 terminal
+WTS	V4 text to System 3 text converter
+
+
+6.5.2	Oberon System 3 for Windows Applications
+
+Application packages can be installed by executing the Installer tool command:
+					Installer.Install archivename [ Script ] ~
+		
+This command automatically processes the archive according to the specifications contained in the script file named in the parameter list. The specifications may instruct the Installer to compile the source code files, to generate definition files (.Def) and to copy application related files. A script file named Install.Script, included in each archive, is used by default. If you do not have a standard Oberon directory layout, you may specifiy your sub-directories in the registry section [Installer]. The standard setting is:
+
+		[Installer]
+		SYSTEM := C:/Oberon/System	; system files
+		OBJ := C:/Oberon/Obj	; compiled obj files 
+		SRC := C:/Oberon/Src	; source code files
+		APPS := C:/Oberon/Apps	; miscellaneous application files and packages
+		DOCU := C:/Oberon/Docu	; tutorials and other documentation files
+
+Archive file (.Arc)	Description
+
+ASCIITab	ASCII table gadget
+Backdrops	Wallpaper generator
+Calc	Simple calculator
+Coco	Scanner and parser generator
+Diff	Text difference tool
+Dim3	3D-engine
+EditKeys	Keyboard macro utility for TextGadgets
+FileUtils	A file backup tool (see section 2.7)
+Find	String searcher
+Games	A collection of games: Asteroids, Freecell, MineSweeper,
+	Scramble, Shanghai, Sokoban, Solitaire, Spider, Tetris
+Hex	Binary file editor
+Histogram	Histogram gadget (see Chapter 4)
+HPCalc	RPN calculator
+HTML	Simple text to HTML converter
+JuiceCDK	Juice Authoring Toolkit
+LayLa	Layout Language (see section 6.1)
+LayoutPanels	LayoutPanels with formatting constraints
+Leonardo	A tool for drawing illustrations
+Log	Another Out module
+LPRPrinter	Remote (LPR) printer utility
+Magnifier	Pixel magnifier
+MultiMail	Send e-mail with MIME attachments
+OldFiles	Reads Oberon files from DOS and Win32s Systems
+	(see section 2.7)
+PictConverters	Picture format converters
+Pr2Fnt	Printer fonts in 200 dpi resolution (not an application)
+Pr6Fnt	Printer fonts in 600 dpi resolution (not an application)
+PS	Picture to Postscript converter
+RX	Regular expression searcher
+Sort	Line-based sorter
+TextPopups	Popup menu for TextDocs (see section 6.2)
+V24Terminal	Simple V24 terminal
+Win.Audio	CDAudioPlayer, FileAudioPlayer, Mixer and other tools
+Win32.Backup	Ceres and PC Native Oberon Backup
+Win.CUSM	CUSeeMe video receiver
+Win.FontTools	Oberon raster font editor,
+	Converter to Windows FON resources
+Win.ODBC	ODBC Interface
+Win.Snapshot	Makes snapshot of gadget, viewer, document, screen
+WTS	V4 text to System 3 text converter
+
+
+6.5.3	Oberon System 3 for Linux and Macintosh Applications
+
+The applications are installed in the same manner as Windows applications. The applications are those listed in section 6.5.2, but a few of them are not available:
+	Dim3, FileUtils, OldFiles, V24Terminal and all the Win* applications.
+

@@ -1,0 +1,127 @@
+
+Appendix B
+
+Extended Language and Compiler for PC Native Oberon
+
+
+
+
+
+The PC Native implementation of Oberon System 3 comes with an improved and slightly extended language and compiler. In the following we enumerate and informally explain the new constructs and features. We should emphasize that the sole purpose of this language extension is an increased expressiveness and that it does not compromise the efficiency of the original language. We consider both style and implementation of the extensions as completely compatible with the "spirit" of Oberon and in particular with the principle of "making it as simple as possible but not simpler".
+
+
+B.1	Methods and initializers within record scopes
+
+Traditionally in the Pascal line, record scopes are poorly used. In the course of a current project (called Active Oberon) with the goal of unifying objects and processes we upgrade record scopes by the following optional ingredients:
+
+		(a) a body,
+		(b) procedure declarations and
+		(c) an initializer.
+
+	The body is used to specify the intrinsic behavior of objects of this type and it typically runs as a separate thread. Type-local procedures support the protected access to objects of this type in a multi-process environment (using built-in exclusive or shared locks) and the initializer guarantees atomic creation and initialization of instances.
+	Syntactically, record types have thereby been brought into closer line with modules, where the VAR keyword and the repeated name after the END keyword are optional. One of the procedure declarations within a record scope can be distinguished as initializer by adding a "&"-mark after the keyword PROCEDURE. Any corresponding NEW statement must then supply the initializer's actual parameters immediately after the traditional pointer parameter.
+	In a single-process environment like Oberon System 3 there is no direct use of record bodies. However, type-local procedures and the initializer concept still make perfect sense. Type-local procedures can beneficially be used as methods, because the ordinary object-oriented rules for inheritance and covering apply. The actual benefits in comparison with the original Oberon language are that (a) neither a "self"-parameter nor any qualification for the access of type-local data is needed and that (b) methods are type-centered rather than instance-centered.
+
+Example:
+
+		TYPE
+		  RP = POINTER TO R;
+		  R = RECORD
+		    VAR a, b: INTEGER;
+		    PROCEDURE P (i: INTEGER): BOOLEAN;
+		    BEGIN RETURN i <= a + b
+		    END P;
+		    PROCEDURE& Q (a0, b0: INTEGER);
+		    BEGIN a := a0; b := b0
+		    END Q;
+		  END R;
+
+		VAR r: RP; a0, b0: INTEGER;
+
+		NEW(r, a0, b0)
+
+
+B.2	Dynamic Arrays
+
+Unless they appear as open procedure parameters, arrays in Oberon need a specified size at compile time. In our extended language, we allow two kinds of dynamic arrays.
+	The first kind still requires an explicit size specification in the declaration that, however, may now be a variable expression. Because the value of this expression must be well-defined at scope activation time, this kind of dynamic array is applicable within local scopes only.
+	For the second kind of dynamic array no explicit size specification is needed at declaration time. Syntactically,  the size expression is replaced by a "*". However, before using such an array it has to be created explicitly by a NEW statement that specifies the size in the form of an expression. For both kinds of dynamic array an arbitrary dimensionality is possible.
+
+Syntax:
+
+Type	=  ARRAY [ Interval { "," Interval } ] OF Type.
+Interval	=  Expr | "*".
+
+Example:
+
+		TYPE A = ARRAY * OF REAL;
+		VAR a: A;
+		.. NEW(a, 100); ...
+
+		TYPE B = ARRAY *, * OF REAL;
+		VAR i: INTEGER; b: B;
+		.. NEW(b, i, i+1); ...
+
+		TYPE C = ARRAY * OF ARRAY * OF REAL;
+		VAR i, j: INTEGER; c: C;
+		.. NEW(c, i+1); ...; NEW(c[i-1], j); ...
+
+		PROCEDURE P (n, i: INTEGER);
+		  VAR a: ARRAY n+1 OF REAL;
+		BEGIN ...
+		END P;
+
+
+B.3	Abstract Operators
+
+Oberon supports the definition of abstract data types but lacks a corresponding support for the definition of abstract infix operators. This is unfortunate, because the ordinary procedural notation is clumsy in combination with nesting. Therefore, we allow the overloading of operators by redefinition. Syntactically, a redefinition is identical to a procedure declaration, where the procedure name is replaced by the operator symbol, for example by "*". It should be noted that the identification of operators in the context of an expression is done at compile time, that is, it does not depend on the dynamic types of the operands. The identification algorithm is: (a) identify all matching declarations, i.e. declarations whose formal parameter types are (direct or indirect) base types of the corresponding actual parameter types and (b) select the matching operator that lexicographically minimizes the "type-distance vector", where the components of this vector are the level differences of actual type and corresponding formal type from left to right. Typically, Oberon does not allow structured types for function return values. In the interest of nestable abstract operators, this restriction is removed in our extended compiler. 
+
+Syntax:
+
+ProcDecl	=  PROCEDURE {ProcTags} (IdentDef | '"'OpDef'"' ["*"])
+		[FormalPars] ";" Scope (ident | '"'OpDef'"').
+OpDef	=  Relation | AddOp | MulOp | "~".
+Relation	=  "=" | "#" | "<" | "<=" | ">" | ">=" | IN.
+AddOp	=  "+" | "-" | OR.
+MulOp	=  " * " | "/" | DIV | MOD | "&".
+
+Example:
+
+		TYPE
+		  A = RECORD ... END;
+		  B = RECORD ... END;
+		  A1 = RECORD (A) ... END;
+		  B1 = RECORD (B) ... END;
+
+		PROCEDURE "*" (a: A; b: B): A;
+		BEGIN ... (* implementation 1 *)
+		END "*";
+
+		PROCEDURE "*" (a: A1; b: B): B1;
+		BEGIN ... (* implementation 2 *)
+		END "*";
+
+		PROCEDURE "*" (a: A1; b: B1): B;
+		BEGIN ... (* implementation 3 *)
+		END "*";
+
+		VAR a: A; b: B; a1: A1; b1: B1;
+
+		a*b identifies implementation 1
+		a1*b identifies implementation 2
+		a*b1 identifies implementation 1
+		a1*b1 identifies implementation 3
+		(a*b)*b identifies  implementation 1 twice
+		a1*(a1*b1) identifies implementations 3 and 2
+
+
+B.4	Additional Compiler Features
+
+1. The Native Oberon compiler has been improved, so that "forward"-declarations are no longer needed. They are, however, still accepted for compatibility reasons.
+
+2. If types RP and R are connected by the pair of declarations (DD), then RP is now consistently regarded by the compiler as a representative of R in type tests and type guards. This allows types of pointer-based records to be kept anonymous and (DD) to be replaced by a single declaration (D).
+
+		(DD)	TYPE RP = POINTER TO R; R = RECORD ... END;
+		(D)	  TYPE RP = POINTER TO RECORD ... END;
+
+3. The language extension described above is a functional superset of Oberon-2. However, in the interest of compatibility with existing Oberon-2 programs, the PC Native Oberon compiler accepts Oberon-2 constructs under the option "\2".

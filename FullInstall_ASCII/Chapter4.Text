@@ -1,0 +1,2376 @@
+
+Chapter Four
+
+The Standard Gadgets Reference
+
+
+
+
+
+
+4.1	Introduction
+
+In an extensible system, new components are continually being added to the system. It is thus possible to give a snapshot only of the components supplied with the Oberon System 3 Release 2.2 described here. This chapter lists the most often used gadgets included in the Oberon distribution. A few of them are superseded by better ones.
+	The gadget descriptions are ordered alphabetically by name. The generator and alias for each gadget are listed, followed by a description of the gadget's function and attributes. The attributes, with the exception of the Name attribute (every gadget has one), are presented in the order in which they appear, when inspected with Columbus (refer to Chapter 3). The initial (or default) value assigned to each attribute after instantiation with a Gadgets.Insert ViewGenerator [ModelGenerator] ~ or Gadgets.Link ModelGenerator ~ command is specified after the attribute type between square brackets [ ]. "[ ]" represents the empty string and "[?]" means that the value is determined by the context. When a gadget is instantiated its Name attribute contains the empty string. Remember also, that every visual gadget can be linked to a model gadget, though this may not be meaningful for several of them. The existence of such a link can be revealed with Columbus and by determining whether the Model link contains a Reference or not. The Model link is however not documented since it is omnipresent. In addition, a few visual gadgets may be linked to additional gadgets in the same fashion. Such links are explicitely documented. Where relevant, commands related to the gadget are listed at the end.
+	With a few exceptions, all these visual and model gadgets can easily be instantiated using the Gadgets.Panel.
+	Whenever the registry is mentioned, remember to refer to the Appendix A to find out how to tailor your system profile to your personal requirements.
+
+
+
+Figure 4.1	Visual gadgets overview
+
+	Boolean
+
+
+
+
+Classification	Model gadget
+Generator	BasicGadgets.NewBoolean
+Alias	Boolean
+
+Function
+
+A Boolean is a model gadget that stores a BOOLEAN value. Booleans function as models of Button and CheckBox gadgets.
+
+Attributes
+
+Value
+Boolean [FALSE] value.
+
+
+	Button
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	BasicGadgets.NewButton
+Alias	Button
+
+Function
+
+A push-button with a 3D-effect and a user-definable caption. Buttons are pushed with the MM key. This toggles them from off (pushed out) to on (pushed in) and vice-versa. Additionally, the Popout attribute indicates if the Button should pop out immediately after being pressed. This attribute is typically set when the Button activates a command. A Button may be linked to a Boolean or to an Integer model gadget. Several Buttons and CheckBoxes can be linked to the same Integer model gadget. They then act as radio buttons: only Buttons with a SetVal attribute value matching that of the Integer model are switched on. Normally, one and only one radio button in a set is "on".
+
+Attributes
+
+Caption
+String [Button] with the text to appear on the Button. When this attribute is set to the empty string, a visual gadget may be dropped once inside the Button. The consumed gadget then becomes the Button's linked Look gadget. Normally, it will be a RembrandtFrame with a Picture model gadget. Selecting a Button so captioned and issuing the command BasicGadgets.Break reverses the operation (see below). The Caption string can still be changed after the Button has consumed a gadget: the string takes precedence and masks the gadget.
+
+Value
+Boolean [FALSE] indicating the state of the Button (off or on).
+
+Popout
+Boolean [TRUE] - TRUE indicates that the Button must immediately return to the off state after being pressed.
+
+Led
+Boolean [TRUE] - TRUE indicates that an LED must appear when the Button is pressed.
+
+LedColor
+Integer [1] specifying the color of the LED.
+
+Color
+Integer [13] specifying the color of the Button.
+
+SetVal
+Integer [0] used in conjunction with an Integer model linked to the Button. It indicates for which value of the Integer model, the Button should switch itself on.
+
+YesVal
+String [ ] that is returned by a Button only when switched on. When off, an empty string is returned, even though the attribute value is remembered. This attribute is useful in conjunction with the lookup macro "&" for specifying a command option depending on the state of the Button.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+Cmd
+String [ ] executed as a command when the gadget is toggled or pushed.
+
+Links
+
+Look
+The visual gadget which appears as caption. The visual gadget can be installed only if the Caption attribute contains the empty string by drag and drop. Using the services of Columbus, the Look gadget may be installed, changed and removed.
+
+Commands
+
+BasicGadgets.SetValues
+assigns a unique SetVal number to each of the selected Buttons and CheckBoxes. Numbering is from zero onwards in their order of selection. This command is used when creating radio buttons. The common model must be an Integer.
+
+BasicGadgets.Break
+takes the selected Button apart, removing the linked Look gadget and inserting it at the caret.
+
+
+	Calendar
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	Clocks.NewCalendar
+Alias	Calendar
+
+Function
+
+A calendar showing the current day of the week and the date.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the text. "Sunday" is always displayed in red, regardless of this value.
+
+TimeDiff
+Integer [0] that sets a time difference in hours relative to the system time. May be used to display the day of the week and the date in a different time zone.
+
+Commands
+
+Clocks.InsertDate
+inserts the current date at the caret. The date is formatted according to the specifications contained in the DateFormat key in the [System] section of the registry. If the caret is positioned inside a TextDoc, a TextField, a TextGadget or a TextNote, it is inserted as a string. If the caret is positioned inside a container such as a Panel, a PanelDoc or a desktop, it appears as the Value attribute of a Caption.
+
+Remark
+
+When the Clocks module is loaded, a background task is installed in the Oberon loop. To remove the task, remove all the visual gadgets it controls from the display space and execute a System.Free Clocks ~ command.
+
+
+	Caption
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	TextFields.NewCaption
+Alias	Caption
+
+Function
+
+A Caption is a text entity used for titles or comments in Panels and other container gadgets. A Caption may consist of multiple lines of text, but only limited editing capabilities are provided. The keyboard focus is set with an ML key click, the gadget is then framed in a thin rectangle but no caret is visible. When focused, characters typed in with the keyboard are appended to the caption text. The backspace key deletes the last character. A text stretch, including mixed fonts and colors, may be appended to the focused Caption with a copy interclick (copy to caret or copy over). The font and the color can be changed using the commands listed below. This gadget is always linked to a Text model gadget which may be replaced by another, using Columbus for instance, but which may never be deleted.
+
+Useful hint: A Caption may be typed directly in a Panel or in a desktop at the caret position. It is not necessary to insert the Caption first with Gadgets.Insert Caption ~.
+
+Attributes
+
+Value
+String [ ] appearing in the Caption. Only the first 64 characters are returned. The text may contain mixed fonts and colors. The text color is reset to black when this attribute value is manipulated with Columbus.
+
+Font
+String [Syntax10.Scn.Fnt] specifying the font of the text. The string is assigned the value "mixed" after a mixed font or mixed color text stretch was copied to the Caption.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+Underlined
+Boolean [FALSE] - TRUE indicates that the text must be underlined.
+
+Commands
+
+TextDocs.ChangeColor color-no
+applies the color specified by the parameter to the most recently selected Caption. The text color can also be changed with the ColorPicker. The color is reset to black when the gadget attributes are manipulated with Columbus.
+
+TextDocs.ChangeFont font-name
+applies the font specified by the parameter to the most recently selected Caption. The font name must be specified in full, e.g. Courier10.Scn.Fnt.
+
+
+	CDTracks
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	AudioGadgets.NewTrack
+Alias	none
+
+Function
+
+An auto-adaptive graphic with a 3D-effect for a number of numbered cells contained between a left and a right scroll button. The cells and the scroll buttons adjust themselves to fit on the available surface when the gadget is resized. If the specified number of cells cannot all fit, the scroll buttons become active (indicated by the < or > captions). Scrolling through the cells is controlled by MM key clicks on the scroll buttons. One of the cells, identified by the Value attribute, appears pressed. A cell also appears pressed when the MM key is pressed or dragged on it. This gadget is used in the CDAudio.Panel for which it was originally designed, but can be used in any other environment too.
+
+Attributes
+
+Value
+Integer [0] specifying the number of the cell that must appear pressed. This value is stored in the linked Model gadget. The value "0" means "no cell pressed".
+
+Tracks
+Integer [20] specifying the number of cells to distribute on the available surface. Cells are numbered from 1 onward. This value is stored in the linked Tracks gadget.
+
+Point
+Integer [0] that remembers the last clicked cell (read-only).
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key. In the context of the CDAudio.Panel this attribute is assigned the value "CDAudioPlayer.Play #Point".
+
+Links
+
+Tracks
+Model gadget which stores the value assigned to the Tracks attribute. In the context of the CDAudio.Panel: Reference to the Integer model named "CDTracks" containing the number of tracks of the CD loaded in the CD-ROM device.
+
+Commands
+
+AudioGadgets.InsertTrack [Model-generator [Tracks-generator]]
+inserts a CDTracks gadget at the caret, without linked model gadget, linked to a Model gadget, or linked to a Model gadget and to a Tracks model gadget.
+
+Remark
+
+The Audio application must be installed.
+
+
+	CheckBox
+
+
+							
+
+
+Classification	Visual elementary gadget
+Generator	BasicGadgets.NewCheckBox
+Alias	CheckBox
+
+Function
+
+CheckBoxes function pretty much like Buttons, except that they show a check mark when switched on. A CheckBox may be linked to a Boolean or to an Integer model gadget. Several CheckBoxes and Buttons can be linked to the same Integer model gadget. They then act as radio buttons: only CheckBoxes with a SetVal attribute value matching that of the Integer model are switched on. Usually, one and only one radio button in a set is "on". When used as radio buttons, Checkboxes show rectangular check marks instead.
+
+Attributes
+
+Value
+Boolean [FALSE] indicating the state of the CheckBox (not checked or checked).
+
+YesVal
+String [ ] that is returned by a CheckBox only when it is switched on. When off, Columbus does not show its value, even though it is set behind the scenes. This attribute is useful in conjunction with the lookup macro "&" for specifying command options depending on the state of the CheckBox.
+
+SetVal
+Integer [0] used in conjunction with an Integer model linked to the CheckBox. It indicates for which value of the Integer model, the CheckBox should check itself.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the model gadget is used by default.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+Color
+Integer [14] specifying the color of the CheckBox.
+
+Commands
+
+BasicGadgets.SetValues
+assigns a unique SetVal number to each of the selected Buttons and CheckBoxes. Numbering is from zero onwards in their order of selection. This command is used when creating radio buttons. The common model must be an Integer.
+
+
+	Circle
+
+
+		
+
+
+Classification	Visual elementary gadget, transparent
+Generator	BasicFigures.NewCircle
+Alias	Circle
+
+Function
+
+A circle with an adjustable radius. Selecting a Circle causes two control points to appear, one in the center and the other on the circumference of the Circle. Pressing the MM key on one of the control points and dragging changes the position or the radius of the Circle which takes its final shape when the key is released.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the Circle. If the Circle is filled, the color also applies to the interior. The color can also be changed with the ColorPicker.
+
+Width
+Integer [1] specifying the width in pixels of the Circle.
+
+Pattern
+Integer [0] specifying in which pattern the Circle is to be drawn. If the Circle is filled, the pattern also applies to the interior. Patterns, which are exported by the module Printer3, are numbered from 0 to 8:
+
+    0  1  2  3  4 
+    5  6  7  8 
+
+The value 0 (no pattern) and invalid values are mapped to the value 5 corresponding to a pattern named "solid".
+
+Closed
+Boolean [FALSE] - not interpreted.
+
+Filled
+Boolean [FALSE] - TRUE indicates that the Circle must be filled. If so, the filled part has the color specified by the Color attribute and the pattern specified by the Pattern attribute.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	Clock
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	Clocks.NewClock
+Alias	Clock
+
+Function
+
+An analogue clock with hour and minute hands, showing the current time.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the Clock.
+
+TimeDiff
+Integer [0] that sets a time difference in hours relative to the system time. May be used to display the time in a different time zone.
+
+Commands
+
+Clocks.InsertTime
+inserts the current time at the caret. The time is formatted according to the specifications contained in the TimeFormat key in the [System] section of the registry. If the caret is positioned inside a TextDoc, a TextField, a TextGadget or a TextNote, it is inserted as a string. If the caret is positioned inside a container such as a Panel, a PanelDoc or a desktop, it appears as the Value attribute of a Caption. Refer to the TimeStamp gadget for details on the time format.
+
+Remark
+
+See Calendar.
+
+
+	ColorPicker
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	ColorTools.NewColorPicker
+Alias	ColorPicker
+
+Function
+
+A ColorPicker shows the current color palette entries of the system. The colors are listed from left to right, top to bottom, from color index 0 to the number of colors available. Pressing the MM key on the ColorPicker pops up a menu from which a color can be selected. When the key is released, this color is then applied to the most recent selection, either text, gadget or group of gadgets which have a Color attribute, by virtue of the value assigned by default to the Cmd attribute (see below). The color attribute of a selected text piece can also be changed by copying the text attributes of another character, with a ML + MR key interclick. However, the typeface and the vertical offset attributes of the character chosen are also copied. The ColorPicker does a finer grain change.
+
+Attributes
+
+Colors
+String [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15] that specifies the first 16 indices shown by the ColorPicker. It defaults to the first colors 0 to 15 in the color palette.
+
+Col
+Integer [15] that remembers the last picked color.
+
+Cmd
+String [ColorTools.ChangeColor #Col ~] executed as a command when a color is picked.
+
+Commands
+
+ColorTools.ChangeColor col-no
+changes the color of the selection to the specified color. This command is both applicable to the text and gadget selections. In the case of a gadget, the Color attribute is assigned a new value.
+
+
+	ColorWell
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	ColorWells.NewColorWell
+Alias	ColorWell
+
+Function
+
+A ColorWell stores a current color value. The color value runs from 0 to the number of colors available. This gadget is typically linked to an Integer model gadget, though it may quite well be used without a model. A drag-and-drop operation allows dropping the current color onto another visual gadget having a Color attribute. In case the color of a gadget is controlled by an attribute with another name, the TargetAttr can be used.
+	Pressing the ML key on a ColorWell activates a ColorPicker with which a color can be picked directly. While dragging on the key, the color positioned under the mouse focus is highlighted. This color becomes the current color when the key is released.
+
+Attributes
+
+Color
+Integer [0] that stores the current color.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key. In order to change the color attribute of a selected text piece, one can assign the value "ColorTools.ChangeColor #Color ~" to this attribute.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+TargetAttr
+String [ ] indicating which attribute must be changed when a drag-and-drop operation is performed. The value of this gadget's Color attribute is assigned to the named attribute of the consuming gadget. For example, to change the background color of a Scrollbar, the value "BackColor" must be specified. When empty, the default name is "Color". The named attribute does not even have to control a color.
+
+Remark
+
+The Leonardo application must be installed.
+
+
+	Columbus
+
+
+	
+
+
+Classification	Visual document gadget
+Generator	Columbus.NewDoc
+Alias	Columbus
+
+Function
+
+Columbus is an extension of a PanelDoc containing a single Columbus Panel. It is opened with the commands Desktops.OpenDoc (Columbus) or Columbus.Inspect, or with the [Columbus] button in the Gadgets.Panel. It appears with a menu bar containing buttons captioned [Close], [Hide] and [Grow]. The function of the [Hide] button is explained in the Finder commands. Clicking the [  ] button in an existing Columbus Panel for inspecting another object or library re-uses the Panel and returns it to an attribute view or library view as described below, that is, no new document is opened. Refer to the detailed description in Chapter 3.
+
+Implementation restriction: Columbus cannot have attributes and it cannot be named, though the NamePlate contains "Objects.Panel". Also, it can neither be saved nor inserted at the caret with Gadgets.Insert Columbus.
+
+Commands
+
+Columbus.Inspect *
+Columbus.Inspect ~
+Columbus.Inspect L.O
+opens a Columbus Panel in the Attributes view of the target object to inspect. The latter may be the marked frame, the frame selected most recently, the name L.O of an object in a public library L or a name contained in the most recent selection. If no target is found, an empty Columbus is opened. The first version of this command using the marker (*) is of great utility to inspect a marked component in a locked container (in which the components cannot be selected). When the parameter value specifies the name of a library, a Columbus Panel in the Library view is opened.
+
+
+	Complex
+
+
+
+
+Classification	Model gadget
+Generator	Complex.New
+Alias	Complex
+
+Function
+
+Complex is a compound model gadget representing a complex number.
+
+Attributes
+
+Real
+real [0] value representing the real part of the complex number.
+
+Imag
+real [0] value representing the imaginary part of the complex number.
+
+Rho
+real [0] value representing the polar vector length of the complex number.
+
+Phi
+real [0] value representing the polar angle in radians of the complex number.
+
+
+	CurrentDirectory
+
+
+
+
+Classification	Model gadget
+Generator	Directories.NewDrv
+Alias	CurrentDirectory
+
+Function
+
+A CurrentDirectory gadget stores the current directory path the system is using. This model gadget is typically visualized by a TextField gadget.
+
+Attributes
+
+Value
+String [?] value representing the current directory path. An empty string is returned in PC Native Oberon.
+
+Commands
+
+System.ChangeDirectory path
+System.ChangeDirectory ..
+sets the current directory either to that specified by path or to the parent (..) directory.
+
+Remark
+
+When the Directories module is loaded, a background task is installed in the Oberon loop. To remove the task, remove all the gadgets it controls from the display space and execute a System.Free Directories ~ command.
+
+Example
+
+Insert a directory indicator at the caret with the command:
+
+    Gadgets.Insert TextField CurrentDirectory ~
+
+By assigning the string System.ChangeDirectory #Value to the Cmd attribute of the TextField gadget, the TextField can also be used to change the current directory. An example can be found in the System.Tool.
+
+
+	CurrentLoad
+
+
+
+
+Classification	Model gadget
+Generator	Gages.NewLoad
+Alias	CurrentLoad
+
+Function
+
+A CurrentLoad model gadget calculates the current workload of the Oberon system. The workload is estimated from the frequency at which the system obtains control in the Oberon loop. This model gadget is typically visualized by a Scope gadget.
+
+Attributes
+
+Value
+Integer [?] value representing the current workload. It has no scale.
+
+Remark
+
+When the Gages module is loaded, a background task is installed in the Oberon loop. To remove the task, remove all the gadgets it controls from the display space and execute a System.Free Gages ~ command.
+
+Example
+
+Insert a load indicator at the caret with the command:
+
+    Gadgets.Insert Scope CurrentLoad ~
+
+
+	Dag
+
+
+
+
+Classification	Model gadget
+Generator	ListDags.New
+Alias	Dag
+
+Function
+
+A Dag stores strings organized as a directed acyclic graph. The list may contain duplicates or not. This model gadget is typically used as a model by a ListGadget.
+
+Attributes
+
+Unique
+Boolean [FALSE] - TRUE indicates that no duplicate items are allowed on a level.
+
+Commands
+
+See ListGadget.
+
+
+	DigitalClock
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	Clocks.NewDigiClock
+Alias	DigitalClock
+
+Function
+
+A digital clock showing the current time in hours and minutes.
+
+Attributes
+
+Color
+Integer [0] specifying the color of the DigitalClock's text.
+
+TimeDiff
+Integer [0] that sets a time difference in hours relative to the system time. May be used to display the time in a different time zone.
+
+Commands
+
+Clocks.InsertTime
+inserts the current time at the caret. The time is formatted according to the specifications contained in the TimeFormat key in the [System] section of the registry. If the caret is positioned inside a TextDoc, a TextField, a TextGadget or a TextNote, it is inserted as a string. If the caret is positioned inside a container such as a Panel, a PanelDoc or a desktop, it appears as the Value attribute of a Caption.
+
+Remark
+
+See Calendar.
+
+
+	Directory
+
+
+
+
+Classification	Model gadget
+Generator	Directories.New
+Alias	Directory
+
+Function
+
+A Directory stores strings organized as a tree representing the structure of the computer's external storage. It is typically visualized by a DirList or a ListGadget gadget.
+
+Attributes
+
+Mask
+String [*] used as a mask for selecting the list items. The only wildcard character allowed in the mask is the "*".
+
+RootDir
+String [ ] determining the path for selecting the list items.
+
+Commands
+
+See ListGadget.
+
+Remark
+
+See CurrentDirectory.
+
+
+	DirectoryView
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Directories.NewDirList
+Alias	DirectoryView
+
+Function
+
+A DirList is designed to visualize a Directory. It features the same properties and the same attributes as a ListGadget, except that it displays fancy icons representing the external storage devices and folders. These icons are created from Picture gadgets provided in the public library Symbols.Lib.
+
+Attributes, Links and Commands
+
+See ListGadget.
+
+Remark
+
+See CurrentDirectory.
+
+
+	EventTimer
+
+
+
+
+Classification	Model gadget
+Generator	Gages.NewLap
+Alias	EventTimer
+
+Function
+
+This model gadget calculates how long the execution of commands takes, by measuring the time during which the system obtains control in the Oberon loop. Only events longer than half a second are measured.
+
+Attributes
+
+Value
+Integer [?] value measuring the elapsed time in milliseconds.
+
+Remark
+
+See CurrentLoad.
+
+Example
+
+Insert an EventTimer at the caret with the command:
+
+    Gadgets.Insert TextField EventTimer ~
+
+
+	Finder
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Finder.NewFrame
+Alias	Finder
+
+Function
+
+A Finder is used to quickly find a document among the many documents piled in a desktop and to place it on top of all others, open and ready. Moving the mouse focus to the Finder and pressing the MM key opens the Finder showing a list of document names from which one can be selected. When the MM key is released, the selected document is brought to the front of the desktop and the Finder is closed. An open document that is partially visible can also be brought to the front by a simple ML click.
+
+The Finder has three parts: the top part lists the names of the open documents (in blue), the middle part lists the minimized documents (in green) and the bottom part lists the documents contained in the [FinderTemplates] section of the registry. The names of open and minimized documents are taken from their NamePlates. The names include the full path specification and they are preceded by an ideogram representing the document type. A document having an empty NamePlate appears as "Untitled document".
+
+The names in the three parts have an order. In the list of open documents, the document placed on back of the desktop appears first, while the document placed in front appears last. The name order in the second list is determined by the system. In the last list, the names appear in the order of their appearance in the [FinderTemplates] section, which may be customized at will. Each entry in the section must appear in a text line with the following format:
+
+	Name = documentName | documentType
+
+e.g. Gadgets = Gadgets.Panel or new Text=(TextDocs.NewDoc) for an untitled TextDoc.
+
+Finally, if several desktops share the display, their respective Finders, if any, will also share the unique [FinderTemplates] section, but will display different open and minimized document name lists.
+
+In the Oberon for Windows, Linux and Mac versions, one may drop any open document from the desktop on the Finder: this document is then added to the [FinderTemplates] section and to the last part of the Finder.
+
+Commands
+
+Finder.Minimize
+minimizes the document in which the command is executed, whereby the meaning of minimizing depends on the environment. When the document is placed on a desktop, the document is removed from the desktop and its name is placed in the Finder. If no Finder can be found on the desktop, nothing happens. In the tiled viewer system, the menu bar of the document is pulled down to the very bottom of the track, leaving the rest of the document invisible. This command is used in the [Hide] button found in most menu bars.
+
+Finder.UpdateTemplates
+reads the [FinderTemplates] section of the registry again. This command is used after an update of the registry in the current session.
+
+
+	Histogram
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Histogram.NewFrame
+Alias	none
+
+Function
+
+A Histogram displays a chart of the previous values of the model gadget linked to it. The exact behavior depends on the setting of the Histogram attributes. By default, the Histogram uses the first values to determine an appropriate histogram geometry, and adapts to new values as the model gadget changes.
+
+Attributes
+
+adaptive
+Boolean [TRUE] - TRUE indicates that the Histogram operates in learning mode. FALSE indicates that the Histogram parameters are not adapted.
+
+moving
+Boolean [FALSE] - TRUE indicates that the Histogram shows a moving plot of the recent values. FALSE indicates that the Histogram will accumulate all previous observations.
+
+suspended
+Boolean - TRUE indicates that the Histogram does not accumulate new values.
+
+DoResetCounts
+Boolean [FALSE] - Used to control the Histogram. TRUE indicates that the value remains unchanged, but all Histogram counts are reset to zero.
+
+DoResetAll
+Boolean [FALSE] - Used to control the Histogram. TRUE indicates that the value remains unchanged, but all Histogram geometry parameters and counts are reset to zero.
+
+NrObs, TooSmall, TooLarge, NaNs
+Integers showing the global Histogram counts. These attributes should not be set directly. They may however be reset using DoResetCounts.
+
+Min, Max, CellWidth, nrCells
+Reals resp. integers defining the global Histogram geometry. These attributes should only be set directly when Histogram action is suspended. They may however be reset using DoResetAll. DoResetAll resets the Histogram counts.
+
+LogTransform
+Boolean [FALSE] - TRUE forces a logarithm transformation of the model values. Changing this value forces a DoResetAll.
+
+Diff
+Boolean [FALSE] - TRUE forcing to take differences of the (possibly transformed) model values. Changing this value forces a DoResetAll.
+
+Example
+
+Insert a Histogram at the caret with the command:
+
+    Gadgets.Insert Histogram.NewFrame ModelGenerator ~
+
+Insert a Histogram at the caret showing differences between subsequent values of the linked model gadget with the command:
+
+    Gadgets.Insert Histogram.NewDiffFrame ModelGenerator ~
+
+To insert a Histogram in suspended state, use the generators Histogram.NewSuspendedFrame or Histogram.NewSuspendedDiffFrame.
+
+
+	Icon
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent (superseded by Finder)
+Generator	Icons.NewIcon
+Alias	Icon
+
+Function
+
+An Icon provides a caption for the linked Model gadget it visualizes. When it is instantiated, an Icon has no model. At this stage, a visual gadget may be dropped inside it, but once only. Normally, the dropped gadget is a RembrandtFrame with a Picture model gadget. Instead of dropping a gadget into an empty Icon, the Icon attribute may be used to set the linked Model gadget to visualize. Selecting such an Icon and issuing the command Icons.Break reverses the operation (see below). An Icon created with the Icons.InsertIcon command is a "minimized" version of the original stored document. It occupies little space on a desktop and the stored document can be re-opened with a simple MM key click, by virtue of the value assigned to its Cmd attribute. Icons can consume other gadgets and they are otherwise very flexible. An example is given in section 3.8.
+
+Using the [Hide] button to minimize a document and a Finder to insert it back on the desktop, represents a different approach: an already opened document and not a stored document re-appears on the desktop.
+
+Attributes
+
+Caption
+String [Icon] containing the Icon caption text. Executing the command Icons.InsertIcon assigns a new value to this attribute.
+
+Icon
+String [ ] used to set the linked Model gadget to visualize. The string is the name of a visual object O located in a public library L (notation L.O). A library Icons.Lib of RembrandtFrames is provided for this purpose. The Libraries.Panel is used to investigate the content of this library.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key. The string is typically a command of the form Desktops.OpenDoc '#Caption ' for opening the document named in the Caption attribute. Executing the command Icons.InsertIcon assigns that value to this attribute.
+
+ConsumeCmd
+String [ ] executed as a command when a gadget or a group of gadgets is dropped inside the Icon. The originals of the dropped gadgets (or initiators) remain in place. This command is executed only when the Icon has a linked Model gadget. No command is executed the first time a gadget is dropped. The command string will usually contain an initiator macro "!".
+
+Commands
+
+Icons.Break
+takes the selected Icon apart, removing the linked Model gadget and inserting it at the caret.
+
+Icons.InsertIcon
+creates an Icon for the marked document and inserts it at the caret. The Caption attribute is set to the document name, the Cmd attribute is assigned the string Desktops.OpenDoc '#Caption ' and the linked Model Gadget is set according to the document type. For example, if it is used with a document "Work.Text", the Icon Icons.Text is extracted from Icons.Lib.
+
+
+	Iconizer
+
+
+			
+
+
+Classification	Visual container gadget
+Generator	Icons.NewIconizer
+Alias	Iconizer
+
+Function
+
+An Iconizer is used to build various types of menus. It is a flip-card, with a gadget on each side of the card. A switch pin is located in the top left corner of the Iconizer. Clicking on this pin with the MM key, flips the Iconizer between its two sides. Initially, the Iconizer has no links and the two "empty" sides can be distinguished by their captions "Closed" and "Open". On each side, a visual gadget may be dropped, but once only. The dropped gadget then becomes the side's linked gadget (Open or Closed) which is viewed by this side. The two sides can be distinguished by the cross on the switch pin of the "Open" side. By setting the attributes, Iconizers can be changed into different types of pop-up menus. When building a menu, the "Closed" side represents the menu, and the "Open" side represents the menu items themselves.
+
+Attributes
+
+Popup
+Boolean [FALSE] - TRUE indicates that the Iconizer functions as a pop-up menu when the MM key is clicked. When the Menu attribute is set to FALSE, the "Open" side gadget will pop-up and will track the mouse until the key is released. As an example, in this state an item can be picked directly from a TextGadget or a TextNote contained in the "Open" side of the Iconizer. An example is given below.
+
+Menu
+Boolean [FALSE] - Together with the Popup attribute, the Menu attribute allows you to make pop-up menus. When the menu is popped up, a menu item may be selected. The menu item is any text piece located in the "Open" side of the card that contains a Cmd attribute. The Cmd of the selection will be executed when the mouse key is released. In this mode, the closed side of the Iconizer cannot be edited anymore.
+
+FixedViews
+Boolean [TRUE] - TRUE indicates that the two sides of the card are displayed at their default positions. Otherwise, the two sides may be located at different positions in the current parent context. Moving one side of the card does not affect the position of the other.
+
+Pin
+Boolean [TRUE] - TRUE indicates that the switch pin must be visible. When set to FALSE, the Iconizer can be flipped only by executing the command Icons.Flip from within it, or with the help of Columbus. Also, when set to FALSE, the Popup attribute could be set to TRUE to be able to access the "Open" side temporarily. The menu on that side is well protected, whatever the value of the Locked attribute.
+
+Locked
+Boolean [FALSE] - TRUE indicates that the Iconizer cannot be edited or resized.
+
+Links
+
+Closed and Open
+The visual gadgets appearing on the two sides of this gadget.
+
+Commands
+
+Icons.Break
+takes the selected Iconizer apart, removing the visual gadget appearing on both sides and inserting them at the caret if it is set.
+
+Icons.Flip
+flips the Iconizer when executed from within it.
+
+Example
+
+A typical Iconizer is constructed with a Panel as its Closed link and a TextNote (or a TextGadget, a Panel, etc.) as its Open link. The Panel has a Caption in it for the title of the pop-up menu, and the TextNote contains a list of commands or file names. The Iconizer attributes are set to: Popup = TRUE, Menu = FALSE, FixedViews = TRUE, Pin = FALSE. In the case of file names, the Cmd attribute of the TextNote must contain a command, such as Desktops.OpenDoc #Point for example, as dictated by the application.
+
+						
+			Closed side					Open side
+
+	This kind of pop-up menu is very useful in tool texts and is even more compact than an alternative implementation based on TextHyperlinks. The Programming.Tool contains a few examples of such menus in Iconizers, with a visible switch pin though.
+	The following module comes in handy to maintain menu texts in such Iconizers:
+
+MODULE IconizerEdit;
+
+IMPORT Attributes, Display, Gadgets, Links, Oberon, Objects, Out, Texts, TextGadgets0;
+
+VAR w: Texts.Writer;
+
+(* Copy selected Iconizer menu for editing: IconizerEdit.EditMenu.
+	The "Closed" side may contain several components, one of them may be a Caption. *)
+PROCEDURE EditMenu*;
+VAR obj1, obj2: Objects.Object;  time: LONGINT;  name, cmd: ARRAY 32 OF CHAR;
+		t: Texts.Text;  f: Display.Frame;
+BEGIN
+	Gadgets.GetSelection(obj1, time);
+	IF (time >= 0) & (obj1 # NIL) THEN
+		Attributes.GetString(obj1, "Gen", name);
+		IF name = "Icons.NewIconizer" THEN
+			Links.GetLink(obj1, "Closed", obj2);
+			IF (obj2 # NIL) & (obj2 IS Display.Frame) THEN
+				name := "";
+				f := obj2(Display.Frame).dsc;	(* first child *)
+				WHILE f # NIL DO
+					Attributes.GetString(f, "Gen", name);
+					IF name = "TextFields.NewCaption" THEN
+						Attributes.GetString(f, "Value", name);  f := NIL
+					ELSE
+						name := "";  f := f.next
+					END
+				END
+			END;
+			Links.GetLink(obj1, "Open", obj2);
+			IF (obj2 # NIL) & (obj2 IS TextGadgets0.Frame) THEN
+				obj2 := Gadgets.Clone(obj2, TRUE);
+				WITH obj2: TextGadgets0.Frame DO
+					obj2.state0 := obj2.state0 +
+						{TextGadgets0.sizeadjust, TextGadgets0.grow, TextGadgets0.shrink}
+				END;
+				NEW(t);  Texts.Open(t, "");
+				Texts.WriteString(w, "IconizerEdit.MakeMenu ");
+				Texts.Write(w, 22X);  Texts.WriteString(w, name);  Texts.Write(w, 22X);
+				Texts.Write(w, " ");
+				Attributes.GetString(obj2, "Cmd", cmd);
+				Texts.Write(w, 22X);  Texts.WriteString(w, cmd);  Texts.Write(w, 22X);
+				Texts.WriteLn(w);
+				Texts.WriteObj(w, obj2);  Texts.WriteLn(w);
+				Texts.Append(t, w.buf);
+				Oberon.OpenText("", t, 200, 200)
+			ELSE Out.String("no text");  Out.Ln
+			END
+		ELSE Out.String("not an Iconizer");  Out.Ln
+		END
+	ELSE Out.String("no selection");  Out.Ln
+	END
+END EditMenu;
+
+(* Make a new Iconizer with a Caption "name" and a TextNote obj as third parameter.
+	The string "cmd" is to be assigned to the TextNote.
+	IconizerEdit.MakeMenu "caption" "cmd" obj *)
+PROCEDURE MakeMenu*;
+CONST W = 64;  H = 25;
+VAR name, cmd: ARRAY 64 OF CHAR;  s: Texts.Scanner;  obj1, obj2, obj3: Objects.Object;
+BEGIN
+	Texts.OpenScanner(s, Oberon.Par.text, Oberon.Par.pos);  Texts.Scan(s);
+	IF s.class = Texts.String THEN
+		COPY(s.s, name);  Texts.Scan(s);
+		IF s.class = Texts.String THEN
+			COPY(s.s, cmd);  Texts.Scan(s);
+			IF s.class = Texts.Object THEN
+				obj1 := Gadgets.CreateObject("Iconizer");
+				Attributes.SetBool(obj1, "Popup", TRUE);
+				Attributes.SetBool(obj1, "Pin", FALSE);
+				Gadgets.ModifySize(obj1(Display.Frame), W, H);
+				obj2 := Gadgets.Clone(s.obj, TRUE);	(* open contents *)
+				Attributes.SetString(obj2, "Cmd", cmd);
+				Links.SetLink(obj1, "Open", obj2);
+				obj2 := Gadgets.CreateObject("Panel");	(* closed contents *)
+				Gadgets.ModifySize(obj2(Display.Frame), W, H);
+				obj3 := Gadgets.CreateObject("Caption");
+				Attributes.SetString(obj3, "Value", name);
+				Gadgets.Consume(obj2(Gadgets.Frame), obj3(Gadgets.Frame), 8, -18);
+				Attributes.SetBool(obj2, "Locked", TRUE);
+				Links.SetLink(obj1, "Closed", obj2);
+				Gadgets.Integrate(obj1)
+			ELSE Out.String("no gadget");  Out.Ln
+			END
+		END
+	END
+END MakeMenu;
+
+BEGIN
+	Texts.OpenWriter(w)
+END IconizerEdit.
+
+
+	Integer
+
+
+
+
+Classification	Model gadget
+Generator	BasicGadgets.NewInteger
+Alias	Integer
+
+Function
+
+An Integer is a model gadget that stores a LONGINT value. It may be visualized by TextFields, Scrollbars, Sliders, Buttons or ProgressMeters. When linked to a set of Buttons or CheckBoxes (or a mixture of Buttons and CheckBoxes), these gadgets function as radio buttons. In this case, each Button and CheckBox should be assigned a unique integer value stored in their respective SetVal attributes. This can be conveniently done with the command BasicGadgets.SetValues. A Button or CheckBox is "on" when its assigned integer value corresponds to the Integer gadget value.
+
+Attributes
+
+Value
+Integer [0] value.
+
+
+	LCD
+
+
+	
+
+
+Classification	Visual elementary
+Generator	AudioGadgets.NewLCD
+Alias	none
+
+Function
+
+An auto-adaptive LCD display with a 3D-effect. The LCD segments are green and the background is black. The LCD segments adjust themselves to fit on the available surface when the gadget is resized. This gadget is used in the CDAudio.Panel for which it was originally designed, but can be used in any other environment too.
+
+Attributes
+
+Value
+Positive integer [0] value displayed.
+
+Digits
+Integer [2] specifying the number of digits to display. The displayed value is right-adjusted and left-padded with zeros or left-truncated depending on the current Value.
+
+Width
+Integer [3] specifying the width in pixels of the LCD segments.
+
+Border
+Integer [2] specifying the width of the 3D border surrounding the gadget.
+
+Remark
+
+The Audio application must be installed.
+
+
+	Line
+
+
+			
+
+
+Classification	Visual elementary gadget, transparent
+Generator	BasicFigures.NewLine
+Alias	Line
+
+Function
+
+A line or polygonal line. Selecting a Line causes control points to appear at the line joints. The control points can be adjusted by dragging on the MM key. The Line takes its final shape when the MM key is released. While dragging a control point, an MR key interclick inserts an additional control point, whereas an ML key interclick deletes that control point.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the Line. If the Line is filled, the color also applies to the interior. The color can also be changed with a ColorPicker.
+
+Width
+Integer [1] specifying the width in pixels of the Line.
+
+Pattern
+Integer [0] specifying in which pattern the Line is to be drawn. If the Line is filled, the pattern also applies to the interior. Patterns are numbered from 0 to 8. Refer to the Pattern attribute of Circle.
+
+Closed
+Boolean [FALSE] - TRUE indicates that the two end points of the Line should be joined.
+
+Filled
+Boolean [FALSE] - TRUE indicates that the Line must be filled. If so, an open polygonal line appears closed, and the filled part has the color specified by the Color attribute and the pattern specified by the Pattern attribute.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	List
+
+
+		
+
+
+Classification	Visual elementary gadget (superseded by ListGadget)
+Generator	Lists.NewList
+Alias	List
+
+Function
+
+A List presents strings in list-like fashion. The list may be sorted or unsorted, and it may have a scrollbar or not. Copying strings into the List is done by focusing the List with an ML key click, and then copying text into it using a right + middle keys interclick. The MR key is used to select list entries. The normal interclick combinations to delete and copy over text from text gadgets apply. Lists support a quick search facility: first focus the list, then type the first few characters of the string entry to jump directly to that entry. Press RETURN to restart the search process. The MM key is used to pick items from the list. While the MM key is dragged, the list will scroll up and down if the mouse focus is moved above and below the extent of the gadget. This gadget is always linked to a Text model gadget which may be replaced by another, using Columbus for instance, but which may never be deleted. The List gadget is an earlier development, now replaced by a ListGadget / ListModel pair. It should no longer be used.
+
+Attributes
+
+Scrollbar
+Boolean [TRUE] - TRUE indicates that a scrollbar must be included.
+
+Sorted
+Boolean [TRUE] - TRUE indicates that the list must be alphabetically sorted. No duplicate entries are allowed in a sorted list.
+
+Sel
+The currently selected items (read-only).
+
+Point
+String [ ] pointed at, just before the Cmd is executed. It is often used by the Cmd attribute itself (read-only).
+
+Cmd
+String [ ] executed as a command when a List item is clicked on with the MM key.
+
+Commands
+
+Lists.Directory "pattern" ObjName
+searches the current directory and inserts a list of all the file names that match the pattern, into the List named ObjName. The only wildcard character allowed in the pattern is "*".
+
+Lists.Diskette "pattern" ObjName
+searches the currently selected diskette and inserts a list of all the file names that match the pattern, into the List named ObjName. The only wildcard character allowed in the pattern is "*". This command is not implemented on all ports of the system.
+
+Lists.Library "lib" ObjName
+searches the library lib and inserts a list of all the object names into the list named ObjName.
+
+
+	ListGadget
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	ListGadgets.NewFrame
+Alias	ListGadget
+
+Function
+
+A ListGadget is designed to visualize list models. At the present time, four list model gadgets are offered: ListModel, Tree, Dag and Directory. Depending on the model chosen, this visual gadget displays different properties. The combination of a ListGadget and a ListModel represents the simplest case, which is very much the same as a List gadget.
+
+Whatever the model is, a list is focused with an ML key click, which places the caret (denoted here by a horizontal line) immediately under the closest list item or at the top of an empty list. Drag on the ML key up or down, above and below the extent of the list window, to scroll through the list. The scrolling speed can be controlled by changing the vertical distance between the ListGadget and the mouse focus: the greater the distance, the faster the scrolling. This is handy for long lists. Alternatively, a long focused list can be explored quickly with the help of the keyboard keys:
+	- Home	go to the top of the list
+	- End	go to the end
+	- PageDown	the bottom item appears at the top
+	- PageUp	the top item appears at the bottom
+	- Cursor up	move up one line
+	- Cursor down	move down one line.
+
+Copying string(s) into the list is done in one of the two classical Oberon ways:
+- by focusing the ListGadget first, and then copying a selected text to it (MR + MM keys interclick), or
+- by selecting a text stretch first and copying the selection at the caret in the list (ML + MM keys interclick).
+If the attributes Sorted and Unique of the model list are such that the list is unsorted and contains duplicates, the copied items are inserted after the caret.
+
+The MR key is used to select list items. Here also, dragging on the MR key scrolls through the list. Multiple adjacent items are selected in that way, if allowed by the MultiSel attribute. Finally, the items to select must not be adjacent, when the ExtendSel attribute is set to TRUE. The normal interclick combinations to delete and copy over text from or to text gadgets apply.
+
+The MM key is used to pick an item from the list. Here again, dragging on the MM key scrolls through the list.
+
+When the model linked to a ListGadget is a Tree or a Dag, the displayed model features a few specialities denoted by an arrow pointing to the right or an arrow pointing down. The right arrow indicates that the item contains a collection of hidden sub-items. An MM click on the arrow causes the hidden sub-items to be inserted in the list after the arrowed line. The sub-list is indented to the right by the amount of pixels specified in the TabSize attribute. At the same time, the arrow changes its shape to a down arrow. Another click on the arrow returns the display to its former look. The mouse click sensitive area can be extended to the entire item line when the ExpOnPoint attribute is set to TRUE. A sub-list is constructed in the following manner: select any number of adjacent items as a group, or even several such groups in a focused list and hit the keyboard cursor key ->. The selected item group(s) become sub-items of the item which precedes them. That item, respectively items, is/are thus arrowed. To remove a sub-list, select any number of items in a focused list and hit the keyboard cursor key <-. The selected items are placed at the same level as the item which precedes them, i.e. their root items. That item thus loses its arrow. Finally, the command specified in the Cmd attribute is not executed when clicking on an arrowed item, when the ExpOnPoint attribute is set to TRUE.
+
+For visualizing a Directory model gadget, one may also use a DirList which displays fancy icons for representing the external storage devices and folders.
+
+Attributes
+
+TabSize
+Integer [10] specifying the indenting space of sub-items in pixels. This attribute has no meaning when a ListModel gadget is linked to this gadget.
+
+BackCol
+Integer [14] specifying the color of the list background.
+
+TextCol
+Integer [15] specifying the color of the list items.
+
+PointCol
+Integer [15] specifying the color of the list items which have been pointed at with an MM key click.
+
+InclPath
+Boolean [FALSE] - TRUE indicates that the full tree path is created when an item is copied to a text. The path components are separated by "/", the path data is enclosed in double quotes and ends with a carriage return.
+
+MultiSel
+Boolean [TRUE] - TRUE indicates that multiple list items may be selected by dragging on the MR key.
+
+ExtendSel
+Boolean [FALSE] - TRUE indicates that the selection can be extended to non-adjacent list items by pressing the ALT-key while clicking with the MR key.
+
+ExpOnPoint
+Boolean [TRUE] - FALSE indicates that only the right arrow, or down arrow as the case might be, is mouse clicks sensitive. TRUE indicates that the entire item line is sensitive. In that case, the string in the Cmd attribute is not executed as a command when the item is arrowed.
+
+Locked
+Boolean [FALSE] - TRUE indicates that no new item can be added to the list.
+
+Font
+String [Syntax10.Scn.Fnt] specifying the font of the list items.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key. The four read-only attributes may be used in conjunction with an activator macro "#" in this string.
+
+The following attributes are read-only attributes:
+
+Point
+String pointed at with the MM key. It may be used with the activator macro "#" in the Cmd attribute.
+
+Sel
+String of the first list item selected. It may be used with the activator macro "#" in the Cmd attribute.
+
+PointKey
+Unique key (integer) of the model item corresponding to the item pointed at with the MM key. It may be used with the activator macro "#" in the Cmd attribute.
+
+SelKey
+Unique key (integer) of the model item corresponding to the first list item selected. It may be used with the activator macro "#" in the Cmd attribute.
+
+Links
+
+VPos
+Reference to the model gadget whose Value attribute represents the first item shown in the list.
+
+VRange
+Reference to the model gadget whose Value attribute represents the number of lines in a list (read only).
+
+HPos
+Reference to the model gadget whose Value attribute represents the first indent shown in the list.
+
+HRange
+Reference to the model gadget whose Value attribute represents the number of indents (read only).
+
+For all these links, the model value is interpreted as an integer value, though the model may be an Integer, a Real or a String.
+
+Commands
+
+ListGadgets.InsertVScrollList ListGadget model ~
+inserts a ListGadget, with a vertical Scrollbar on its right side, at the caret. The inserted gadget is in reality a composite construction based on an Organizer with two components: a ListGadget and a Scrollbar. Each of these components is decorated with a Constraints attribute.
+
+ListGadgets.InsertHVScrollList ListGadget model ~
+inserts a ListGadget, with a vertical Scrollbar on its right side and a horizontal Scrollbar on the lower side, at the caret. The inserted gadget is in reality a composite construction based on an Organizer with three components: a ListGadget and two Scrollbars. Each of these components is decorated with a Constraints attribute.
+
+Directories.Directory [\p] "mask" ObjName
+finds all the file names in the current directory that match a specified mask and inserts them in a list model gadget (ListModel, Tree or Dag) named ObjName in the current context. If the option \p is specified, the file names are prefixed with their relative path in the current directory. When the Directories module is loaded, a background task is installed in the Oberon loop: refer to the remark under CurrentDirectory.
+
+Example
+
+The module TextPopups uses this gadget, linked to a ListModel. See description in section 6.2. 
+
+
+	ListModel
+
+
+
+
+Classification	Model gadget
+Generator	ListModels.NewList
+Alias	ListModel
+
+Function
+
+A ListModel stores items in a linear fashion. The list items may be sorted or unsorted and the list may contain duplicates or not. This model gadget is typically used as a model by a ListGadget. Such a combination has the same properties as a List.
+
+Attributes
+
+Sorted
+Boolean [FALSE] - TRUE indicates that the list items are sorted.
+
+Unique
+Boolean [FALSE] - TRUE indicates that no duplicate list items are allowed.
+
+Commands
+
+See ListGadget.
+
+
+	LogDoc
+
+
+
+
+Classification	Visual document gadget
+Generator	TextDocs.NewLog
+Alias	LogDoc
+
+Function
+
+A text document (see TextDoc) displaying the system log. If it is opened with the command Desktops.OpenDoc (LogDoc), it appears with a menu bar containing buttons [Close], [Hide], [Grow], [Copy], [Locate] and [Clear]. The button [Clear] empties the log. The button [Locate] is used for locating selected syntax errors reported by the compiler in the system log inside the marked module source text. The function of the [Hide] button is explained in the Finder commands. This gadget is always linked to a TextGadget model gadget.
+
+Attributes
+
+DocumentName
+String [System.Log] specifying the name of the document. This string appears in the NamePlate of the document.
+
+Commands
+
+See TextDoc.
+
+
+	MemoryUsed
+
+
+
+
+Classification	Model gadget
+Generator	Gages.NewMem
+Alias	MemoryUsed
+
+Function
+
+A MemoryUsed model gadget contains an up-to-date indication of how much of the Oberon heap is currently being used.
+
+Attributes
+
+Value
+Integer [?] value representing the memory usage in bytes.
+
+Remark
+
+See CurrentLoad.
+
+Example
+
+Insert a memory monitor at the caret with:
+
+    Gadgets.Insert TextField MemoryUsed ~
+
+
+	NamePlate
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	NamePlates.NewNamePlate
+Alias	NamePlate
+
+Function
+
+A NamePlate shows the name of the document in the document menu bar or the name of the desktop when located inside one. The name is the string value found in the DocumentName attribute of a document gadget. Most editing operations work in the same way as those in a main editable text: the name may be changed and a text stretch may be selected, deleted or copied. Placing the caret is however a little different depending on the environment: if the document is placed on a desktop, the caret is placed with an ML key click anywhere in the NamePlate, whereas if the document is placed in a track, the mouse has to point at the very bottom of it.
+
+PC Native Oberon does not have a directory system. Consequently, the document name appears alone.
+
+In Linux, Mac and Windows Oberon, the document name is followed by the full path name of the document, which is however often not completely visible. To view the remaining text, place the caret in the NamePlate and scroll right or left with the corresponding keyboard cursor keys. An MM key click on the gadget causes the full name to appear in the system log, by virtue of the default value assigned to the Cmd attribute (see below).
+
+Attributes
+
+Value
+String [?] indicating the name of a document.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	Navigator
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Navigators.NewNavigator
+Alias	Navigator
+
+Function
+
+An Oberon desktop, for example Oberon.Desk, is 2 x 2 times the size of the display screen: normally only the top left quadrant is visible. A Navigator is a miniature representation of the four quadrants: the currently visible one is always shown in black whereas the three remaining ones show the silhouettes of the objects dropped on the desktop. A Navigator allows accessing all four quadrants of a desktop: clicking with the MM key on any quadrant, makes it visible. Gadgets can be moved (or copied) to the neighbouring quadrants as usual by dragging (and clicking) them across the fictitious boundary line. All quadrants display the navigator in the same absolute position on the display screen. The top left corner of the display is a very convenient location for it. Navigators can be used only in desktops; outside desktops they are inactive.
+
+Whereas a Finder can be used to quickly find a document among the many documents piled in the visible part of a desktop, the navigator can be advantageously used to segregate those many documents into up to four application oriented quadrants: this is an entirely arbitrary subdivision left to the user's appreciation and taste. In the realm of program development it seems fairly obvious to elect to use one quadrant for managing source text documents and another for compiling and running programs. Remember that a system log may be opened in each quadrant.
+
+An alternative approach is to use different desktops instead of using several quadrants in a single desktop.
+
+
+	NoteBook
+
+
+		
+
+
+Classification	Visual container gadget
+Generator	NoteBooks.New
+Alias	NoteBook
+
+Function
+
+A NoteBook organizes a heterogenous collection of visual gadgets as pages of a notebook. When it is instantiated, a NoteBook contains no page. Any visual gadget, except a transparent one, can be inserted into the NoteBook by dropping it inside the top part. Each additional gadget is inserted on a new page at the end. The top part of the NoteBook shows the name of the current page: it is the Name attribute of the visual gadget appearing on the page. Two arrowed buttons allow turning the pages forward or backward. All the pages have the same size and resizing a single page resizes all the other pages accordingly. A page can be removed by moving it to a different location out of the NoteBook or with a delete interclick.
+
+Attributes
+
+Locked
+Boolean [FALSE] - TRUE indicates that pages cannot be resized or removed, and no new page can be added.
+
+Commands
+
+NoteBooks.Show {"First" | "Last" | "Previous" | "Next" | "page-name" }
+pages to the indicated page of the book in the current context. This command must be executed somewhere inside the NoteBook itself.
+
+NoteBooks.Show notebook-name {"First" | "Last" | "Previous" | "Next" | "page-name" }
+pages to the indicated page of the named book, that is, the book in the current context identified by notebook-name.
+
+
+	Organizer
+
+
+	
+
+
+Classification	Visual container gadget
+Generator	Organizers.NewPanel
+Alias	Organizer
+
+Function
+
+An Organizer is a Panel extended with a simple constraint solver to reorder the children automatically when the Organizer is changed in size. The constraint system [Car86] is based on virtual wires: four wires are strung between the four sides of a descendant and the edges of the Organizer. The horizontal sides of the child gadget are attached to the top or bottom edges, and the vertical sides to the left or right edges. The lengths of the four wires are given as four numbers in the Constraints string attribute of the child. Positive numbers string the wire "outward" and negative numbers "over" the gadget. That is:
+	Gadgets.ChangeAttr Constraints "10 20 30 40" ~
+
+sets constraints on the selected child, where the left side of the gadget is 10 pixels from the left edge of the Organizer, the top side 20 pixels from the top edge, the right side 30 pixels from the right edge, and the bottom side 40 pixels from the bottom edge. Thus the sequence of numbers are left, top, right, and bottom wire distances. Changing the 20 to -20 attaches the top side of the gadget 20 pixels from the bottom edge. TestOrganizer.Panel is an example including an Organizer.
+
+Attributes and Links
+
+See Panel.
+
+Commands
+
+Organizers.Exchange
+flips the marked Organizer between an Organizer and a Panel. Constraints attributes assigned to contained gadgets remain in existence.
+ 
+Also refer to the commands of PanelDoc.
+
+
+	Outline
+
+
+			 This is the folded text.
+
+
+Classification	Visual elementary gadget
+Generator	Outlines.New
+Alias	Outline
+
+Function
+
+An Outline, which functions inside a text only, implements a way to fold text and gadgets enclosed between two arrows away into the gadget. When folded, the Outline is a black rectangle. An MM click on a folded Outline "unfolds" its content between the arrows. The two arrowed parts of an unfolded Outline are themselves Outlines. The left part has the same attributes as the folded Outline. Text and gadgets in an unfolded Outline may be freely edited and Outlines may recursively contain other Outlines to any depth. An MM click on one of the two arrows folds the text back into the Outline: an interesting device for presenting detail or explanatory information without overloading a main text. Be cautious however, deleting an arrowed Outline may prevent an Outline from being folded again. Note that the text editing commands "search", "replace", "replace all" , etc. do not operate on folded text, and that the compiler cannot compile the text contained in folded Outlines. You first need to unfold them all (refer to the commands below).
+
+Attributes
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key. A different command string may be assigned to the two parts of an unfolded Outline.
+
+Commands
+
+Outlines.Insert
+embeds the most recent selection in a folded Outline, or if no selection exists, inserts an empty Outline at the caret in a text.
+
+Outlines.Collapse *
+Outlines.Collapse
+collapses all Outlines, including the nested ones, in the marked text document (*) or in the text document in which it is executed.
+
+Outlines.Expand *
+Outlines.Expand
+expands all Outlines, including the nested ones, in the marked text document (*) or in the text document in which it is executed.
+
+Outlines.Replace
+replaces the text stretch previously searched with an Outlines.Search command with the selection in the document. If the searched text pattern is found in an Outline, it is expanded first.
+
+Outlines.ReplaceAll
+replaces all instances of the text stretch previously searched with an Outlines.Search command with the selection in the document. If the searched text patterns are found in Outlines, they are expanded.
+
+Outlines.Search *
+Outlines.Search
+searches for the selected text stretch, starting at the caret in a document or if the caret is not set, from the beginning of the marked text document (*) or document in which it is executed. If the text pattern is found in an Outline, it is expanded.
+
+
+	Panel
+
+
+	
+
+
+Classification	Visual container gadget
+Generator	Panels.NewPanel
+Alias	Panel
+
+Function
+
+A Panel is like a sheet of paper on which gadgets are organized in a two-dimensional fashion. The gadgets contained inside are called the direct descendants or children of that Panel, and the Panel itself the children's father, context or container. As Panels are gadgets too, Panels may appear inside Panels, nested to any depth. They support operations on groups of gadgets plus the layout and alignment of children. The children of a Panel are organized in a priority sequence and may overlap each other. A child keeps its priority when moved around in a Panel and newly inserted gadgets are always placed in front. Oberon commands put a gadget behind or in front of other gadgets. The simplest way to bring a gadget to the front is to pick it up and consume it with an MM + ML key interclick. A snapping grid allows easy positioning of children. The grid is not visible and the grid spacing is adjusted with the GridSnap attribute. Children can be aligned to the same base line, height, size, or width, or organized vertically and horizontally. Operations on Panels can be performed with the tools provided in the Gadgets.Panel. Behind the scene, these tools use the command Panels.Align and other commands described below.
+
+Panels use the normal mouse conventions:
+
+An ML key click inside a Panel sets the caret. Combined with an MM key interclick, a shallow copy of the selection is placed at the caret.
+
+An MM key click on a child gadget activates it. Use the MM key inside the border to pick up a Panel and move it around dragging on the key. The border is not visible but its width is adjusted with the Border attribute.
+
+An MR key click on a child selects it. Dragging on the MR key in a free area causes a spanning rectangle to appear for selecting several gadgets at the same time. All the gadgets entirely contained in the rubber-banding rectangle are selected when the key is released, and they can then be edited as a group. An MR key drag followed by an ML key interclick deletes all the selected gadgets. An MR key drag followed by an MM key interclick makes a shallow copy of the selection and copies it over to the caret position. An MR key click in a free area of the Panel clears the selection. An MR key click inside the border of a Panel selects it. Another click deselects it.
+
+Key		Associated action
+
+ML	Point	Set the caret to mark the insertion point.
+ML + MM	Copy to	Set the caret and copy an existing selection
+		to the caret.
+
+MM	Activate	Activate or manipulate a child: depends
+		on the child type and on the mouse focus.
+MM + ML		Bring the focused child to the front.
+
+MR	Select	Select child or group of children.
+MR + ML	Delete	Select child(ren) and delete.
+MR + MM	Copy over	Select child(ren) and copy over to caret.
+
+ML + MM + MR	Nullify	Nullify current mouse action.
+
+A Panel can be converted to an Organizer, an extension of a Panel, with the Organizers.Exchange command. This works on a PanelDoc too.
+
+Attributes
+
+Color
+Integer [13] specifying the background color of the Panel. The color of a Panel can also be changed with the ColorPicker. If the gadget is linked to a backdrop picture, it takes precedence over the color.
+
+Border
+Integer [2] specifying the width in pixels of the clipping area around the edge of the panel. Children are clipped when placed overlapping this area. This value does not influence the look of the Panel border. Use the attribute Flat for that purpose.
+
+GridSnap
+Integer [2] specifying the snapping grid spacing in pixels. The grid is not visible.
+
+Flat
+Boolean [FALSE] - FALSE indicates that the gadget must be surrounded by a 3D border.
+
+Texture
+Boolean [FALSE] - TRUE indicates that, if a backdrop picture has been installed with a Panels.ChangeBackdrop command, it should fill the whole panel background as a texture. When the value FALSE is assigned, the picture is placed in the upper left corner of the Panel.
+
+Locked
+Boolean [FALSE] - TRUE indicates that the Panel's content cannot be edited.
+
+Links
+
+Picture
+Reference to the backdrop picture which is installed, changed or removed with the Panels.ChangeBackdrop command.
+
+Commands
+
+Panels.Recall
+recalls the gadgets deleted most recently and inserts them at the caret.
+
+Panels.ToFront
+brings the selected gadgets to the front of the Panel.
+
+Panels.ToBack
+puts the selected gadgets to the back of the Panel.
+
+Panels.ChangeBackdrop picture-fileName
+changes the backdrop of the selected Panels. To clear the backdrop, use a non-existing Picture file name or else use Columbus. See also Picture.
+
+Panels.Align type
+aligns the selected gadgets along an imaginary reference line or resizes them. For example, in a Left alignment all selected gadgets must be lined up on their left edges, the reference edge being that of the left most gadget. The following alignment types are available:
+
+	top	to common top border
+	bottom	to common bottom border
+	left	to common left border
+	right	to common right border
+	vertical	in a vertical fashion
+	horizontal	in a horizontal fashion
+	width	to the same width
+	height	to the same height
+	size 	to the same size
+	verticalcenter	centered on a common vertical line
+	horizontalcenter	centered on a common horizontal line
+
+When the parameter is width, height or size, the largest dimension of the selected gadgets is applied to all of them.
+
+Organizers.Exchange
+flips the marked Panel between an Organizer and a Panel. Constraints attributes assigned to contained gadgets remain in existence.
+
+Also refer to the commands of PanelDoc.
+
+
+	PanelDoc
+
+
+
+
+Classification	Visual document gadget
+Generator	PanelDocs.NewDoc
+Alias	PanelDoc
+
+Function
+
+A PanelDoc is a document containing a single Panel or Organizer. If it is opened with the command Desktops.OpenDoc (PanelDoc), it appears with a menu bar containing buttons captioned [Close], [Hide], [Grow] and [Store]. The function of the [Hide] button is explained in the Finder commands. The document may be given a name and can be saved in a file with that name.
+
+Attributes
+
+DocumentName
+String specifying the name of the document. This string appears in the NamePlate of the document.
+
+Commands
+
+PanelDocs.AppendPanel L.O
+inserts a pre-fabricated component (Panel or Organizer) L.O at the bottom of an existing container (Panel or Organizer). The command must be executed in the context of the container. This effect is obtained by inserting a gadget which has a Cmd attribute, a Button for example, in the container. Then, the command is assigned as an attribute value. When the gadget is activated, the object L.O is appended. This operation can be undone in two ways by executing one of the two commands described below.
+
+PanelDocs.RemovePanel
+removes a component (Panel or Organizer) from its context (Panel or Organizer). The command must be executed in the context of the component itself. This effect is obtained by inserting a gadget which has a Cmd attribute in the component. Then, the command is assigned as attribute value. When the gadget is activated, the component is removed.
+
+PanelDocs.DetachPanel
+removes a component (Panel or Organizer) from its context (Panel or Organizer) and opens a separate PanelDoc that contains it. The command must be executed in the context of the component itself. This effect is obtained by inserting a gadget which has a Cmd attribute in the component. Then, the command is assigned as an attribute value. When the gadget is activated, the component is removed.
+
+Rembrandt.Panel and Leonardo.Panel use these three commands.
+
+Desktops.Recall
+recalls the document closed most recently.
+
+
+	Picture
+
+
+
+
+Classification	Model object
+Generator	Pictures.NewPicture
+Alias	Picture
+
+Function
+
+A Picture is a model object containing a colored bitmap visualized by a RembrandtFrame to which it is linked as a model. It has no attributes at all, and no further attribute can be attached to it. A picture editor called Rembrandt is included in the system to edit such bitmaps.
+
+Attributes
+
+Implementation restriction: Picture gadgets cannot be named or have attributes.
+
+
+	ProgressMeter
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	ProgressMeters.NewFrame
+Alias	ProgressMeter
+
+Function
+
+Display a meter showing the value of a linked model gadget, e.g. an Integer or a Real. This visual gadget typically visualizes the Integer model gadget named "Progress" located in the NetDocs.Lib library provided for this purpose. A ProgressMeter having that gadget as a model shows the progress of a data transfer over the network interface. An example is found in the HyperDocs.Panel.
+
+Attributes
+
+Value
+Integer [0] specifying the current value of the meter. This value is normally stored in a linked Model gadget.
+
+Min
+Integer [0] specifying the minimum value of the meter.
+
+Max
+Integer [100] specifying the maximum value of the meter.
+
+Color
+Integer [1] specifying the color index of the measured Value.
+
+Step
+Integer [20] specifying the interval at which graduations must appear.
+
+Marks
+Boolean [TRUE] - TRUE indicates that graduation marks must appear at the interval specified in Step.
+
+Labels
+Boolean [TRUE] - TRUE indicates that graduation values must appear at the interval specified in Step.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+
+	Real
+
+
+
+
+Classification	Model gadget
+Generator	BasicGadgets.NewReal
+Alias	Real
+
+Function
+
+A Real is a model gadget that stores a LONGREAL value.
+
+Attributes
+
+Value
+Real [0] value.
+
+
+	Rectangle
+
+
+			
+
+
+Classification	Visual elementary gadget, transparent
+Generator	BasicFigures.NewRect
+Alias	Rectangle
+
+Function
+
+A rectangle, possibly filled. Selecting a Rectangle causes two diagonally opposite control points to appear. The control points can be adjusted by dragging on the MM key. The Rectangle takes its final shape when the MM key is released.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the Rectangle. If the Rectangle is filled, the color also applies to the interior. The color can also be changed with the ColorPicker.
+
+Width
+Integer [1] specifying the width in pixels of the Rectangle.
+
+Pattern
+Integer [0] specifying in which pattern the perimeter line is to be drawn. If the Rectangle is filled, the pattern also applies to the interior. Patterns are numbered from 0 to 8. Refer to the Pattern attribute of Circle.
+
+Closed
+Boolean [FALSE] - not interpreted.
+
+Filled
+Boolean [FALSE] - TRUE indicates that the Rectangle must be filled. If so, the filled part has the color specified by the Color attribute and the pattern specified by the Pattern attribute.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	Rectangle3D
+
+
+			
+
+
+Classification	Visual elementary gadget, transparent
+Generator	BasicFigures.NewRect3D
+Alias	Rectangle3D
+
+Function
+
+A rectangle with a 3D-effect, possibly filled. Selecting a Rectangle3D causes two diagonally opposite control points to appear. The control points can be adjusted by dragging on the MM key. The rectangle takes its final shape when the key is released.
+
+Attributes
+
+See Rectangle.
+
+
+	Reference
+
+
+
+
+Classification	Model gadget
+Generator	RefGadgets.NewReference
+Alias	Reference
+
+Function
+
+A reference to any object which is an extension of Objects.Object. This model gadget is visualized by a RefFrame gadget.
+
+
+	RefFrame
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	RefGadgets.NewFrame
+Alias	RefFrame
+
+Function
+
+A RefFrame (also called visual reference gadget) provides a frame for visualizing a Reference to any object of type Objects.Object. This frame can have three different representations:
+
+	 - when it does not refer to an object,
+	 - when it refers to a visual gadget,
+	 - when it refers to a model gadget.
+
+The practical advantage of this gadget is that it contains a Reference to an object irrespective of its type (visual gadget or model) and of its size. The Reference can be dragged-and-dropped or copied over to another context just as easily as the object it represents.
+
+A visual reference can be changed either by dropping a visual gadget into its frame or by copying over a selected visual gadget. Alternatively, a reference from another reference can be dropped or copied over with the same effect. When a reference is changed by such a user interaction, it will execute the command specified in the ConsumeCmd attribute. To remove the reference use a delete interclick on the reference. If a model reference is dropped on a visual gadget, the reference becomes a model of it. Like most other visual gadgets, a reference may execute a command when clicked on. This gadget is used in Columbus for which it was originally designed, but can be used in any other environment too.
+
+
+Attributes
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+ConsumeCmd
+String [ ] executed as a command when a gadget is dropped inside the RefFrame and when the Reference is deleted with a delete interclick.
+
+Locked
+Boolean [FALSE] - TRUE indicates that the RefFrame refuses 'drop', 'copy over' and 'delete' actions.
+
+Drag
+Boolean [TRUE] - TRUE indicates that the reference may be dragged away.
+
+Links
+
+Value
+Reference to the object represented.
+
+Commands
+
+RefGadgets.Create generator
+creates a new object and sets the Value link of an existing destination RefGadget which is either the selected or the marked or the executor gadget.
+
+
+	RembrandtDoc
+
+
+
+
+Classification	Visual document gadget
+Generator	RembrandtDocs.NewDoc
+Alias	RembrandtDoc
+
+Function
+
+A picture document containing a single RembrandtFrame gadget. When the document is opened with the command Desktops.OpenDoc (RembrandtDoc), it appears with a menu bar containing buttons captioned [Close], [Hide], [Grow], [Copy], [+], [-] and [Store]. The button [+] magnifies the selection, or the entire picture if there is no selection. A magnification of 4, 7, 10, 13 and 16 is obtained by clicking the button repeatedly, a maximum of 5 times. This makes it very easy to retouch pictures pixel-wise. The button [-] reduces the entire picture. It may be clicked a maximum of 5 times in succession until the original size is restored, and not beyond. The function of the [Hide] button is explained in the Finder commands. The contained Picture can be edited with the tools provided in the Rembrandt.Panel. RembrandtDocs are usually stored in files having a file name extension ".Pict". The Oberon system can also read other graphical files such as GIF or JPEG files. The [PictureConverters] section of the registry contains a list of acceptable file formats.
+
+Attributes
+
+DocumentName
+String specifying the name of the document. This string appears in the NamePlate of the document.
+
+Commands
+
+Desktops.Recall
+recalls the document closed most recently.
+
+
+	RembrandtFrame
+
+
+
+
+Classification	Visual elementary gadget
+Generator	Rembrandt.New
+Alias	none
+
+Function
+
+A RembrandtFrame provides a frame for visualizing a single Picture model gadget. The Picture model gadget may be replaced by another one, using Columbus for instance, but it may never be deleted.
+
+Attributes
+
+Color
+Integer [14] specifying the color index of the background.
+
+Cmd
+String [ ] executed as a command when the gadget is locked and clicked on with the MM key.
+
+Locked
+Boolean [FALSE] - TRUE indicates that the contained Picture cannot be edited, but it can be scaled by rezising the frame. When the gadget is unlocked, the Picture returns to its original size.
+
+Border
+Boolean [TRUE] - TRUE indicates that the gadget must be surrounded by a 3D-border.
+
+
+	Scope
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Gages.NewFrame
+Alias	Scope
+
+Function
+
+A Scope is a bar chart of the previous values of the model gadget linked to it. The model must be an Integer. A new vertical bar is added to the right when the model is updated. When the chart fills the Scope, the bar chart scrolls to the left as new vertical bars are added. The minimum and the maximum value observed in the visible portion of the chart are displayed on the left. The Scope adjusts its scale automatically.
+
+Remark
+
+See CurrentLoad.
+
+Example
+
+Insert a load monitor at the caret with the command:
+
+    Gadgets.Insert Scope CurrentLoad ~
+
+
+	Scrollbar
+
+
+			
+
+
+Classification	Visual elementary gadget
+Generator	Scrollbars.New
+Alias	Scrollbar
+
+Function
+
+A Scrollbar visualizes a continuous range of values from which the user can select by adjusting the Scrollbar's knob position with the MM key. If arrow boxes are used, the knob can also be adjusted by MM key clicks on these arrows. Keeping this key pressed, also adjusts it repeatedly until the key is released. It can be linked to String, Integer or Real gadgets. The String must represent a numerical value. It is typically used in combination with a ListGadget.
+
+Attributes
+
+Min
+Integer [0] specifying the minimum value of the attribute Value. Alternatively, this value can be stored in a linked Min gadget.
+
+Max
+Integer [100] specifying the maximum value of the attribute Value. Alternatively, this value can be stored in a linked Max gadget.
+
+Value
+Integer [50] specifying the current value of the Scrollbar. This value is normally stored in a linked Model gadget.
+
+StepSize
+Integer [1] specifying by how many units the current value must be incremented or decremented by MM key clicks on the arrow boxes, if present, or by dragging the knob with the MM key. Alternatively, this value can be stored in a linked Step gadget.
+
+BackColor
+Integer [14] specifying the color of the background.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked Model gadget is used.
+
+Cmd
+String [ ] executed as a command after the knob's position was changed.
+
+Vertical
+Boolean [TRUE] - TRUE indicates that the Scrollbar is upright.
+
+ArrowBoxes
+Boolean [TRUE] - TRUE indicates that the Scrollbar must be decorated with MM key sensitive arrow boxes at its extremities.
+
+HeavyDrag
+Boolean [FALSE] - TRUE indicates that the model gadget linked to the Scrollbar is updated at the same time as the knob is moved. FALSE indicates that the model gadget is updated only when the mouse key is released. This is relevant in the case where multiple views of the model exist in the display space.
+
+Links
+
+Min
+Reference to the model gadget whose Value attribute is used as the Min value.
+
+Max
+Reference to the model gadget whose Value attribute is used as the Max value.
+
+Step
+Reference to the model gadget whose Value attribute is used as  theStep value.
+
+For all these links the model value is interpreted as an integer value, though the model may be an Integer, a Real or a String.
+
+
+	ScrollView
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	ScrollViews.NewView
+Alias	ScrollView
+
+Function
+
+A ScrollView is a View which can be fitted with a horizontal or a vertical Scrollbar or both according to its attribute values.
+
+Attributes
+
+HScrollBar
+Boolean [TRUE] - TRUE indicates that a horizontal Scrollbar is used.
+
+VScrollBar
+Boolean [TRUE] - TRUE indicates that a vertical Scrollbar is used.
+
+
+	Set
+
+
+
+
+Classification	Model gadget
+Generator	SetGadgets.NewSet
+Alias	Set
+
+Function
+
+A Set is a model gadget that stores a 32-bit set. It is normally visualized by a SetFrame gadget, but also a TextField, a Slider, a Button, a CheckBox or a group of them may be linked to it.
+
+Attributes
+
+String
+String [{}] representing a 32-bit set (Oberon language notation).
+
+Value
+Integer [0] representation of the 32-bit set in the String attribute.
+
+
+	SetFrame
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	SetGadgets.NewFrame
+Alias	SetFrame
+
+Function
+
+A SetFrame provides a frame for visualizing a set. It is most frequently linked to a Set model gadget, but an Integer or a String (representing a set in the Oberon language notation) may also be used. Any bit can be included (indicated by a vertical bar) or excluded by MM key clicking on its placeholder. The least significant bit is at the left in position 0.
+
+Attributes
+
+Value
+Integer [0] representation of the 32-bit set visualized. This value is normally stored in a linked Model gadget.
+
+String
+String [{}] representing a 32-bit set (Oberon language notation).
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	Sisiphus
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	Sisiphus.New
+Alias	Sisiphus
+
+Function
+
+An animated cartoon representing a walking man called Sisiphus. An MM key click on a Sisiphus activates a screen saver which can be interrupted by pressing the Neutralize key.
+
+Attributes
+
+Color
+Integer [14] specifying the background color of Sisiphus. The color can also be changed with the ColorPicker.
+
+Age
+Integer [0] specifying the age of the gadget. It counts how many times the gadget has been updated by the background task.
+
+Commands
+
+Sisiphus.Sync
+synchronizes the selected Sisiphus gadgets and resets their age to 0.
+
+Remark
+
+When the Sisiphus module is loaded, a background task is installed in the Oberon loop. To remove the task, remove all Sisiphus gadgets it controls from the display space and execute a System.Free Sisiphus ~ command.
+
+
+	Slider
+
+
+		
+
+
+Classification	Visual elementary gadget (superseded by Scrollbar)
+Generator	BasicGadgets.NewSlider
+Alias	Slider
+
+Function
+
+A Slider visualizes a continuous range of values from which the user can make a selection by adjusting the Slider's knob position with the MM key. It can be linked to a String, Integer or Real model gadget. The Slider is an earlier development, now replaced by the Scrollbar. It should no longer be used.
+
+Attributes
+
+Min
+Integer [0] specifying the minimum value of the attribute Value.
+
+Max
+Integer [100] specifying the maximum value of the attribute Value.
+
+Value
+Integer [50] specifying the current value of the Slider. This value is normally stored in a linked Model gadget.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+Cmd
+String [ ] executed as a command after the knob's position was changed.
+
+
+	Spline
+
+
+		
+
+
+Classification	Visual elementary gadget, transparent
+Generator	BasicFigures.NewSpline
+Alias	Spline
+
+Function
+
+A spline, possibly filled. Selecting a Spline causes control points to appear at the line joints. The control points can be adjusted by dragging on the MM key. The Spline takes its final shape when the MM key is released. While dragging a control point, an MR key interclick inserts an additional control point, whereas an ML key interclick deletes that control point.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the Spline. If the Spline is filled, the color also applies to the interior. The color can also be changed with the ColorPicker.
+
+Width
+Integer [1] specifying the width in pixels of the Spline.
+
+Pattern
+Integer [0] specifying in which pattern the Spline is to be drawn. If the Spline is filled, the pattern also applies to the interior. Patterns are numbered from 0 to 8. Refer to the Pattern attribute of Circle.
+
+Closed
+Boolean [FALSE] - TRUE indicates that the two end points of the Spline should be joined.
+
+Filled
+Boolean [FALSE] - TRUE indicates that the Spline must be filled. If so, an open Spline appears closed, and the filled part has the color specified by the Color attribute and the pattern specified by the Pattern attribute.
+
+Cmd
+String [ ] executed as a command when the gadget is clicked on with the MM key.
+
+
+	String
+
+
+
+
+Classification	Model gadget
+Generator	BasicGadgets.NewString
+Alias	String
+
+Function
+
+A String is a model gadget that stores a string value of up to 64 characters. It is usually visualized by a TextField. If the string represents a set in the Oberon language notation, it may be visualized by a SetFrame.
+
+Attributes
+
+Value
+String [ ] value.
+
+
+	Text
+
+
+
+
+Classification	Model object
+Generator	Texts.New
+Alias	Text
+
+Function
+
+Text is the abstract data type used for manipulating text in the Oberon system. Texts can be of (practically) unlimited length, and contain font, color, and vertical offset information. Gadgets can float inside a text stream. Texts are not true gadgets and can have no attributes, except the Name attribute. More about text can be found in Chapter 2 describing the textual user interface of Oberon.
+
+
+	TextDoc
+
+
+
+
+Classification	Visual document gadget
+Generator	TextDocs.NewDoc
+Alias	TextDoc
+
+Function
+
+A TextDoc is a document containing a single TextGadget. If it is opened with the command Desktops.OpenDoc (TextDoc), it appears with a menu bar containing buttons captioned [Close], [Hide], [Grow], [Copy], [Search], [Rep], [RepAll] and [Store]. The [Search] button searches for the selected text stretch in the text. Each time the [Search] button is pressed, the caret advances to the next location in the text where the pattern appears. When the end of text is reached, the searching wraps around to the beginning of the text. The [Rep] button replaces the last searched pattern with the current text selection and the caret then advances to the next occurrence of the searched pattern. Repeatedly pressing the [Rep] button replaces all the following occurrences of the search pattern. A replacement can be skipped by pressing the [Search] button as many times as required. At any time the [Rep] button can be pressed to start replacing occurrences of the search pattern. The [RepAll] button is not present when the document is opened in the system track. The function of the [Hide] button is explained in the Finder commands.
+
+Attributes
+
+DocumentName
+String specifying the name of the document. This string appears in the NamePlate of the document.
+
+Commands
+
+TextDocs.ChangeColor color-no
+applies the color specified by the parameter to the most recent text selection. Colors are numbered 0 to 255. For example, white is 0, red is 1, green is 2, blue is 3 and black is 15. The color can also be changed with the ColorPicker.
+
+TextDocs.ChangeFont font-name
+applies the font specified by the parameter to the most recent text selection. The font name has to be specified in full, e.g. Courier10.Scn.Fnt. The default font is Oberon10.Scn.Fnt for PC Native Oberon. For other implementations, the default font is defined in the [System] section of the registry. If it is not defined there, Syntax10.Scn.Fnt is used.
+
+TextDocs.ChangeOffset pixels
+applies the vertical offset specified by the parameter to the most recent text selection. The offset is specified in number of pixels. Positive numbers make text super-scripts, and negative numbers make sub-scripts.
+
+TextDocs.Clear
+clears the content of a document (often used in menu bars).
+
+TextDocs.Controls *
+TextDocs.Controls
+toggles the visibility of the text control gadgets, that is, TextHyperlinks and TextStyles, in the marked (*) or in the selected document. TextStyles which have their Pagebreak attribute set on are always visible.
+
+TextDocs.Locate
+locates the compiler error in the marked text document. The compiler error position must be selected.
+
+TextDocs.PrintSetup [\Hon | \Hoff] [\Pon | \Poff]
+controls the printing of headers and page numbers, displaying the new setup in the system log. If any of the parameters is missing, the current setup is displayed.
+
+TextDocs.Recall
+inserts the most recently deleted piece of text at the position of the caret. The same text can be recalled many times, until another piece of text is deleted, the Backspace key is pressed or the Delete key is pressed.
+
+TextDocs.Replace
+replaces the previously searched text stretch with the selection (used in the [Rep] Button of menu bars).
+
+TextDocs.ReplaceAll
+replaces all instances of the previously searched text stretch with the selection in the document (used in the [RepAll] Button of menu bars).
+
+TextDocs.Search
+searches the selected text stretch in the document in which the command is executed (used in the [Search] Button of menu bars). Differences in the text attributes font, color and vertical offset are ignored.
+
+TextDocs.Search "string"
+searches the specified string in the document in which the command is executed. Differences in the text attributes font, color and vertical offset are ignored.
+
+TextDocs.SearchColor
+searches a specified color in a text document. Select a text stretch first. The color to search is the color of the first character in the stretch. Then, set the caret in the text and execute the command. The text stretch with the specified color appears selected and the caret is set at the end of it.
+
+TextDocs.SearchDiff
+TextDocs.SearchDiff \w
+compares two open documents and searches the first difference between them, starting at the selection in the last two selected texts. The first position where a difference is found will be selected. The \w option regards sequences of white spaces (blanks, TAB characters or CR characters) as a single space.
+
+TextDocs.Show M.word
+TextDocs.Show ^
+opens a TextDoc displaying the text of module M, with the caret positioned at the first occurrence of the specified word, provided the source text file M.Mod is available. Otherwise, an empty document is opened. If word is not found, the text is positioned at the beginning and the caret is not set.
+
+Desktops.PrintDoc Default *
+Desktops.PrintDoc Default file-list ~
+prints a document on the printer specified by the first name. Either the marked document or a list of document names are accepted as parameters. Depending on your platform, the printer name might vary, but in most cases the printer name is simply ignored. Please check your implementation guide for more details.
+
+Desktops.Recall
+recalls the document closed most recently.
+
+In addition, a large palette of text editing commands is provided by the EditTools tool described in Chapter 2.
+
+
+	TextField
+
+
+	
+
+
+Classification	Visual elementary gadget
+Generator	TextFields.NewTextField
+Alias	TextField
+
+Function
+
+A TextField allows the editing of a single line of text. A TextField can be linked to Integer, Real, Set, String, or compatible model gadgets. It can be used to visualize the String attribute of a Set in Oberon set notation. Full Oberon-like text editing capabilities are available for TextFields. The caret or focus point is set with an ML key click and selections are processed with the MR key. A TextField enters a temporary, local editing mode during editing. During this time the frame of the TextField seems to pop out from the screen. If part of the text is not visible, scrolling to the left or to the right is possible with the corresponding keyboard cursor keys. While in editing mode, changes made to the contained text string are not immediately reflected in the model gadget linked to the TextField. As soon as the cursor is removed or when the CR key is pressed, the local editing mode is left and the model and view are made consistent. The previous value (if still available from the model gadget) is restored in the TextField when the Neutralize key is pressed. When TextFields are linked to model gadgets other than the string model gadget, a value conversion will take place to the same format as the model gadget. In some cases, a conversion is not possible, resulting in a default value being shown depending on the exact nature of the model gadget. When multiple TextFields are located in the same container, the TAB key advances the caret from one TextField to the next. Setting the caret and pressing the left and right arrow keys scrolls the contained text horizontally when the content is wider than the width of the TextField.
+
+Attributes
+
+Value
+String [ ] value of the TextField. This value is norammly stored in a linked Model gadget.
+
+Color
+Integer [14] specifying the color of the TextField. The color can also be changed with the ColorPicker.
+
+Field
+String [ ] indicating which attribute of the linked model gadget should be visualized. When empty, the Value attribute of the linked model gadget is used by default.
+
+Cmd
+String [ ] executed as a command when the gadget is focused and the RETURN key is hit.
+
+
+	TextGadget
+
+
+	
+
+
+Classification	Visual container gadget
+Generator	TextGadgets.New
+Alias	TextGadget
+
+Function
+
+A TextGadget visualizes a Text model and implements a text editor. Texts may contain visual gadgets floating along in the text. A scrollbar with a small crossbeam on the left allows you to scroll forward or backward in the text. The ML key scrolls the underlined text line to the top of the gadget (scroll forward) and the MR key scrolls the underlined text line to the bottom of the gadget (scroll backward). The MM key is used to position absolutely in a text. An MM + ML key interclick scrolls to the end of the text, while an MM + MR key interclick scrolls to the beginning of the text. When users are typing text, the text scrolls up to show what is being typed. A more detailed description of using and editing text can be found in the chapter on the textual user interface. The Text model gadget may be replaced by another one, using Columbus for instance, but it may never be deleted. Selected gadgets can be resized using the Gadgets.Panel.
+
+Attributes
+
+Color
+Integer [14] specifying the color of the background. The color can also be changed with the ColorPicker.
+
+Flat
+Boolean [FALSE] - FALSE indicates that the gadget must be surrounded by a 3D border.
+
+Point
+String [ ] containing the last word clicked on with the MM key. The value of this attribute can be used by the Cmd attribute (read-only).
+
+Locked
+Boolean [FALSE] - TRUE indicates that the gadget's direct descendant cannot be edited. The components themselves remain unlocked and can be manipulated.
+
+Cmd
+String [ ] executed as a command when clicking on a word with the MM key. Since the Point attribute contains the Oberon name or string that was clicked on, a command string such as Desktops.OpenDoc #Point will open the document whose name is clicked on.
+
+Commands
+
+See TextDoc.
+
+
+	TextHyperlink
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	TextGadgets.NewControl
+Alias	TextHyperlink
+
+Function
+
+A TextHyperlink is a text control gadget. The visibility of the TextHyperlink gadgets is toggled with the TextDocs.Controls command. A TextHyperlink contains an Oberon command to be executed when the colored piece of text located immediately in front and delimited by a blank at its left is activated with an MM key click. That piece of text can be activated independently of the visibility of the TextHyperlink but the color of the text must differ from black (15). The Cmd attribute value is typically Desktops.OpenDoc docuName or Desktops.ReplaceDoc docuName, but any other suitable command string may be used. To edit this field, make the gadget visible first and then click on it with the MM key: a Columbus Panel is opened automatically, allowing an easy editing of the command.
+
+Attributes
+
+Cmd
+String [ ] executed as a command when the colored text in front of the TextHyperlink is clicked on with the MM key. The TextHyperlink must not necessarily be visible.
+
+Commands
+
+TextDocs.Controls *
+TextDocs.Controls
+toggles the visibility of the text control gadgets, that is, TextHyperlinks and TextStyles, in the marked (*) or in the selected document.
+
+Example
+
+TextHyperlinks are used extensively by the many .Tool documents supplied.
+
+
+	TextNote
+
+
+	
+
+
+Classification	Visual container gadget
+Generator	TextGadgets.NewNote
+Alias	TextNote
+
+Function
+
+A TextNote is a TextGadget without a scrollbar. A TextNote will adjust itself in size depending on the size of the text it contains. More details about text editing can be found in the chapter on the textual user interface. This gadget is often used as a memo pad or post-it note. Sometimes they are used as the pages of a NoteBook. Alternatively, they are used in pop-up menus as an alternative to a list. TextNotes may be colored to enhance their presentation.
+
+Attributes and Commands
+
+See TextGadget.
+
+
+	TextStyle
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	TextGadgets.NewStyleProc
+Alias	TextStyle
+
+Function
+
+A TextStyle is a text control gadget that influences the formatting of text. The visibility of style gadgets is toggled with the TextDocs.Controls command. They have the shape of a thin horizontal dotted line with black weights at the end. A style can be inserted at the caret with the TextGadgets.NewStyle command, or by pressing CTRL-ENTER. In that case all the styles are made visible. On the Macintosh, use the num-lock key instead. The style is divided into two sections: the top part, above the dotted line, controls the formatting whilst the bottom part controls the setting of tab stops. MM key clicks above the dotted line are as follows: when pressing and dragging on the area the black weights occupy, the left border and the formatting width can be specified; clicking next to the weight (but not on top of it), switches the weight on and off. The weights pull the left and right text ends of a text line to them. Left, right, block and center adjust can be selected in this way:
+
+          A left weight. Left adjust mode with word wrapping.
+          A right weight. Right adjust mode.
+          A weight to the left and the right. Block adjust mode.
+          No weights. Center adjust.
+
+A new tab stop is inserted with an MM + ML key interclick when the mouse focus is positioned below the dotted line. The tab stop shows up as small black rectangle and can be moved by dragging on the MM key. Tab stops are removed by dragging them completely out of the TextStyle to the left or to the right. All these adjustments can be made more comfortably than with the mouse, by assigning values to the attributes Tabs, Left and Width with the help of Columbus. As tabbing does not make much sense in center or right adjust mode, in such cases the tab stops are not visible. Copying a stretch of text always makes a copy of the gadgets contained in that stretch (TextStyles are gadgets too). The Pagebreak attribute is used to specify if a page break should be inserted before the style when printing. Styles that cause a page break are shown with a solid instead of a dotted line. When a TextStyle is named and placed in a public library, it can be re-used many times in the same document or even in different documents, which is very handy for creating a uniformly formatted document. The Libraries.Panel offers three ways to retrieve a TextStyle (or any other gadget) from a public library: a reference, a shallow copy or a deep copy. The most general and most flexible approach is to retrieve it by reference. In that manner, the format of the document(s) in which it is used can be modified by simply changing the attributes of the (master) TextStyle stored in the public library. These TextStyles are easily recognizable by the label at the right end: libraryName.TextStyleName.
+
+Attributes
+
+Pagebreak
+Boolean [FALSE] - TRUE indicates that a page break must be inserted at this text position during printing. Styles with this flag set are shown as a solid line and are always visible in the text.
+
+WYSIWYG
+Boolean [FALSE] - TRUE indicates that when the document is printed the printout corresponds to the display representation. Otherwise, only printer metrics are used.
+
+Adjust
+Boolean [TRUE] - TRUE indicates that the printout must be adjusted to the printer frame.
+
+Tabs
+String [ ] of integers delimited by commas, specifying the position of the tab stops in pixels. A maximum of 32 tab stops can be set. The tabs are not visible in center or right adjust mode.
+
+Left
+Integer [0] specifying the position of the left end in pixels.
+
+Width
+Integer specifying the width of the TextStyle in pixels.
+
+Commands
+
+TextDocs.Controls *
+TextDocs.Controls
+toggles the visibility of the text control gadgets, that is, TextHyperlinks and TextStyles in the marked (*) or in the selected document. TextStyles which have their Pagebreak attribute set on are always visible.
+
+TextGadgets.NewStyle
+inserts a style at the caret.
+
+Example
+
+TextStyles are used extensively by the many .Tool documents supplied.
+
+
+	TimeStamp
+
+
+	
+
+
+Classification	Visual elementary gadget, transparent
+Generator	TimeStamps.New
+Alias	TimeStamp
+
+Function
+
+When a TimeStamp is inserted at the caret, it shows the current date and time. If it appears in a document, it is updated when the document is stored to disk. Consequently, when the document is opened the TimeStamp shows the date and time the document was last stored. The date and the time are formatted according to the specifications contained in the DateFormat and the TimeFormat keys in the [System] section of the registry.
+
+Attributes
+
+Color
+Integer [15] specifying the color of the time stamp. The color can also be changed with the ColorPicker.
+
+Font
+String [Syntax10.Scn.Fnt] specifying the font of the text.
+
+
+	Tree
+
+
+
+
+Classification	Model gadget
+Generator	ListModels.NewTree
+Alias	Tree
+
+Function
+
+A Tree stores strings in a tree fashion (lists of lists). The list items may be sorted or unsorted and the list may contain duplicates or not. This model gadget is typically used as a model by a ListGadget.
+
+Attributes
+
+Sorted
+Boolean [FALSE] - TRUE indicates that the list items are sorted on a level.
+
+Unique
+Boolean [FALSE] - TRUE indicates that no duplicate list items are allowed on a level.
+
+Commands
+
+See ListGadget.
+
+
+	View
+
+
+				
+
+
+Classification	Visual camera view gadget
+Generator	Views.NewView
+Alias	View
+
+Function
+
+A View acts as a camera displaying a single visual gadget or document. The visual gadget is linked to the View as a model gadget and it can not be un-linked with Columbus. A visual gadget may be dropped in an empty View, but once only. The viewed gadget can be removed by moving it to a different location out of the View or with a delete interclick. Each View has a certain viewpoint of the thing it displays (camera angle). This feature is useful when the viewed gadget has a rigid size exceeding the size of the View. The viewpoint can be changed by picking up the viewed gadget by pressing the MM key on its border and moving it to a new location. Should the border be invisible because the gadget is too big, an invisible area in the top left corner of the view can be used to grab and move the viewed gadget. The gadget's bounding box will appear as a rectangle showing the size and relative position of the gadget. Refer also to the ScrollView which is a View with optional horizontal and vertical Scrollbars.

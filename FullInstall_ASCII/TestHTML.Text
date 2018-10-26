@@ -1,0 +1,49 @@
+TestHTML.html: A test page
+
+<!Red paragraphs at the start ends up in the header of the page>
+<META name="description" content="A test page">
+<META name="keywords" content="test,oberon">
+
+Introduction
+
+This is a test page for the Text to HTML converter of Oberon ( HTML.Tool). It contains italics and 
+a hyperlink{http://www.ethz.ch/} (in blue).  Level two headers are written in bold.
+
+Special characters
+
+Most accented characters are automatically converted to their HTML form, like this: 
+       
+
+If you need to write an open brace, use: &#123;
+
+Lists
+
+Here we have a list:
+
+* This is item one (a list item paragraph starts with a "*")
+
+* This is item two
+
+* This is item three
+
+Preformatted text
+
+Normal text is written in the default 12pt font, and by using a 10pt font, it is possible to include 
+preformatted text:
+
+  HTML.Compile *  HTML.Compile ^ HTML.Show *  HTML.Show ^  HTML.Show @
+
+Embedded HTML
+
+If you want special effects, simply embed the HTML code, like this:
+
+<CENTER>
+Centered paragraph
+</CENTER>
+
+A minus on its own in a paragraph generates a horizontal ruler.
+
+-
+
+Always end the text with an empty line.
+

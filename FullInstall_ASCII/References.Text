@@ -1,0 +1,146 @@
+References
+
+
+	Institute for Computer Systems
+	Oberon User Group (OUG)
+	FTP Site
+	News Group
+	World Wide Web
+	Oberon CD-ROM
+	Oberon News
+	Literature & Publications
+
+
+
+Institute for Computer Systems
+
+The Institute for Computer Systems, home of Oberon, can be contacted at:
+
+			Institut fr Computersysteme
+			ETH-Zentrum
+			CH-8092 Zrich
+			Switzerland
+			
+			email: oberon@inf.ethz.ch
+			tel: +41 (1) 632 73 11
+			fax: +41 (1) 632 13 07
+
+
+
+Oberon User Group (OUG)
+
+The Oberon User Group (OUG) organizes the popular Oberon Day every year. They also maintain an anonymous FTP server called huxley.ethz.ch.
+
+			The Oberon User Group
+			Bergstrasse 5
+			CH-8044 Zrich
+			Switzerland
+			
+			email: oberon-user@inf.ethz.ch
+
+
+
+FTP Site
+
+The current Oberon versions for several different hardware platforms can be obtained via internet file transfer ftp from the anonymous FTP server ftp.inf.ethz.ch. It archives the Oberon systems in the directory /pub/Oberon. In directory /pub/Oberon/System3 the Oberon System 3 implementations can be found. Oberon System 3 is freely available for Windows 3.1/NT, Mac II, PowerMac, PC Native and PC Linux.
+
+FTP Hostname:	ftp.inf.ethz.ch
+Directory:	/pub/Oberon/System3/
+
+
+News Group
+
+On Internet, the news group comp.lang.oberon discusses Oberon. If you don't have news group access, but do have e-mail access, a list server can send you the newsgroup contents. Send the list server an e-mail:
+
+	To: listproc@inf.ethz.ch
+	subscribe oberon-news@inf.ethz.ch <your e-mail address here>
+
+Or to get more information:
+
+	To: listproc@inf.ethz.ch
+	help
+
+An interesting document explains how to use the internet when you only have e-mail access:
+
+	To: LISTSERV@ubvm.cc.buffalo.edu
+	GET INTERNET BY-EMAIL NETTRAIN F=MAIL
+
+
+
+
+World Wide Web
+
+The Oberon home page is located on the Web at:
+
+	http://www.oberon.ethz.ch
+
+
+
+
+Oberon CD-ROM
+
+The Oberon system collection is available on CD-ROM from:
+
+	The Oberon System - September 21st, 1994
+	by  Anthra Norell, Inc.
+	ISBN  0-964-29530-X
+	UPC  79591000006
+	                
+	Oberon - das neue Pascal fuer DOS, Windows, Mac und Unix, 
+	Version 1.0
+	by Addison Wesley
+	ISBN 3-89319-791-5 VVA-Nr. 563-00791-9
+	
+	Oberon! - System 3 Release 2.0
+	ComponentWare
+	Fr DOS, Windows, Mac und Unix - 2. aktualisierte Auflage
+	Josef Templ
+	by Addison-Wesley - 1995
+	ISBN 3-89319-886-5
+
+
+
+Literature & Publications
+
+N. Wirth and M. Reiser: 
+Programming in Oberon. - Steps beyond Pascal and Modula_2.
+Addison Wesley, 1992, ISBN 0-201-56543-9.
+Tutorial for the Oberon programming language and concise language reference.
+
+H. Mssenbck: 
+Objektorientierte Programmierung in Oberon-2
+Springer-Verlag, 1993, ISBN 3-540-55690-7
+German version of Object-Oriented Programming in Oberon-2
+
+M. Reiser: The Oberon System. User Guide and Programmer's Manual.
+Addison Wesley, 1991, ISBN 0-201-54422-9.
+User manual for the programming environment and reference for the standard module library.
+
+N. Wirth and J. Gutknecht: 
+Project Oberon - The Design of an Operating System and Compiler.
+Addison Wesley, 1992, ISBN 0-201-54428-8.
+Program listings with explanations for the whole Oberon system, including the compiler for NS32000.
+
+Jrg Gutknecht:
+Oberon System 3: Vision of a Future Software Technology
+Software - Concepts and Tools, Volume 15, No 1, 1994.
+ 
+Johannes L. Marais:
+Inside Oberon System 3
+Dr.Dobb's Journal, October 1994.
+
+Johannes L. Marais:
+The GADGETS User Interface Management System
+Structured Programming, Volume 12, 1991.
+ 
+Jrg Gutknecht:
+Oberon - Perspectives of Evolution
+Proceeedings of the Joint Modular Languages Conference, Ulm 1994. Published in Advances in Modular Languages, Peter Schulthess, Technology transfer series, Benzstrasse 12, Postfach 4204, D-89032 Ulm/Donau.
+ 
+Johannes L. Marais:
+Towards End-User Objects: The Gadgets User Interface System
+Proceeedings of the Joint Modular Languages Conference, Ulm 1994. Published in Advances in Modular Languages, Peter Schulthess, Technology transfer series, Benzstrasse 12, Postfach 4204, D-89032 Ulm/Donau.
+
+Andr Fischer and Hannes Marais:
+The Oberon Companion: A Guide to Using and Programming Oberon System 3
+vdf Verlag, Zrich

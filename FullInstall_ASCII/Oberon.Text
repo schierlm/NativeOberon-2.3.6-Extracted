@@ -1,0 +1,839 @@
+{ The Oberon Configuration Text - Script.Open System.Text for more information }
+
+System = {
+	InitCommands = {
+		{ !TextDocs.ReplaceSystemEditor }	{* remove "!" to load Gadgets as default *}
+		{ System.OpenLog }
+		{ System.Open System.Tool }	{* change to System3.Tool for Gadgets-based system tool *}
+	}
+	TimeDiff = "+0100"	{* time difference of PC clock to GMT *}
+}
+
+Printer = {
+	Default = PSPrinter.Install	{* options: HPLaserPrinter.Install, PSPrinter.Install, LPRPrinter.Install *}
+	DefaultName = "Temp.ps"	{* output of printer named "Default" goes here *}
+	COM1 = {19200,8,n,1}
+	COM2 = {19200,8,n,1}
+}
+
+PSPrinter = {
+	Resolution = 600
+	Width = {210 mm}
+	Height = {297 mm}
+	LeftMargin = {2 cm}
+	RightMargin = {2 cm}
+	TopMargin = {1.5 cm}
+	BottomMargin = {1.5 cm}
+}
+
+HPLaserPrinter = {
+	Resolution = 300
+	Width = {210 mm}
+	Height = {297 mm}
+	LeftMargin = {2 cm}	{* minimum 6mm *}
+	RightMargin = {2 cm}
+	TopMargin = {1.5 cm}	{* minimum 12.5mm *}
+	BottomMargin = {1.5 cm}
+}
+
+NetSystem = {
+	Hosts = { 
+		Domain = { "<yourdomain>", "" }
+		DNS0 = { "dns0", "<ip number>" }
+		DNS1 = { "dns1", "<ip number>" }
+		DNS2 = { "dns2", "<ip number>" }
+
+		Device0 = { "<drivermodule.initproc>", "" }
+			{* options:
+				Device0 = { "PPPMain.InstPPP", "COM1"}
+				Device0 = { "SLIP.InstallDevice", "COM1 compressed"}
+				Device0 = { "Net3Com509.InstallDevice", "" }
+				Device0 = { "Net3Com905B.InstallDevice", "" }
+			*}
+		
+		Route0 = {
+			Device = "device0"
+			Mode = "arp"	{* "arp" for LAN, "" for PPP or SLIP *}
+			Host = { "<yourhost.yourdomain>", "<ip number>" }	{* not PPP *}
+			Gateway = { "gateway", "<ip number>" }	{* not PPP *}
+			Netmask = { "netmask", "<netmask>" }	{* LAN only *}
+		}
+	}
+
+	SMTP = "<smtpserver>"	{* outgoing mail server *}
+	POP = "<popserver>"	{* incoming mail server *}
+	NNTP = "<newsserver>"	{* news server *}
+	POPMode = "POP3"	{* POP3 or APOP *}
+
+	EMail = "<yourname@yourdomain>"	{* your return address (leave out the < and >) *}
+	MailSignature = "Mail.Sig.Text"	{* text appended to every outgoing mail *}
+	NewsSignature = "News.Sig.Text"	{* text appended to every outgoing news posting *}
+	LeaveOnServer = Yes	{* Mail.Panel leaves email on POP server when downloading *}
+	TraceMail = No	{* display mail protocol information in System.Log *}
+
+	ProxyDomain = "<yourdomain>"	{* optional *}
+	HTTPProxy = "<yourproxyserver.yourdomain:port>"
+	FTPProxy = "<yourproxyserver.yourdomain:port>"
+	GopherProxy = "<yourproxyserver.yourdomain:port>"
+
+	NewsThreading = Yes	{* Newsreader keeps message threads together? *}
+	NewsFont = Courier10.Scn.Fnt	{* Font for news articles *}
+
+	HTMLImages = Yes	{* Download WWW images with background task? *}
+	
+	Topic0 = "ToDo"	{* Topic 0 automatically set on downloaded mail *}
+	Topic1 = "Topic1"	{* define up to 32 topics here, for use with Set/Clear/Query on Mail.Panel *}
+	Topic2 = "Topic2"
+}
+
+DIAL = {
+	Host = { "<slipserver>" }	{* SLIP only *}
+	Init = { COM1 19200 }	{* modem port and speed *}
+	PAPName = { "<username>" }	{* if using PAP only *}
+	PAPPassword = { "<password>" }	{* if using PAP only *}
+	Dial = {
+		"ATZ" 
+		10 "OK" 
+		"ATD #######" 
+		60 "CONNECT" 
+		10 "Login:" 
+		USER 
+		20 "Password:" 
+		PASSWORD 
+		20 "enabled" 
+		CALL PPPMain.StartInst
+	}
+{* Dial script notes:
+	o No comments allowed inside script
+	o Dial script must end with CALL PPPMain.StartInst or CALL SLIP.StartDevice 
+	o The last wait string ("enabled") should be set to your ISP's "successful login" message
+*}
+}
+
+Sound = {
+	Audio = {
+		Port = 220H
+		IRQ = 7
+		LowDMA = 1
+		HighDMA = 7
+		compatible = -1	{* -1: true SB (autodetect); compatibles ->  0: SB1.5; 1: SB2.0; 2: SBpro; 3: SB16 *}
+	}
+	CDAtapi = {
+		CtrlPort = 170H
+		RegPort = 376H
+		IRQ = 15
+	}
+	CDMitsumi = {
+		Port = 340H
+		IRQ = 10
+	}
+}
+
+LinkSchemes = {
+	ftp = FTPDocs.NewLinkScheme
+	mailto = Mail.NewMailToLinkScheme
+	mailserver = Mail.NewMailServerLinkScheme
+	finger = Finger.NewLinkScheme
+	news = News.NewNewsLinkScheme
+	nntp = News.NewNNTPLinkScheme
+	telnet = TelnetGadgets.NewLinkScheme
+	gopher = Gopher.NewLinkScheme
+	file = HyperDocs.NewLinkScheme
+	http = HTTPDocs.NewLinkScheme
+}
+
+MIME = {
+	"text/html" = html
+	"text/plain" = txt
+	"image/x-xbitmap" = xbm
+	"image/gif" = gif
+	"image/jpeg" = jpg
+	"application/octet-stream" = ""
+	"application/oberondoc" = ""
+	"application/oberon" = ""
+}
+
+HTMLTags = {
+	CAPTION = HTMLTables.NewCAPTION
+	TABLE = HTMLTables.NewTABLE
+	TD = HTMLTables.NewTD
+	TH = HTMLTables.NewTH
+	TR = HTMLTables.NewTR
+	FORM = HTMLForms.NewFORM
+	INPUT = HTMLForms.NewINPUT
+	SELECT = HTMLForms.NewSELECT
+	TEXTAREA = HTMLForms.NewTEXTAREA
+	MAP=HTMLImages.NewMAP
+	AREA=HTMLImages.NewAREA
+	IMG=HTMLImages.NewIMG
+}
+
+PictureConverters = {
+	gif = GIF.InitPicture
+	jpg = JPEG.InitPicture
+	jpeg = JPEG.InitPicture
+	xbm = XBM.InitPicture
+	bmp = BMP.InitPicture
+	pcx = PCX.InitPicture
+	ico = ICO.InitPicture
+	tga = TGA.InitPicture
+	iff = IFF.InitPicture
+	xpm = XPM.InitPicture
+	pbm = PPM.InitPicture
+	pgm = PPM.InitPicture
+	ppm = PPM.InitPicture
+}
+
+ImageFormats = {
+	Pict = GfxPictures.Install
+}
+
+FontFormats = {
+	TTF = GfxOType.Install
+}
+
+OP2 = {
+	Errors = {
+		Incorrect use of language Oberon
+		
+		  0	undeclared identifier
+		  1	multiply defined identifier
+		  2	illegal character in number
+		  3	illegal character in string
+		  4	identifier does not match procedure name
+		  5	comment not closed
+		  6	
+		  7	
+		  8	
+		  9	"=" expected
+		10	
+		11	
+		12	type definition starts with incorrect symbol
+		13	value starts with incorrect symbol
+		14	statement starts with incorrect symbol
+		15	declaration followed by incorrect symbol
+		16	MODULE expected
+		17	
+		18	"." missing
+		19	"," missing
+		20	":" missing
+		21	
+		22	")" missing
+		23	"]" missing
+		24	"}" missing
+		25	OF missing
+		26	THEN missing
+		27	DO missing
+		28	TO missing
+		29	
+		30	"(" missing
+		31	
+		32	
+		33	
+		34	":=" missing
+		35	"," or OF expected
+		36	
+		37	
+		38	EXIT not within loop statement
+		39	
+		40	identifier expected
+		41	";" missing
+		42	
+		43	END missing
+		44	
+		45	
+		46	UNTIL missing
+		47	illegally marked identifier
+		48	
+		49	
+		50	expression should be constant
+		51	constant not an integer
+		52	identifier does not denote a type
+		53	identifier does not denote a record type
+		54	result type of procedure is not a basic type
+		55	procedure call of a function
+		56	assignment to non-variable
+		57	pointer not bound to record or array type
+		58	recursive type definition
+		59	illegal open array parameter
+		60	wrong type of case label
+		61	inadmissible type of case label
+		62	case label defined more than once
+		63	illegal value of constant
+		64	more actual than formal parameters
+		65	fewer actual than formal parameters
+		66	element types of actual array and formal open array differ
+		67	actual parameter corresponding to open array is not an array
+		68	control variable must be integer
+		69	parameter must be an integer constant
+		70	pointer or VAR record required as formal receiver
+		71	pointer expected as actual receiver
+		72	procedure must be bound to a record of the same scope
+		73	procedure must be of level 0
+		74	procedure unknown in base type
+		75	invalid call of base procedure
+		76	this variable (field) is read only
+		77	object is not a record
+		78	dereferenced object is not a variable
+		79	indexed object is not a variable
+		80	index expression is not an integer
+		81	index out of specified bounds
+		82	indexed variable is not an array
+		83	undefined record field
+		84	dereferenced variable is not a pointer
+		85	guard or test type is not an extension of variable type
+		86	guard or testtype is not a pointer
+		87	guarded or tested variable is neither a pointer nor a VAR-parameter record
+		88	open array not allowed as variable, record field or array element
+		89	open lower bound not bound to procedure parameter
+		90	semi-dynamic array not allowed in a record
+		91	
+		92	operand of IN not an integer, or not a set
+		93	set element type is not an integer
+		94	operand of & is not of type BOOLEAN
+		95	operand of OR is not of type BOOLEAN
+		96	operand not applicable to (unary) +
+		97	operand not applicable to (unary) -
+		98	operand of ~ is not of type BOOLEAN
+		99	ASSERT fault
+		100	incompatible operands of dyadic operator
+		101	operand type inapplicable to *
+		102	operand type inapplicable to /
+		103	operand type inapplicable to DIV
+		104	operand type inapplicable to MOD
+		105	operand type inapplicable to +
+		106	operand type inapplicable to -
+		107	operand type inapplicable to = or #
+		108	operand type inapplicable to relation
+		109	overriding method must be exported
+		110	operand is not a type
+		111	operand inapplicable to (this) function
+		112	operand is not a variable
+		113	incompatible assignment
+		114	string too long to be assigned
+		115	parameter does not match
+		116	number of parameters do not match
+		117	result type does not match
+		118	export mark does not match with forward declaration
+		119	redefinition textually precedes procedure bound to base type
+		120	type of expression following IF, WHILE, UNTIL or ASSERT is not BOOLEAN
+		121	called object is not a procedure (or is an interrupt procedure)
+		122	actual VAR-parameter is not a variable
+		123	type of actual parameter is not identical with that of formal VAR-parameter
+		124	type of result expression differs from that of procedure
+		125	type of case expression is neither INTEGER nor CHAR
+		126	this expression must not be a type or a procedure
+		127	illegal use of object
+		128	unsatisfied forward reference
+		129	unsatisfied forward procedure
+		130	WITH clause does not specify a variable
+		131	LEN not applied to array
+		132	dimension in LEN too large or negative
+		134	initialiser can not return a value
+		135	SYSTEM not imported
+		136	recursive call of operator
+		137	operator not defined
+		138	VAR-parameter not allowed
+		139	multiply-defined operator
+		140	operator not allowed in record scope
+		141	operator type missing
+		142	name does not denote an operator
+		143	invalid number of formal parameters
+		144	only one initializer allowed in a record
+		145	forward declaration not allowed
+		146	operator must use one locally declared argument type
+		147	:= operator: cannot be a function
+		148	:= operator: first parameter must be VAR
+
+		150	key inconsistency of imported module
+		151	incorrect symbol file
+		152	symbol file of imported module not found
+		153	object or symbol file not opened (disk full?)
+		154	recursive import not allowed
+		155	generation of new symbol file not allowed
+
+		170	incompatible assignment (declare the record as POINTER TO RECORD)
+
+		Limitations of implementation
+
+		200	not yet implemented
+		201	lower bound of set range greater than higher bound
+		202	set element greater than MAX(SET) or less than 0
+		203	number too large
+		204	product too large
+		205	division by zero
+		206	sum too large
+		207	difference too large
+		208	overflow in arithmetic shift
+		209	case range too large
+		210	code too long
+		211	procedure too large (reduce procedure size)
+		212	operator should precede procedure declaration
+		213	too many cases in case statement
+		214	
+		215	not enough registers: simplify expression
+		216	not enough floating-point registers: simplify expression
+		217	
+		218	illegal value of parameter  (20 <= p < 256)
+		219	illegal value of parameter  (0 <= p < 16)
+		220	illegal value of parameter
+		221	too many pointers in a record
+		222	too many global pointers
+		223	too many record types
+		224	too many pointer types
+		225	address of pointer variable too large (move forward in text)
+		226	too many exported and/or type-bound procedures
+		227	too many imported modules
+		228	too many exported structures
+		229	too many nested records for import
+		230	too many constants (strings) in module
+		231	too many external and/or type-bound procedures
+		232	too many commands in module
+		233	record extension hierarchy too high
+		234	export of recursive type not allowed
+		235	too many accesses to global variables or constants
+		236	too many exported variables
+		240	identifier too long
+		241	string too long
+		242	address overflow
+		243	too many imported variables
+
+		248	PASSIVATE with global condition
+		249	only allowed for POINTER TO RECORDs
+		250	code procedures must not be exported
+		251	too many nested function calls
+		252	pointer to this record required
+		253	initialiser must belong to a record
+		254	can not define a static instance of an active object
+		260	Active Oberon forward reference
+		261	Active Oberon method
+		262	Active Oberon relaxed declaration order
+		270	Oberon X structured return type
+		271	Oberon X array
+
+		Compiler Warnings
+
+		301	implicit type cast
+		302	guarded variable can be side-effected
+		303	SYSTEM.PTR var parameter output-only
+		304	SYSTEM.VAL size mismatch
+		305	only open arrays and named types can be used
+		310	ambigous operator
+		311	dynamic array deep copy
+		312	implicit reference to heap object via VAR
+
+		Incorrect use of i80386 Assembly Language
+
+		500	undeclared identifier
+		501	addressing mode not allowed
+		502	undefined instruction
+		503	number to large
+		504	max one segment override allowed
+		505	register expected
+		506	32-Bit register expected
+		507	"[" expected
+		508	scale factor expected (2, 4, 8)
+		509	index already defined
+		510	Carriage Return expected
+		511	Operand missing
+		512	Undefined operand size
+		513	string expected
+		514	Object Type not supported
+		515	Instruction not supported on target
+		516	no target specified
+
+		Analyzer Warnings
+
+		900	never used
+		901	never set
+		902	used before set
+		903	set but never used
+		904	used as varpar, possibly not set
+		905	also declared in outer scope
+		906	access/assignment to intermediate
+		907	redefinition
+		908	new definition
+		909	statement after RETURN/EXIT
+		910	for loop variable set
+		911	implied type guard in record assignment
+		912	call might depend on evaluation sequence of params
+		913	parameter never used
+	}
+}
+
+ColorSystem = {
+	RGB = {
+		AliceBlue	  0.941	  0.973	  1.000	
+		AntiqueWhite	  0.980	  0.922	  0.843	
+		Aquamarine	  0.498	  1.000	  0.831	
+		Azure	  0.941	  1.000	  1.000	
+		Beige	  0.961	  0.961	  0.863	
+		Bisque	  1.000	  0.894	  0.769	
+		Black	  0.000	  0.000	  0.000	
+		BlanchedAlmond	  1.000	  0.922	  0.804	
+		Blue	  0.000	  0.000	  1.000	
+		BlueViolet	  0.541	  0.169	  0.886	
+		Brown	  0.647	  0.165	  0.165	
+		Burlywood	  0.871	  0.722	  0.529	
+		CadetBlue	  0.373	  0.620	  0.627	
+		CadetBlue	  0.373	  0.620	  0.627	
+		Chartreuse	  0.498	  1.000	  0.000	
+		Chocolate	  0.824	  0.412	  0.118	
+		Coral	  1.000	  0.498	  0.314	
+		CornflowerBlue	  0.392	  0.584	  0.929	
+		Cornsilk	  1.000	  0.973	  0.863	
+		Cyan	  0.000	  1.000	  1.000	
+		DarkBlue	  0.000	  0.000	  0.545	
+		DarkCyan	  0.000	  0.545	  0.545	
+		DarkGoldenrod	  0.722	  0.525	  0.043	
+		DarkGreen	  0.000	  0.392	  0.000	
+		DarkGrey	  0.663	  0.663	  0.663	
+		DarkKhaki	  0.741	  0.718	  0.420	
+		DarkMagenta	  0.545	  0.000	  0.545	
+		DarkOliveGreen	  0.333	  0.420	  0.184	
+		DarkOrange	  1.000	  0.549	  0.000	
+		DarkOrchid	  0.600	  0.196	  0.800	
+		DarkRed	  0.545	  0.000	  0.000	
+		DarkSalmon	  0.914	  0.588	  0.478	
+		DarkSeaGreen	  0.561	  0.737	  0.561	
+		DarkSlateBlue	  0.282	  0.239	  0.545	
+		DarkSlateGrey	  0.184	  0.310	  0.310	
+		DarkTurquoise	  0.000	  0.808	  0.820	
+		DarkViolet	  0.580	  0.000	  0.827	
+		DeepPink	  1.000	  0.078	  0.576	
+		DeepSkyBlue	  0.000	  0.749	  1.000	
+		DimGrey	  0.412	  0.412	  0.412	
+		DodgerBlue	  0.118	  0.565	  1.000	
+		Firebrick	  0.698	  0.133	  0.133	
+		FloralWhite	  1.000	  0.980	  0.941	
+		ForestGreen	  0.133	  0.545	  0.133	
+		Gainsboro	  0.863	  0.863	  0.863	
+		GhostWhite	  0.973	  0.973	  1.000	
+		Gold	  1.000	  0.843	  0.000	
+		Goldenrod	  0.855	  0.647	  0.125	
+		Green	  0.000	  1.000	  0.000	
+		GreenYellow	  0.678	  1.000	  0.184	
+		Grey	  0.745	  0.745	  0.745	
+		Honeydew	  0.941	  1.000	  0.941	
+		HotPink	  1.000	  0.412	  0.706	
+		IndianRed	  0.804	  0.361	  0.361	
+		Ivory	  1.000	  1.000	  0.941	
+		Khaki	  0.941	  0.902	  0.549	
+		Lavender	  0.902	  0.902	  0.980	
+		LavenderBlush	  1.000	  0.941	  0.961	
+		LawnGreen	  0.486	  0.988	  0.000	
+		LemonChiffon	  1.000	  0.980	  0.804	
+		LightBlue	  0.678	  0.847	  0.902	
+		LightCoral	  0.941	  0.502	  0.502	
+		LightCyan	  0.878	  1.000	  1.000	
+		LightGoldenrod	  0.933	  0.867	  0.510	
+		LightGoldenrodYellow	  0.980	  0.980	  0.824	
+		LightGreen	  0.565	  0.933	  0.565	
+		LightGrey	  0.827	  0.827	  0.827	
+		LightPink	  1.000	  0.714	  0.757	
+		LightSalmon	  1.000	  0.627	  0.478	
+		LightSeaGreen	  0.125	  0.698	  0.667	
+		LightSkyBlue	  0.529	  0.808	  0.980	
+		LightSlateBlue	  0.518	  0.439	  1.000	
+		LightSlateGrey	  0.467	  0.533	  0.600	
+		LightSteelBlue	  0.690	  0.769	  0.871	
+		LightYellow	  1.000	  1.000	  0.878	
+		LimeGreen	  0.196	  0.804	  0.196	
+		Linen	  0.980	  0.941	  0.902	
+		Magenta	  1.000	  0.000	  1.000	
+		Maroon	  0.690	  0.188	  0.376	
+		MediumAquamarine	  0.400	  0.804	  0.667	
+		MediumBlue	  0.000	  0.000	  0.804	
+		MediumOrchid	  0.729	  0.333	  0.827	
+		MediumPurple	  0.576	  0.439	  0.859	
+		MediumSeaGreen	  0.235	  0.702	  0.443	
+		MediumSlateBlue	  0.482	  0.408	  0.933	
+		MediumSpringGreen	  0.000	  0.980	  0.604	
+		MediumTurquoise	  0.282	  0.820	  0.800	
+		MediumVioletRed	  0.780	  0.082	  0.522	
+		MidnightBlue	  0.098	  0.098	  0.439	
+		MintCream	  0.961	  1.000	  0.980	
+		MistyRose	  1.000	  0.894	  0.882	
+		Moccasin	  1.000	  0.894	  0.710	
+		NavajoWhite	  1.000	  0.871	  0.678	
+		NavyBlue	  0.000	  0.000	  0.502	
+		OldLace	  0.992	  0.961	  0.902	
+		OliveDrab	  0.420	  0.557	  0.137	
+		Orange	  1.000	  0.647	  0.000	
+		OrangeRed	  1.000	  0.271	  0.000	
+		Orchid	  0.855	  0.439	  0.839	
+		PaleGoldenrod	  0.933	  0.910	  0.667	
+		PaleGreen	  0.596	  0.984	  0.596	
+		PaleTurquoise	  0.686	  0.933	  0.933	
+		PaleVioletRed	  0.859	  0.439	  0.576	
+		PapayaWhip	  1.000	  0.937	  0.835	
+		PeachPuff	  1.000	  0.855	  0.725	
+		Peru	  0.804	  0.522	  0.247	
+		Pink	  1.000	  0.753	  0.796	
+		Plum	  0.867	  0.627	  0.867	
+		PowderBlue	  0.690	  0.878	  0.902	
+		Purple	  0.627	  0.125	  0.941	
+		Red	  1.000	  0.000	  0.000	
+		RosyBrown	  0.737	  0.561	  0.561	
+		RoyalBlue	  0.255	  0.412	  0.882	
+		SaddleBrown	  0.545	  0.271	  0.075	
+		Salmon	  0.980	  0.502	  0.447	
+		SandyBrown	  0.957	  0.643	  0.376	
+		SeaGreen	  0.180	  0.545	  0.341	
+		Seashell	  1.000	  0.961	  0.933	
+		Sienna	  0.627	  0.322	  0.176	
+		SkyBlue	  0.529	  0.808	  0.922	
+		SlateBlue	  0.416	  0.353	  0.804	
+		SlateGrey	  0.439	  0.502	  0.565	
+		Snow	  1.000	  0.980	  0.980	
+		SpringGreen	  0.000	  1.000	  0.498	
+		SteelBlue	  0.275	  0.510	  0.706	
+		Tan	  0.824	  0.706	  0.549	
+		Thistle	  0.847	  0.749	  0.847	
+		Tomato	  1.000	  0.388	  0.278	
+		Turquoise	  0.251	  0.878	  0.816	
+		Violet	  0.933	  0.510	  0.933	
+		VioletRed	  0.816	  0.125	  0.565	
+		Wheat	  0.961	  0.871	  0.702	
+		White	  1.000	  1.000	  1.000	
+		WhiteSmoke	  0.961	  0.961	  0.961	
+		Yellow	  1.000	  1.000	  0.000	
+		YellowGreen	  0.604	  0.804	  0.196	
+		Grey0	  0.000	  0.000	  0.000	
+		Grey1	  0.012	  0.012	  0.012	
+		Grey2	  0.020	  0.020	  0.020	
+		Grey3	  0.031	  0.031	  0.031	
+		Grey4	  0.039	  0.039	  0.039	
+		Grey5	  0.051	  0.051	  0.051	
+		Grey6	  0.059	  0.059	  0.059	
+		Grey7	  0.071	  0.071	  0.071	
+		Grey8	  0.078	  0.078	  0.078	
+		Grey9	  0.090	  0.090	  0.090	
+		Grey10	  0.102	  0.102	  0.102	
+		Grey11	  0.110	  0.110	  0.110	
+		Grey12	  0.122	  0.122	  0.122	
+		Grey13	  0.129	  0.129	  0.129	
+		Grey14	  0.141	  0.141	  0.141	
+		Grey15	  0.149	  0.149	  0.149	
+		Grey16	  0.161	  0.161	  0.161	
+		Grey17	  0.169	  0.169	  0.169	
+		Grey18	  0.180	  0.180	  0.180	
+		Grey19	  0.188	  0.188	  0.188	
+		Grey20	  0.200	  0.200	  0.200	
+		Grey21	  0.212	  0.212	  0.212	
+		Grey22	  0.220	  0.220	  0.220	
+		Grey23	  0.231	  0.231	  0.231	
+		Grey24	  0.239	  0.239	  0.239	
+		Grey25	  0.251	  0.251	  0.251	
+		Grey26	  0.259	  0.259	  0.259	
+		Grey27	  0.271	  0.271	  0.271	
+		Grey28	  0.278	  0.278	  0.278	
+		Grey29	  0.290	  0.290	  0.290	
+		Grey30	  0.302	  0.302	  0.302	
+		Grey31	  0.310	  0.310	  0.310	
+		Grey32	  0.322	  0.322	  0.322	
+		Grey33	  0.329	  0.329	  0.329	
+		Grey34	  0.341	  0.341	  0.341	
+		Grey35	  0.349	  0.349	  0.349	
+		Grey36	  0.361	  0.361	  0.361	
+		Grey37	  0.369	  0.369	  0.369	
+		Grey38	  0.380	  0.380	  0.380	
+		Grey39	  0.388	  0.388	  0.388	
+		Grey40	  0.400	  0.400	  0.400	
+		Grey41	  0.412	  0.412	  0.412	
+		Grey42	  0.420	  0.420	  0.420	
+		Grey43	  0.431	  0.431	  0.431	
+		Grey44	  0.439	  0.439	  0.439	
+		Grey45	  0.451	  0.451	  0.451	
+		Grey46	  0.459	  0.459	  0.459	
+		Grey47	  0.471	  0.471	  0.471	
+		Grey48	  0.478	  0.478	  0.478	
+		Grey49	  0.490	  0.490	  0.490	
+		Grey50	  0.498	  0.498	  0.498	
+		Grey51	  0.510	  0.510	  0.510	
+		Grey52	  0.522	  0.522	  0.522	
+		Grey53	  0.529	  0.529	  0.529	
+		Grey54	  0.541	  0.541	  0.541	
+		Grey55	  0.549	  0.549	  0.549	
+		Grey56	  0.561	  0.561	  0.561	
+		Grey57	  0.569	  0.569	  0.569	
+		Grey58	  0.580	  0.580	  0.580	
+		Grey59	  0.588	  0.588	  0.588	
+		Grey60	  0.600	  0.600	  0.600	
+		Grey61	  0.612	  0.612	  0.612	
+		Grey62	  0.620	  0.620	  0.620	
+		Grey63	  0.631	  0.631	  0.631	
+		Grey64	  0.639	  0.639	  0.639	
+		Grey65	  0.651	  0.651	  0.651	
+		Grey66	  0.659	  0.659	  0.659	
+		Grey67	  0.671	  0.671	  0.671	
+		Grey68	  0.678	  0.678	  0.678	
+		Grey69	  0.690	  0.690	  0.690	
+		Grey70	  0.702	  0.702	  0.702	
+		Grey71	  0.710	  0.710	  0.710	
+		Grey72	  0.722	  0.722	  0.722	
+		Grey73	  0.729	  0.729	  0.729	
+		Grey74	  0.741	  0.741	  0.741	
+		Grey75	  0.749	  0.749	  0.749	
+		Grey76	  0.761	  0.761	  0.761	
+		Grey77	  0.769	  0.769	  0.769	
+		Grey78	  0.780	  0.780	  0.780	
+		Grey79	  0.788	  0.788	  0.788	
+		Grey80	  0.800	  0.800	  0.800	
+		Grey81	  0.812	  0.812	  0.812	
+		Grey82	  0.820	  0.820	  0.820	
+		Grey83	  0.831	  0.831	  0.831	
+		Grey84	  0.839	  0.839	  0.839	
+		Grey85	  0.851	  0.851	  0.851	
+		Grey86	  0.859	  0.859	  0.859	
+		Grey87	  0.871	  0.871	  0.871	
+		Grey88	  0.878	  0.878	  0.878	
+		Grey89	  0.890	  0.890	  0.890	
+		Grey90	  0.898	  0.898	  0.898	
+		Grey91	  0.910	  0.910	  0.910	
+		Grey92	  0.922	  0.922	  0.922	
+		Grey93	  0.929	  0.929	  0.929	
+		Grey94	  0.941	  0.941	  0.941	
+		Grey95	  0.949	  0.949	  0.949	
+		Grey96	  0.961	  0.961	  0.961	
+		Grey97	  0.969	  0.969	  0.969	
+		Grey98	  0.980	  0.980	  0.980	
+		Grey99	  0.988	  0.988	  0.988	
+		Grey100	  1.000	  1.000	  1.000	
+	}
+}
+
+Gadgets = {
+	Hardlook = No
+	FixedDocs = No	{* should desktop documents have a fixed height *}
+	Aliases = {
+		Boolean = BasicGadgets.NewBoolean
+		Integer = BasicGadgets.NewInteger
+		String = BasicGadgets.NewString
+		Real = BasicGadgets.NewReal
+		Complex = Complex.New
+		Text = Texts.New
+		Picture = Pictures.NewPicture
+		
+		Button = BasicGadgets.NewButton
+		CheckBox = BasicGadgets.NewCheckBox
+		Slider = BasicGadgets.NewSlider
+		
+		TextField = TextFields.NewTextField
+		View = Views.NewView
+		
+		Icon = Icons.NewIcon
+		Iconizer = Icons.NewIconizer
+		List = Lists.NewList
+		ColorPicker = ColorTools.NewColorPicker
+		Panel = Panels.NewPanel
+		NamePlate = NamePlates.NewNamePlate
+		TextGadget = TextGadgets.New
+		TextNote = TextGadgets.NewNote
+		TextHyperlink = TextGadgets.NewControl
+		TextStyle = TextGadgets.NewStyleProc
+		Caption = TextFields.NewCaption
+		
+		Navigator = Navigators.NewNavigator
+		NoteBook = NoteBooks.New
+		ColorWell = ColorWells.NewColorWell
+		
+		Clock = Clocks.NewClock
+		DigitalClock = Clocks.NewDigiClock
+		Calendar = Clocks.NewCalendar
+		
+		Organizer = Organizers.NewPanel
+		Sisiphus = Sisiphus.New
+		Outline = Outlines.New
+		
+		PanelDoc = PanelDocs.NewDoc
+		TextDoc = TextDocs.NewDoc
+		RembrandtDoc = RembrandtDocs.NewDoc
+		RembrandtFrame = Rembrandt.New
+		LogDoc = TextDocs.NewLog
+		
+		CurrentDirectory = Directories.NewDrv
+		Directory = Directories.New
+		DirectoryView = Directories.NewDirList
+		CurrentLoad = Gages.NewLoad
+		EventTimer = Gages.NewLap
+		Scope = Gages.NewFrame
+		MemoryUsed = Gages.NewMem
+		Histogram = Histogram.NewFrame
+
+		TimeStamp = TimeStamps.New
+		Finder = Finder.NewFrame
+		
+		Line = BasicFigures.NewLine
+		Circle = BasicFigures.NewCircle
+		Rectangle = BasicFigures.NewRect
+		Spline = BasicFigures.NewSpline
+
+		Rectangle3D = BasicFigures.NewRect3D
+		ScrollView = ScrollViews.NewView
+		Reference = RefGadgets.NewReference
+		RefFrame = RefGadgets.NewFrame
+		Set = SetGadgets.NewSet
+		SetFrame = SetGadgets.NewFrame
+
+		ProgressMeter = ProgressMeters.NewFrame
+		Columbus = Columbus.NewDoc
+		Scrollbar = Scrollbars.New
+		ListGadget = ListGadgets.NewFrame
+		ListModel = ListModels.NewList
+		Tree = ListModels.NewTree
+		Dag = ListDags.New
+		
+		CDTracks = AudioGadgets.NewTrack
+		LCD = AudioGadgets.NewLCD
+	}
+	Documents = {
+		html = HTMLDocs.NewDoc
+		htm = HTMLDocs.NewDoc
+		gif = RembrandtDocs.NewDoc
+		jpg = RembrandtDocs.NewDoc
+		xbm = RembrandtDocs.NewDoc
+		bmp = RembrandtDocs.NewDoc
+		pcx = RembrandtDocs.NewDoc
+		ico = RembrandtDocs.NewDoc
+		tga = RembrandtDocs.NewDoc
+		iff = RembrandtDocs.NewDoc
+		xpm = RembrandtDocs.NewDoc
+		pbm = RembrandtDocs.NewDoc
+		pgm = RembrandtDocs.NewDoc
+		ppm = RembrandtDocs.NewDoc
+		zip = UnZip.NewDoc
+		Arc = Compress.NewDoc
+		Pict = RembrandtDocs.NewDoc
+		Graph = LeoDraw.NewDoc
+		Fig = Leonardo.NewDoc
+		Lib = Columbus.NewDoc
+		tar = Tar.NewDoc
+	}
+	DocumentServices = {
+		file = HyperDocs.NewDoc
+		http = HTTPDocs.NewDoc
+		ftp = FTPDocs.NewDoc
+		mailto = Mail.NewDoc
+		mailserver = Mail.NewDoc
+		finger = Finger.NewDoc
+		news = News.NewDoc
+		nntp = News.NewDoc
+		gopher = Gopher.NewDoc
+		telnet = TelnetGadgets.NewDoc
+	}
+	FinderTemplates = {
+		Gadgets.Panel = "Gadgets.Panel"
+		Libraries.Panel = "Libraries.Panel"
+		Columbus = "(Columbus.NewDoc)"
+		Watson = "Watson.Panel"
+		TextDocs.Panel = "TextDocs.Panel"
+		Documents.Panel = "Documents.Panel"
+		Rembrandt = "Rembrandt.Panel"
+		Leonardo = "Leonardo.Tool"
+		"New Text" = "(TextDocs.NewDoc)"
+		"New Panel" = "(PanelDocs.NewDoc)"
+		"New Log" = "(TextDocs.NewLog)"
+		System3.Tool = "System3.Tool"
+	}
+}

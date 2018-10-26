@@ -1,0 +1,604 @@
+
+Chapter Three
+
+The Gadgets User Interface
+
+
+
+
+
+
+3.1	Introduction
+
+The previous chapter presented the textual user interface of the Oberon system. Although the text interface is an important part of the Oberon system, it is by no means its only component. In Oberon, text is an example of one component in a large collection of components. Components, or objects as they are also called, build the run-time environment of the Oberon system. The components of Oberon are part of a component framework called Gadgets. In this framework, the components themselves are called gadgets too. The Oberon user uses gadgets to write documents and to create applications. The Oberon programmer manipulates already built gadgets under program control, or creates new gadgets by writing Oberon modules.
+	Gadgets cover a large spectrum. Most of them are of a visual nature and are seen on the display. Examples are Buttons, Scrollbars, Panels, TextGadgets, menu bars etc. When a visual gadget is visible on the display, we say that it is located in the display space. The display space is the data structure that forms your Oberon display. When a visual gadget is not located in the display space, we say that it is off screen. In contrast to the visual gadgets, the non-visual gadgets operate behind the scenes to manipulate and store information. The latter type of gadget we call model gadget or model, for short. It is possible to make the hidden information of a model gadget visible by attaching it to a visual gadget, and by placing the latter in the display space. In such a setup, the visual gadget has to visualize the model gadget attached to it. More examples of gadgets and how to configure them will be given in the following section.
+	Gadgets are examples of persistent objects. We can store them in files and transfer copies of them across the network to other machines. In addition, gadgets are universal. This means that they can be used wherever required. For example, a gadget belonging logically to a drawing application (like a circle), can be inserted into a text, a page layout program, a Panel, another graphical editor, and can float anywhere on the display. In this sense, a gadget does not belong to a certain application but to the system as a whole; it is a first class citizen. In fact, the whole concept of an application is a little fuzzy in Oberon. As gadgets are shared between everybody, it is nothing magic to take an application belonging to somebody else, extract some gadgets that you require from it, and use them in your own application.
+	To complete the picture, Oberon does not distinguish between applications and document files. A file, like a text document, consists of persistent objects. An application consists of objects too (perhaps ones that really do something). In Oberon, the distinction between application and document vanishes. Opening a document is the same as starting an application, and starting an application is the same as opening a document. Mixing application aspects and document aspects is allowed as well; imagine having a working application inside an e-mail. Clearly this could be confusing if we do not clear up the terminology as early as possible. In future, we will refer loosely to an application as a collection of objects (perhaps divided between multiple documents) that does something approximately the same (for example, a bitmap or font editor application). A document is a persistent collection of gadgets (objects or components, if you want). The normal case is for a document to be stored in a file, although in some cases it is generated on the fly from information located somewhere else. For example, world-wide web (WWW) pages and file transfer servers (FTP) are also documents (active ones!) in the Oberon world.
+
+
+3.2	A Gadget Classification
+
+As mentioned earlier, gadgets are classified into visual and non-visual gadgets. This section will give an informal overview of the gadget classification.
+	The visual gadgets are further divided into elementary, container, document and camera view gadgets. As the name indicates, a visual gadget is something you see on your Oberon display. The most abundant are elementary gadgets. They do not contain any further gadgets themselves and thus act as leaf or terminal gadgets in the display space. Examples of elementary gadgets are:
+
+		A Button for activating Oberon commands
+		A CheckBox for checking an item
+		A ColorPicker for changing the color of gadgets or text
+		A Line for drawing a graphic
+		A ListGadget for displaying a list of items
+		A NamePlate for giving a name to a document
+		A TextField for entering short strings or numbers
+		A Scrollbar for entering a numerical value
+
+	Container gadgets, just as the name indicates, contain other visual gadgets as direct descendants or children. Containers can be nested in each other. Thus, a child in turn might have further children (making them indirect descendants). The container is called the parent or direct context of its descendants. Although each child gadget is able to edit itself independently, the container provides additional editing functionality for groups of children. Such groups are identified by selecting the gadgets that belong to the group. By convention, once a gadget has been selected, the container assumes all further editing responsibility for the selected group. Selected gadgets are identified by a white semi-transparent selection pattern that covers them. The selected gadgets, or more precisely, the most recently selected gadgets, are often the targets of further processing by Oberon commands. The two most important containers are the TextGadget and the Panel gadgets.
+
+ 		
+
+Figure 3.1	A TextGadget and a Panel
+
+	The prototype of a container is a Panel, a rectangular surface containing other visual gadgets. A Panel supports operations on groups of children plus the layout and alignment of children. The children of a Panel are organized in a priority sequence and may overlap each other. A child keeps its priority when moved around in a Panel and newly inserted gadgets are always placed in front. Oberon commands put a gadget behind or in front of other gadgets. An Organizer is an extension of Panel which imposes constraints on the placement of its components.
+	A TextGadget visualizes a text and implements a text editor. Also a TextGadget is a container and visual gadgets may float inside the text stream.
+	Model gadgets represent another class of gadgets. Model gadgets contain data values useful to Oberon applications. The Gadgets system provides a set of model gadgets that can store the basic types like INTEGER, REAL, BOOLEAN, SET and string of the Oberon language. They are simple in structure and behavior and cannot display themselves on the display. To visualize them, visual or view gadgets from the elementary and from the container classes introduced before are used. This way of arranging things is called the Smalltalk Model-Viewer-Controller framework (MVC). The Oberon system also uses the MVC concept, although in a slightly modified form: the viewer and the controller are united in a single class Frames. In the MVC framework, the model gadget contains the data displayed by the view gadget. Many view gadgets can show the value of the same model gadget. Each view ensures that it remains consistent with the model it represents. We say that the view is linked to a specific model gadget. An example is a gadget constellation where a TextField and a Scrollbar, acting as view gadgets, are both linked to the same Integer model gadget. Behind the scenes, things are organized as in Figure 3.2.
+
+ 
+Figure 3.2	Two visual gadgets linked to a model gadget
+
+	Changing the position of the Scrollbar causes the Integer gadget to be updated accordingly, which in turn causes the TextField to be informed that the value of its model has changed. The idea with the model gadget is that it can easily be manipulated by an Oberon program without regard to how it is visualized. The visualization of the model is updated accordingly without the application knowing what or how many visualizations exist. This allows application programmers to insulate code against changes made to a user interface. Interestingly, many visual gadgets are programmed in such a way that they can also function without a model gadget linked to them. For example, the Scrollbars and TextFields work just as well without models. This fact gives some insight on how models and views are implemented. Both the model and the view contain the data to be represented, often in a format convenient for the gadget (for example, a TextField remembers strings whereas an Integer gadget stores INTEGERs). When one value changes, a communication protocol between the model and the view ensures that the values, even though of different but compatible formats, are made consistent with one another. No updating takes place when the formats are incompatible.
+	The Gadgets system provides only a limited set of model gadgets; typically application programmers add their own model gadgets to the system depending on their needs. For example, it is sometimes useful to construct compound models that store more than one data value The Complex gadget is an example.
+	Another variant of the Model-View-Controller framework is possible in the Gadgets system. Often you want not only to share the same model gadget, but also to have two different camera views on the same displayable gadget. Imagine you are editing a large drawing and you would like to see two different parts of the same drawing at the same time. Again, the structure behind the scenes is similar to the one above, but in this case it can be seen directly on the display (Figure 3.3).
+
+ 		
+
+Figure 3.3	Two camera views of the same Panel
+
+	Here we have two different camera views onto the same Panel containing a single Button and a Scrollbar. Changing the Panel in one view causes it to be updated in the other as well. This is useful when you want to share the same gadget between different applications. It is also the way icons are shared between applications in the system.
+	There are many more gadgets available in the Gadgets component framework. The interested reader is invited to browse through their descriptions in Chapter 4.
+
+
+3.3	Composing gadgets interactively with the mouse
+
+One of the interesting and novel aspects of gadgets is that they can be changed in size and position, in addition to being used, from creation onwards until they are eventually explicitly locked by the user. This is in contrast to other systems where the user receives his user interface locked, and must "take it or leave it". A significant part of the time spent by a user of the Gadgets system is in organizing and building new user interfaces. This can be compared to the user adjusting his tool texts under the textual Oberon user interface. In this section we explain how interactive composition of gadgets is done at run-time.
+	All visual gadgets have a certain size or extent that they occupy on the display. When the mouse is located inside this area, the gadget can do whatever it pleases depending on how it was programmed by its creator. Fortunately, gadget mouse commands often stay close to the Oberon conventions (in the Table 3.4, mouse events are indicated by the first (mouse) key pressed, followed by a "+" sign to indicate that an interclick follows).
+
+Table 3.4	The Oberon mouse conventions
+
+Key		Associated action
+
+ML	Point	Set the caret to mark the insertion point
+ML + MM	Copy to	Set the caret and copy an existing selection
+		to the caret
+
+MM	Activate	Activate command in text or in Cmd attribute
+		of gadget. Also manipulate gadget.
+
+MR	Select	Select text/gadget or group of gadgets
+MR + ML	Delete	Select text/gadget and delete
+MR + MM	Copy over	Select text/gadget and copy over to caret
+
+ML + MM + MR	Nullify	Nullify current mouse action
+
+	By "selection" we mean either a text selection (the selected text stretch) or a gadget selection (the selected gadget or group of gadgets). The system keeps track of the gadget and text selection separately and the mouse keys interclick uses one or the other depending on the context. For example, while working with Panels, the gadget selection is used, and while working with texts or strings, the text selection is used. However, in some cases the most recent gadget selection or text selection is used. Placing the caret in a gadget is called focusing a gadget. There is only one focus active at any one time.
+	Some gadgets support only a subset of mouse commands. For example, often a gadget does not support a caret, in which case mouse commands starting on the ML key are ignored.
+	Most gadgets have inner areas reserved for control. These areas can be used to resize the gadget or move it from one container to another on the display. The control areas may be absent if the gadget cannot be moved or resized. Most visual gadgets are rectangular in shape, and for those gadgets the control area is a border a few pixels wide inside the edge of the gadget. Inside the gadget, but not in the control area, the gadget does whatever it is supposed to do (Buttons can be pushed, CheckBoxes checked, etc). In the control area, the gadget responds to the control mouse combinations listed in Table 3.5.
+
+Table 3.5	Mouse commands in the control area of a gadget
+
+Key		Associated action
+
+ML		Uninterpreted
+
+MM (drag in a corner)		Resize gadget
+MM (drag on a side)		Move gadget around in current container
+MM + ML (drag on a side)		Move gadget and insert in other container
+		(consume shallow copy)
+MM + MR (drag on a side)		Move gadget and insert a copy at mouse
+		position (shallow copy)
+
+MR		Select gadget
+MR + ML		Select gadget and delete
+MR + MM		Select gadget and copy over to caret
+
+	Gadgets can be picked up on a side with the MM key and moved from one position to another on the display. Movement with the MM key alone is restricted to the current container, and may be rejected when attempting to move the gadget completely out of its current context. Movement to another context can be done only with an explicit consume interclick or a copy interclick. A consume interclick initiates a consume operation, often called drag-and-drop in popular terminology. The new container consumes the gadget and removes it from its old container. Not only is a consume operation used to move a child object from one container to another, but also to provide a more general drag-and-drop facility. The consumer (called the receiver or recipient) may interpret the consume event in different ways: it may either absorb the consumee (which is in turn called the sender or initiator) as a descendant (like most containers do) or it may initiate some other event. For example, a compiler Icon may compile source text Icons that it consumes, or a trash can Icon may delete the file gadget Icons that it consumes. Some receivers may execute a user-defined Oberon command on a consume event. The Icon gadget is such a receiver. The consume interclick can also be used to bring a gadget to the front in a Panel. Whereas a consume interclick moves a gadget to a new context, a copy inserts a copy in the new context, leaving the original at its place. In both cases we may say that a gadget is dropped into another location.
+	The MR combinations are the same as those listed in the Table 3.4.
+	By default, most gadgets are freely editable. Mechanisms exist that allow the user to lock gadgets and thus prevent the user from inadvertently changing a gadget.
+	Though most visual gadgets are rectangular in shape, that is fill their bounding box completely, a few others have an irregular shape. These are called transparent gadgets because sub-sections of their bounding box are transparent and show what lies below them. This is particularly useful for drawing geometric figures. The gadgets Circle, Line, Rectangle, Rectangle3D and Spline fall in this category.
+
+
+3.4	Creating new gadgets
+
+To help users compose user interfaces interactively, a Gadgets.Panel is provided. The command Desktops.OpenDoc Gadgets.Panel opens a Gadgets.Panel (Figure 3.6).
+
+
+
+
+Figure 3.6 	The Gadgets.Panel
+
+	The two ListGadgets contain the set of visual (View) and model gadgets (Model) delivered with your Oberon system. An MM click on one of the entries in the View list, inserts a visual gadget of that type at the caret. The caret can be located either in a text or inside a Panel (where it shows up as a small cross). Clicking on an entry in the Model list, links a new model gadget of that type to the current gadget selection.
+	The Align Iconizer of the Gadgets.Panel allows you to control the layout and the alignment of the selected gadgets in containers. It is usually used as a pop-up menu but it can also be flipped with an MM key click on the switch pin located in the top left corner.
+
+ 
+
+Figure 3.7 	The Align menu of the Gadgets.Panel
+
+	Alignment normally takes place relative to some imaginary line. For example, Left alignment means that all selected gadgets must be lined up on their left edges, the reference edge being that of the left most gadget. When gadgets are being sized, the height or the width (or both) of the largest gadget is applied to all gadgets. Gadgets floating in the text of a TextDoc, a TextGadget, a TextNote or a LogDoc cannot be aligned, but sizing is possible. The commands controlling the alignment and sizing operations are documented in the description of the Panel gadget in Chapter 4. 
+	The Buttons [Back] and [Front] change the display priority of the selected gadgets. By display priority is meant which gadgets overlap others in a Panel or in an Organizer. New gadgets are always inserted in front of other gadgets in a container, and they keep their priority until it is explicitly changed. One exception to this is the document gadgets presented later in this chapter; these pop to the front when they are focused (with an ML click). To bring a gadget to the front of the container, the consume interclick can be used as a shortcut. The mouse focus must however remain in the same container, otherwise the gadget may change containers unexpectedly.
+	Activating the [Change View] Button changes (or transforms) the selected gadgets into a new type selected from the View list. For example, Buttons may be changed to Checkboxes, Circles to Lines, though not every transformation is meaningful.
+	Copying a gadget can be done in two different ways. A deep copy is used when both the view and the linked model are copied. A shallow copy means copy only the view gadget and thus have the copy display the same model as the original. Shallow copies are always made directly with either a copy interclick or a consume interclick introduced in the previous section.
+	A deep copy has to be made explicitly with the [Deep Copy] Button located in the Gadgets.Panel. The Deep Copy command takes the selection, makes a deep copy of it, and inserts it at the caret. Deep copies are structure-preserving, which means that an exact duplicate of the gadget data structure is made.
+	The [Set Ref] Button instantiates a gadget of a type appearing in the selection and places a Reference to this gadget in the marked (or in the selected) RefFrame. The practical advantage of a RefFrame is that it contains a Reference to an object irrespective of its type (visual gadget or non-visual) and of its size. The Reference can be dragged-and-dropped or copied over to another context just as easily as the object it represents.
+	Activating the [Columbus] Button opens a Columbus inspection tool. It is discussed in section 3.6.
+	Finally, the [Recall] Button recalls the gadgets deleted most recently from a Panel or an Organizer and inserts them at the caret. This operation can be assimilated to a paste operation after a cut operation, and it may be repeated any number of times.
+
+3.5	Attributes
+
+Gadgets have attributes that customize their behavior. Each attribute consists of an attribute name and an attribute value pair. Attributes are typically used to specify colors, captions, and commands that gadgets should execute. For example, Buttons have an attribute called Caption that contains the caption string that is displayed inside it. A tool called Columbus is used to inspect and edit the attributes of a gadget. Attributes are typed; that is, the attribute type can be enforced by the gadget to be a boolean, integer, real or string type. Each gadget class defines its own set of attributes. In the remainder of this section, we introduce the common attributes of gadgets.
+	Although most gadgets have different attributes, all of them have a common attribute: the Name attribute, which is one of their most important attributes. The name is used to identify or to find a gadget. Gadgets often use names to refer to one another's attributes. In general, we refer to the attributes of gadgets with the following syntax:
+
+	ObjectName.AttributeName
+
+	ObjectName is the name of a gadget and AttributeName is the name of an attribute of that gadget. The Gadgets system employs a search strategy for locating an object with a certain name. The scope in which the system searches for gadgets is determined by the hierarchy of container gadgets. The current scope is determined when a gadget executes a command (more precisely a command attribute), and is exactly the container (or parent) in which the gadget is located. Behind the scenes, a special message is sent to the parent to search for the named object. This message propagates in a breadth-first fashion from the container to all children until the named object is found.
+	A few visual gadgets which can function with a model gadget, can indicate which component or field of the model gadget they are interested in. These gadgets have a Field attribute in which the name of the model gadget's attribute must be stored. It is thus quite possible to build a model gadget of a compound nature (the Complex gadget for example) which can be visualized by several different visual gadgets, each of which is displaying a different attribute of the model it is linked to. If the Field attribute contains the empty string, the name "Value" is assumed and the Value attribute of the model is visualized.
+	Other commonly appearing attributes are the command attributes. They play a special role when combining gadgets together in a user interface. The command attributes specify what action should be taken when the gadget is activated. The action is specified in the form of a command attribute string containing an Oberon command to be executed. The command specifies a module and procedure name to be invoked and may optionally pass parameters to the command. Command attributes have the same syntax as the familiar Oberon commands. Two different command attributes are particularly often used. The first one, named Cmd attribute, contains the command to be executed when the gadget is activated (with an MM key click). For example, the command
+
+	Desktops.OpenDoc Test.Text
+
+assigned to the Cmd attribute of a Button, will open the file Test.Text when the Button is activated. The second one, named ConsumeCmd, contains the command to be executed when another gadget is dropped into a gadget which has such an attribute.
+	The string assigned to a command attribute may contain macro characters that allow other attributes to be accessed, selections to be processed, parameters to be edited, and drag-and-drop operations to be controlled. These macros are used to combine different gadgets together and have enough power to build graphical interfaces for text-based Oberon applications. Macro characters are presented in section 3.8.
+	Another attribute that is frequently used is the Locked attribute, which allows you to freeze user interfaces. Often you need to restrict the editability of the documents you create. By editing is meant changing the position or size of the gadgets in a Panel or other container. The editability of a gadget is determined by two things. First, the gadget itself might be programmed in such a way that it cannot be moved or resized. This is then a deliberate and inherent restriction determined by the programmer of the gadget. Second, the context or container of a gadget can determine if that gadget is locked or not. This implies that when a gadget moves from one context to another, its editing behavior changes depending on its container. A parent can lock or unlock all its direct descendants at once; it cannot selectively lock only some of them. The locked flag affects only the direct children of a container; you have to lock nested containers yourself. Panel, TextGadget, Iconizer, NoteBook, Organizer, etc. are examples of lockable gadgets.
+
+
+3.6	Columbus
+
+Columbus is a very versatile instrument that can be applied to any gadget (visual or model) for an inspection of its identity (generator) and where applicable, of its attributes, links, components and other properties such as the size and relative position in a container. When applied to a specific gadget, the tool adjusts its shape, to represent an attribute form for this gadget. Note that this form is a document created by a program. The tool can also be used to manage public libaries and their content.
+
+ 
+
+Figure 3.8	A Columbus Attributes view
+
+Columbus presents itself in two different "variable geometry" panel documents (they always fit in the system track). One of them, the Columbus Panel, is used to inspect and configure the state of objects (Figure 3.8). The other one, called "Libraries.Panel", is used for manipulating public libraries (see section 3.11). The Columbus Panel is opened with the command:
+
+						Columbus.Inspect ~
+
+or by activating the [Columbus] Button in the Gadgets.Panel.
+	What you see in the Figure 3.8 is the Attributes view of the Panel being inspected; this is evidenced by the little horizontal bar (representing a red LED) in the [Attr] Button. Several other object views can be accessed via the other Buttons which, with the exception of the [W] Button, function as radio buttons.
+	The value of a boolean attribute is visualized by a CheckBox, whereas the value of an integer is visualized by a short TextField and that of a string by a long TextField. An attribute name may have up to 32 characters.
+
+
+3.6.1	Object views
+
+[Attr] - Attributes view
+This view displays the attributes of the inspected object with their values in the Attributes section. It is the preferred view which is always presented first when a new object is inspected. However, for a library (*.Lib), the library view is presented first. You can change the attribute values and apply them to the object by clicking the [Apply] Button on the right.
+
+The New Attribute section is used for adding an attribute to the current object. It features two TextFields: in the first one, enter an attribute's name, in the second one, its value. To add the attribute activate the [Add] Button. An added attribute can be removed with the [Del] Button.
+
+This view is the starting point for an organized or an impromptu inspection tour of the current object with excursions to other related objects or libraries. Every step is recorded in a history stack, making it possible to regress step by step by activating the  Button. On returning to the starting point, the Button disappears. An MM click on the Current Object reference at the top right, will project this view again. This can be used as a shortcut to return immediately to the Attributes view.
+
+[Link] - Links view
+This view shows the links of the inspected object in the Links section. You can change the object links and apply them to the object with the [Apply] Button on the right side.
+
+		
+
+Figure 3.9	A Columbus Links view
+
+The New Link section is used for adding a link to the current object. It features a TextField for specifying a link's name, and an empty visual reference where you drop the object to be linked. To add the link activate the [Add] Button. An added link can be removed with the [Del] Button.
+
+[Coords] - Coordinates view
+This Button is present only when a visual gadget is being inspected. This view shows the X and Y coordinates of a visual gadget with respect to the upper left corner of its container, and its width W and height H, all measured in pixels.
+
+		
+
+Figure 3.10	A Columbus Coordinates view
+
+[Comp] - Components view
+This Button is present only when a container such as NoteBook, Organizer or Panel, is being inspected and when such a container effectively contains a component. This view lists the components of the container gadget with their generator procedure and a visual reference. You may inspect each reference -- with an MM key click. You may drag a reference away to insert the referenced object in other documents, but you can neither change nor delete such a visual reference.
+
+		
+
+Figure 3.11	A Columbus Components view
+
+ - call Watson
+Columbus gives you the opportunity to see additional descriptions of the inspected object. These are definition files or module files. Activating this Button calls Watson.ShowObj with the object's generator name as parameter.
+
+[Lib] - Library view
+This Button is present only when the object inspected is bound to a public or a private library (see section 3.11). Obviously enough, when a library is inspected, the library view is the preferred view which is always presented first. The view lists the objects contained in the library. The generator procedure, the reference number, and in the case of a public library, the name in the index are displayed for each object, together with a visual Reference. Each object can be inspected by MM clicking its visual Reference: an Attributes view of the object is presented. The name of the inspected public library is displayed in the top right corner. In the case of a private library, the text is simply "(Private)". The object which was being inspected when the library view was called is easily spotted: look for the blue text line. If there is no current object, no line is highlighted.
+
+[Editor] - Library editor
+This Button is present only when the object inspected is bound to a public library. With the library editor you can unload the library from memory, cleanup freed objects from the library, store the library and perform many other maintenance tasks in the same way as with the Libraries.Panel described in section 3.11.
+
+
+3.7	Inspecting Module Definitions with Watson
+
+During software development, you will often need to refer to the definitions of modules delivered with the Oberon system. A definition module describes a module interface and is a summary of the complete module. It contains the declaration of the exported names which may be used by other modules. It is also known as the public view of the module and its advantage is its textual compactness. With this clearly defined module interface, a module can be used without knowledge of how it is implemented.
+	In Oberon, it is not necessary to write down the definition of a module: Watson takes care of extracting the best information available about a specified module. For example, should the source text of a module be available, Watson can scan it for so-called exported comments which it presents to the user together with conventional module interface. An exported comment is a program comment starting with a double "*": (** .... *). The comment typically contains more information about how to use specific module features. As the source code of a module is sometimes not available to the user, Watson effectively goes in search of a previously generated definition file (with a .Def extension) first. Should both the definition file and the module source be missing, Watson searches for the module symbol file. If the latter is missing too, Watson tries to extract information about the module from its object file. In each step of the Watson search strategy, the amount of information Watson finds is diminished. Watson also has some further tricks up its sleeve. To reduce the clutter of many definition files, several definition files may be compressed and packed into a single archive file (with a .Arc extension). Watson can automatically extract and decompress definitions from such an archive file.
+	Watson is controlled with a graphical interface accessed by executing the command Desktops.OpenDoc Watson.Panel. It features a number of Buttons and is controlled by the Setup Iconizer and by CheckBoxes appearing in the lower part. It is however just as easy to use the few commands that are associated with its control Buttons.
+
+
+Figure 3.12	Watson Panel
+
+	Watson presents the information it finds as hypertext. This means that hyperlinks allow you to explore type structures and the imported modules directly by MM clicking on the text marked in blue.
+
+
+3.7.1	Watson settings
+
+
+Figure 3.13	Watson Setup
+
+The settings are defined on the reverse side of the Setup Iconizer. Experience has shown that the default settings provided with the system are quite adequate in most situations. If not, the settings can be modified and saved in Watson.Lib with the [Save settings] Button. The three TextFields have the following meaning:
+
+Search order: contains a string of up to five capital letters which determines the order, from left to right, in which the various information sources are consulted for creating a definition text. The sources are:
+
+D	an existing file (.Def) or a file contained in the archive specified
+	in the TextField "Def Archive".
+M	the text of a module in a module file or in a marked viewer.
+S	the symbol file (.Sym).
+C	the object file (.Obj). Only the module commands are shown.
+	Equivalent to what is obtained with System.ShowCommands.
+T	a tutorial text associated with the module.
+
+The default order "DMSCT" may be changed and information sources not explicitely specified are ignored. The set order can also be overridden with the Select Source radio-buttons.
+
+Def Archive: specifies the name of the archive (file) containing the definition texts. The module definitions of the entire Oberon system (but not of the archived applications) are delivered in the archive Definitions.Arc. This file may be extended with the definitions of custom developed modules. Alternatively, new separate archives may be created, but only one such archive can be searched.
+
+Mod file name: specifies a module name filter of the form [prefix.][*[.postfix]] in which Watson will replace the asterisk by the name specified in the Watson command. If the system cannot find a file with the name prefix.*.postfix (or prefix.* if the postfix is omitted), it will drop the prefix and attempt to find a file named name.postfix (or respectively name). Without asterisk, Watson assumes a postfix ".Mod" and the module name filter becomes prefix.name.Mod. When the field is empty, the filter is name.Mod.
+	A number of Oberon modules have a prefix such as IDE in PC Native Oberon or Win, Win32 in Oberon for Windows. Watson can produce the definition module of almost any module on a Windows platform if this field contains "Win." or "Win.*.Mod".
+
+	Assuming that "Sample" is the parameter of a Watson command, these examples show which file names are searched:
+	Win.*.Mod2  	=>   Win.Sample.Mod2	then	Sample.Mod2
+	Win.*	=>   Win.Sample	then	Sample
+	Win.        	=>   Win.Sample.Mod	then	Sample.Mod
+	*.Mod3      	=>   Sample.Mod3
+	*           	=>   Sample
+	empty string	=>   Sample.Mod
+
+
+3.7.2	Select Source
+
+When the radio-button "Auto" is checked (this is the default setting), the information sources search order applies, but it can be temporarily overridden with one of the remaining radio-buttons. The information source corresponding to the checked radio-button is then searched first, while the remaining sources specified in the search order follow in order.
+
+
+3.7.3	Formatting Options
+
+When a module text in a marked viewer or in a .Mod file is used to create a definition text, the created text may be formatted in three different forms:
+	- without alteration to the source module text,
+	- with all text appearing in Oberon10 font: Oberon10 font only is checked (command option \p). This option overrides the Comments in italic one. The Syntax10 font is used in the Windows, Linux and Mac implementations.
+	- with comments in italic (command option \i),
+These two options are ignored, if a .Def file is found first.
+
+
+3.7.4	Symbol file Options
+
+When symbol information extracted from a symbol file or an object file is used to create a definition text, the created text may offer three different information content:
+	- without addition,
+	- with all details (command option \d),
+	- with extended base types information (command option \x).
+These two options are ignored, if a .Def or a .Mod file is found first.
+
+
+3.7.5	Watson commands
+
+The three Buttons in the first row in Figure 3.12 appear in all the different Oberon system implementations. Each of them can activate one of the commands described below:
+
+[Show Def ^] activates Watson.ShowDef ^
+[Show Obj ^] activates Watson.ShowObj ^
+[Show Def *] activates Watson.ShowDef *
+
+Watson.ShowDef ([\options] module | ^)
+Watson.ShowDef [\options] *
+opens a document viewer named "module.Def" displaying the definition of the named module. The name must be an Oberon name, of which only the first part is used. Watson attempts to open the information sources in a predefined search order and reports on the outcome of the search: if the requested information is found, the name of the source is listed in the system log, otherwise an error message "no information about ... available" appears. If the information source is the marked viewer (*), this marked text must be a valid Oberon program text. If it is not, the location of the error is listed in the log. The options belong to three different categories:
+
+1 - the information sources identified by the capital letters D, M, S, C, T in the desired order. This order takes precedence over the search order defined in the Watson setup. Not all sources must be explicitely named - the remaining positions will be taken over from the setup.
+Example:
+		Search order in Setup: DMSCT
+		Command parameter: \MS
+		Resulting search order: MSDCT
+
+2 - the formatting options: d and x
+3 - the symbol file options: i and p
+
+Watson.ShowObj ([\options] module.object | ^)
+opens a document viewer named "module.Def" displaying the definition of the selected object in the selected module. The parameter must contain a two-part qualified name, where object is the name of an object exported by module. If that object is not found, the entire module definition is displayed. The options are the same as those of Watson.ShowDef.
+
+Watson.MakeDefs ([\c] {modName} ~ | ^)
+Watson.MakeDefs [\c] *
+creates a definition module (.Def) for each module file (.Mod) in the list. If the option \c is used, HTML document files (.Def.html) are created instead. If a matching definition or HTML file already exists, it is overridden. Such a definition module may be added to an archive of definitions (.Arc) at any time, if it is of some importance to your installation.
+
+Watson.ConvertDefs ({defName} ~ | ^)
+converts each definition module (.Def) named in the list into a HTML document file (.Def.html). The definition modules to convert must be found in the system directory or in the archive file specified in the Watson panel settings. If a matching HTML file already exists, it is overridden.
+
+	The Watson tool delivered with Linux, Mac and Windows Oberon System 3 features three additional Buttons (second row in Figure 3.12) which can each activate further commands:
+
+[Show Imp ^] activates Watson.ShowImports ^
+[Show Exp ^] activates Watson.ShowExports ^
+[Check ^]		activates Watson.Check ^
+
+Watson.ShowImports ([\options] module | ^)
+opens a viewer named "module.Imp" displaying a map of all the modules imported by the named module, and of all the exported objects in those modules which are effectively imported. This "uses what?" request may take some time to complete. Only the first part of a qualified module name is used.
+
+Watson.ShowExports ([\options] module | ^)
+opens a viewer named "module.Def" displaying the definition of the named module, in the same fashion as [Show Def ^], but the objects exported by the selected module which are effectively used in other modules are shown in green. When the MM key is pressed on such a green spot, a list of modules using the object is presented. Selecting one of the module with the mouse cursor and releasing the MM key opens a viewer displaying the module source text. This "where used?" request may take some time to complete. Only the first part of a qualified module name is used.
+
+Watson.Check ({module[*]} ~ | ^)
+Watson.Check all
+opens a viewer named "Check.Out" containing an enumeration of the module names which can be loaded. Each module name appears in red and an MM key click on it shows its import map (Watson.ShowImports). For each module that cannot be loaded, a message "module not found" is displayed in the system log. The objective is to check the consistency of the named modules or of all modules. Only the first part of qualified module names is used.
+
+	For these implementations which all use a directory structure, the module files and the archive file to use must be found in the the current directory or in the system search path. The meaning of "S" in the search order is then for these implementations:
+
+S	the object file (.Obj) is searched
+
+and not the symbol file anymore.
+	The formatting options in those environments refer to Syntax10 which is the default font at installation time.
+
+
+3.8	The Command Macros
+
+Command macros act as glue between gadgets in a user interface. Typically, when activated, a gadget executes an Oberon command with parameters obtained from the selection, from the attributes of a gadget itself, or from the attributes of a gadget located in the same context. A few macro symbols in a command attribute direct the parameter gathering task. The macros are first expanded completely and the resulting text is passed to the executed procedure in the normal Oberon fashion. This makes it possible to add user interfaces to existing text-based Oberon applications. However, in the realm of the Gadgets interface, some of this overhead can be avoided by using the special "%" character right in front of a command. This character signals that the command is parameterless (parameter scanning is not required), and the called procedure is responsible for collecting additional information from the environment. A short description of the predefined macros of the Gadgets system follows:
+
+
+Activator macro #
+
+The activator macro returns an attribute value of the gadget that is executing the command attribute. It is used in the form #AttrName, where AttrName is the name of the attribute. For example, the ListGadget has an attribute Point that contains the item that is clicked upon with the MM key (provided the gadget is linked to a valid list model). Setting the Cmd attribute of the ListGadget to:
+				Desktops.OpenDoc #Point
+will open the document whose name is pointed at in the ListGadget.
+
+
+Lookup macro &
+
+The lookup macro is useful when you want to pass a parameter to a command, where the value of the parameter is the attribute value of a certain gadget. The macro has the syntax &ObjName.AttrName and on expansion it searches for the object named ObjName inside the current context, extracts its AttrName attribute value, and inserts this value into the command string. Take the case of a simple application interface Panel with two components: a Button and a TextField, which thus appear in the same context. Assume that you wish to open a text file, whose name will appear in the TextField, by activating the Button. To implement this, you first have to name the TextField, say TF, using Columbus. Then, the Cmd attribute of the Button is set to:
+
+	Desktops.OpenDoc &TF.Value
+
+A double && instructs the substitution mechanism to look for the object in the context of the context and each additional & gives access to the next higher level context.
+
+
+Substitute macro '
+
+The substitute macro expands to a double quote character ". It must be used where a double quote would inhibit the substitution mechanism. An example is given below.
+
+
+Initiator macro !
+
+When objects are consumed by another object, those being consumed are called initiators or senders, and the consuming object is called the recipient or receiver. This macro is used in the ConsumeCmd attribute of a visual gadget, and gives access to the attribute values of the initiators. The consume command is executed by the recipient. The macro takes the form !AttrName and expands to a list of attribute values of each object in the group of initiators. Suppose that a source text file is represented by an Icon, and that a Filename attribute is added to the Icon. Then, the name of the file is assigned to this new attribute. Finally, the following string is assigned to the ConsumeCmd attribute of another Icon representing the compiler:
+
+	Compiler.Compile !Filename ~
+
+Now, by dropping one or several text file Icons into the compiler Icon, the compiler will compile each file named in the list resulting from the expansion of the parameter.
+
+
+Selection macro ^
+
+The selection macro expands to the current selection. The macro ^AttrName expands into a list of attribute values of all the selected objects. When no gadget is selected, the text selection is used. The selection returned always contains at least one whole word; if the beginning of a word is selected, the whole word is returned as the selection. If no selection is active, the selection macro expands to itself, the character "^ ".
+
+Most macros behave in a way that may seem strange at first. Macros are identified by a special first symbol (!, &, etc.) followed by a parameter. While expanding macros, the system needs to know when to terminate parsing the parameter: this is either when no characters are left to be scanned (end of string) or when a space is reached. However, when a space is reached first, the space is not included in the expanded macro. If you want a space to be included in the expanded text, you have to explicitly insert another space after the first. This feature allows you to concatenate macros. For example, if O1.Value is "Hello" and O2.Value is "World", then:
+
+	'&O1.Value &O2.Value'	(one space)
+
+will expand to "HelloWorld", while:
+
+	'&O1.Value  &O2.Value'	(two spaces)
+
+will expand to "Hello World".
+
+
+User defined macros
+
+Programmers can add their own macros by identifying special symbols for macros and by writing handlers for these new macro symbols. The mechanism is implemented in the Attributes module.
+
+		MODULE Attributes;
+		
+			MacroHandler =
+			PROCEDURE (ch: CHAR; VAR T: Reader; VAR res: Texts.Text; VAR beg: LONGINT);
+		
+			PROCEDURE AddMacro(ch: CHAR; handler: MacroHandler);
+
+A new macro symbol is registered by calling the procedure AddMacro. The handler is called when character ch is read using the reader/scanner, and it must return:
+
+res	the substitution text. If NIL, no substitution was made.
+beg	the position in the text where reading/scanning must continue.
+
+The macro might take parameters, that is, letters that follow immediately after the macro symbol and which must be read and interpreted by the macro handler using the passed Reader. 
+
+
+3.9	Composition Commands
+
+So far, we have discussed how to create new gadgets and how to change their attributes using prepared user interfaces like the Gadgets.Panel and Columbus. There is also a textual interface with commands to perform the same tasks. These commands are provided for the sake of completeness and need not necessarily be used. The commands do however come in handy when creating your own user interfaces. We will discuss these commands in this section, but before that, we investigate how gadgets are instantiated.
+	A new instance of a gadget is created with an Oberon command. Let us assume that the module M contains a procedure P whose task it is to create a new instance of a certain object type. Here M.P is called the object's new procedure or generator. Executing the procedure M.P causes a new instance of that object type to be created and initialized to a default state so that it is ready to accept messages (i.e. it is completely functional). As the object often does not know what to do with itself after creation, another command is needed to display the new object (that is, if it is a displayable gadget). The module Gadgets provides a standard interface for instantiating and inserting objects at the caret. It has a command Insert with the following BNF syntax:
+
+	Gadgets.Insert ViewGenerator [ ModelGenerator ] ~
+
+	ViewGenerator denotes the generator of the visual (view) gadget to be instantiated. The ModelGenerator denotes the model gadget to be linked to the newly created gadget. The Gadgets.Insert command performs all that is needed to create the view and model behind the scenes. As an example, the following command creates a Model-View pair (consisting of a CheckBox linked to a Boolean) and inserts the CheckBox at the caret:
+
+	Gadgets.Insert BasicGadgets.NewCheckBox BasicGadgets.NewBoolean ~
+
+We see from the generator procedure names what types of gadget are involved. A generator is typically named M.NewType, where NewType is the type of the gadget. As mentioned before, many gadgets function both with and without models, which explains why the ModelGenerator parameter is optional.
+	If a visual gadget has been instantiated without model, it can be linked to a model with the command:
+
+	Gadgets.Link ModelGenerator
+
+The gadgets contained in the gadget selection are linked to the model gadget of the type specified in the parameter. All the visual gadgets share then the same model gadget. The same command may be used to change the linked model.
+	There are many generator procedures (one for each gadget type). Remembering all of them can be difficult. The Gadgets system supports an aliasing feature which allows you to use shorter names than those of the generator procedures. It is for instance possible to rewrite the previous example as:
+
+	Gadgets.Insert CheckBox Boolean ~
+
+The registry contains a section [Aliases] which determines these aliases. Refer to the Appendix A for more details on how to configure your Oberon system. Each alias must appear once in a text line having the following format:
+
+	AliasName = M.P
+
+where AliasName identifies an alias for the new generator procedure M.P. The commands Gadgets.Insert and Gadgets.Link are the principal clients of aliasing.
+	The Gadgets module has a few more useful commands:
+
+Gadgets.ChangeAttr attrName attrValue ~
+sets the selected gadget's attribute. attrValue can take several forms, depending on the attribute type:
+
+names	for string attributes
+Yes/No	for boolean attributes
+1234	for number attributes
+"strings"	for string attributes
+
+Gadgets.Change ViewGenerator
+changes (or transforms) the selected gadgets into a new type identified by the ViewGenerator parameter. An alias may be used. This command is used by the [Change View] Button in the Gadgets.Panel.
+
+Gadgets.Copy
+makes a structure-preserving copy of the selection and inserts it at the caret. This command is used by the [Deep Copy] Button in the Gadgets.Panel.
+
+Gadgets.Set Obj.Attr value ~
+changes the value of the attribute (Attr) of the indicated gadget (Obj). The gadget must exist in the same context.
+
+
+3.10	Documents and Desktops
+
+A document is a named collection of objects. The name identifies the document and must be known to retrieve the document content (the object collection it contains). Most often, the document name is the name of the file in which the document content is stored. By specifying the document name as parameter to the Desktops.OpenDoc command, the document is located, prepared and displayed in a viewer. The OpenDoc command is applicable to documents of all classes. Typically, in the Oberon system, we use PanelDocs, TextDocs and bitmap documents - to mention a few. The fact that the OpenDoc command is applicable to all document classes hints to us that a document must be an object of some type. Indeed, we can request the document object to load itself, store itself, or print itself on a printer.
+	As documents are first class objects, we can imagine that they can do more complicated things than just loading their contents from a disk when they are opened. In fact, many documents "generate" their contents when required and may even require to contact a remote server to retrieve the information. Documents are sometimes also active; while a document is being used it might decide to update its contents. For example, we can imagine having an electronic mailbox on a remote server presenting itself as a document. In fact, Oberon regards the whole world as a source of documents. The network software included in Oberon allows you to open any document identified by the uniform resource locator (URL). As a result, file servers, discusssion groups, and World-Wide Web (WWW) pages all appear as documents in the Oberon system [Zel97]. This is why it is such a pleasure to browse between different information sources with Oberon.
+	In fact, a document is nothing more than an advanced visual container. We can communicate with this container and request it to load, store, print and so on. Being a container, a document can have any number of other gadgets as descendants. Currently, documents in the Oberon system support only a single child (although this is not a restriction). For example, a PanelDoc contains a single Panel as a child, and a TextDoc contains a single TextGadget as child. Note the difference between the Panel and its container, the PanelDoc. The Panel itself is not a document. If it were, nested Panels in the same user interface would end up in different files on disk.
+	In a way, a document can be regarded as a special type of gadget wrapper. It "wraps" additional functionality around its content. A document might also provide useful operations on the document content; the TextDocs provide a Search-and-Replace facility for text, for example. A document also provides for other functions such as constructing a menu bar or generating an Icon for the document.
+	Interestingly, being a true visual object itself, a document can be inserted into other containers. It is possible to insert a PanelDoc inside a TextDoc (for documentation purposes, for example). Opening the TextDoc will automatically load the contents of the PanelDoc it contains. In this way, the TextDoc will always contain the latest version of the PanelDoc, even if it is located across the network. This embedding feature of documents brings up the question how a document container should present itself on the display: if it is embedded in text, we would at least want it to look presentable when printed.
+	Therefore, it was decided to make documents "invisible". A document is always as large as its child and there is no way to distinguish a PanelDoc from the contained Panel. Most of the time, the user is however implicitly aware of the presence of a document. Its presence can also be verified by trying to select the document in question. Documents use a two-phase selection protocol. On the first try, the document content is selected in the normal white selection pattern. Selecting again selects the document in a blue selection pattern. A third selection attempt removes the selection completely. This allows us to select a document for adaptation by Columbus.
+	But where do the menu bar and the viewer of an open document come from if the document itself is invisible? This is the task of the Desktops module. After loading a document, the Desktops module creates a viewer for the document. The viewer consists of a menu bar (generated by the document itself for the Desktops module), and of the document content itself. This gives the desktop display system more freedom for creating appropriate viewers for a document. The Oberon system namely supports two different document viewing models concurrently. This is commonly referred to as the windowing model in other systems.
+	When Oberon was originally developed, it supported only the tiling organization of viewers. In that model, viewers share the screen area without obscuring each other partially. The tiling viewer system is the default viewer allocation strategy when starting Oberon. Later, with the development of the Gadgets framework, it became possible for visual objects to partially overlap each other. This resulted in the development of desktops. A desktop is a large surface embedded in a single viewer. Typically, different desktops are used for different tasks (they are containers). A desktop contains viewers overlapping each other together with other visual gadgets. It also ensures that a viewer pops to the front for use when it is focused with an ML key click inside it. Interestingly, desktops can be stored on disk, usually in a file with a .Desk name extension. This allows the user to remember useful configurations. The default desktop is called Oberon.Desk. In the current Oberon implementation, the tiling viewer system does not support this saving feature. A desktop does not have a menu bar. Instead, commands like Store, Grow, Copy etc. are provided as freely positionable Buttons inside the desktop itself. Like any other viewers, the desktop location is changed by grabbing it with the ML key in an unmarked area a few pixels high along the top edge of the desktop.
+	Providing two viewer systems concurrently creates the problem of deciding where to show freshly opened viewers. A simple heuristic solves the problem: when a viewer is opened, it is opened in the same viewing mode (tiled or in desktop) from which the command to open the viewer was executed. This ensures that once you start working in one model, viewers will be opened only in that very model. As usual, you can override this placement strategy by placing the star marker at the location where you want a viewer to appear.
+	After this introduction to the concept of documents and desktops of Oberon, we discuss in more detail the commands applicable to them.
+
+
+3.10.1	Desktops Commands
+
+The Desktops module is the controlling instance for all document and desktop-related tasks. Currently the desktop system supports both overlapping and tiled organization of viewers.
+	Before listing the Desktops commands, we first have to discuss how new documents are created. Being objects themselves, documents also have generator procedures. Calling a generator procedure causes an empty document of that type to be created. To distinguish between opening an existing document and creating a new one, the Desktops.OpenDoc command uses a special parameter syntax. Opening an existing document involves specifying its name. Creating a new document involves specifying its generator procedure (or its alias) in parentheses:
+
+Desktops.OpenDoc docname	Open document called docname
+Desktops.OpenDoc (Generator)	Open new document with generator as
+	type
+
+Instead of specifying a generator, it is also possible to open a new document by specifying a document name which does not already exist on the system (the search path is used). In that case the type of the new document is determined by the name extension (see Table 3.14). By default, a TextDoc is opened.
+	Thus we can open a new PanelDoc with either of these two commands (the second uses an alias):
+
+Desktops.OpenDoc (PanelDocs.NewDoc)
+Desktops.OpenDoc (PanelDoc)
+
+	Sometimes, it is useful to change a document into a different class. This assumes that the new document class can understand the original document format. In such a case, specify both the document name followed by the wanted document type between parentheses:
+
+Desktops.OpenDoc Main.html(TextDocs.NewDoc)
+Desktops.OpenDoc System.Tool(PanelDocs.NewDoc)
+
+In many cases a conversion will fail, as it would in the second example.
+
+	The Oberon system is delivered with a few document classes, summarized in the following table. Additional classes are supported by add-on packages.
+
+Table 3.14	The Standard document classes
+
+Document Class	Generator Procedure	Alias	File name ext.
+
+Panel	PanelDocs.NewDoc	PanelDoc	.Panel
+Picture	RembrandtDocs.NewDoc	RembrandtDoc	.Pict
+Text	TextDocs.NewDoc	TextDoc	.Text, .Mod, .Tool
+System Log	TextDocs.NewLog	LogDoc
+
+The following class was created for Columbus only:
+Columbus	Columbus.NewDoc	Columbus
+
+	As a conclusion to this section, we summarize the Desktops commands:
+
+Desktops.Open filename
+Desktops.Open ^
+opens the desktop stored in the named file or opens a new default one if a file with that name does not exist.
+
+Desktops.Grow
+grows the current desktop.
+
+Desktops.Copy
+copies the current desktop.
+
+Desktops.Close
+closes the current desktop.
+
+Desktops.Store
+stores the current desktop.
+
+Desktops.OpenDoc filename
+opens a document stored in the named file. If no file with that name exists, a new empty document is opened. The type of the new document is determined by the name suffix used.
+
+Desktops.OpenDoc (DocumentGenerator)
+creates an empty document of the specified type.
+
+Desktops.OpenDoc filename(DocumentGenerator)
+casts the named document to a new type. The document may already exist or it may be a new document.
+
+Desktops.InsertDoc filename
+inserts the document stored in the named file at the caret, without a menu bar.
+
+Desktops.ReplaceDoc filename
+replaces the current document from which the command was executed with another stored in the named file. This allows to switch in-place from one document to another.
+
+Desktops.CloseDoc
+closes the current document.
+
+Desktops.StoreDoc
+Desktops.StoreDoc *
+stores the current document or the marked document in a file. The file name is taken from the document's NamePlate.
+
+Desktops.PrintDoc Printername namelist ~
+Desktops.PrintDoc Printername *
+prints all the documents named in the list or the marked document. On some platforms the printer name is ignored and the attached printer is assumed as print destination.
+
+Desktops.ChangeBackdrop picture-fileName
+changes the backdrop of the marked desktop. To clear the backdrop, use a non-existing Picture file name (*.Pict) or else use Columbus.
+
+
+3.11	Libraries
+
+The Oberon system uses a technique called libraries for making objects persistent. Documents typically use libraries to store their contents in files. Although libraries are primarily of interest to Oberon programmers, a little knowledge about their use is required by the Oberon user too. As long as a gadget is not associated with any library it is free. Once a gadget belongs to a certain library it is bound and it is made permanent by storing the whole library to disk. The libraries are divided into two classes: private and public.
+	Public libraries, uniquely identifiable by name, are shared between applications, loaded once from disk and cached in memory until they are not needed anymore. The fonts and the Icon library are examples of public libraries. The list of currently loaded public libraries can be shown with the Oberon command System.ShowLibraries. Columbus also shows to which library an inspected object belongs. Libraries can be uncached explicitly from memory by the user, although this should be done with care; it may be that an application depends on an object in the public library.
+	Private libraries, in contrast, are loaded from disk each time they are required, are never shared or cached, and do not have a name. Often these nameless libraries are called anonymous. They are useful to protect the contents of a document from outside influences and are of interest only to the programmer.
+	Each library has an indexing mechanism associated with it. The index stores the names of the objects that are to be exported from the library. We shall often refer to a public object L.O assuming that the public library L contains an object O. It is possible for an object to have an intrinsic name, that is, the value of its Name attribute differs from the name it is allocated under in a library. Exported names are used only in public libraries.
+	Public libraries are quite useful repositories of objects. The Libraries.Panel is a convenient tool for managing public and private libraries.
+
+ 
+
+Figure 3.15	The Libraries.Panel
+
+	Executing the command Desktops.OpenDoc Libraries.Panel ~ opens a library Panel. It is divided into three parts. The top part contains the Button [Directory], two radio buttons and a ListGadget. The ListGadget will contain a list of library names. You can choose the kind of libraries to be listed: libraries stored on disk or libraries currently loaded in memory. Activate the [Directory] Button to see the list of your choice.
+	Pick a library in the list with an MM click. The TextField Library is updated: it shows the library which will become the target of the library management operations controlled by the Buttons in the middle part.
+
+	[Unload] - Removes the library from memory.
+	[Cleanup] - Collects the unused objects and stores the library on disk.
+	[Store] - Stores the library on disk (the library remains cached in memory).
+
+At the same time, the list of objects contained in the library is displayed. Each object can be inspected by MM clicking its visual Reference at the right side. A Columbus Panel is directly opened presenting the Attributes view of the object.
+
+Pick an object in the list with its Name Button. The TextField Object is updated: it shows the object which will become the target of the operations controlled by the Buttons in the bottom part.
+
+[Retrieve] - Inserts the object at the caret or opens it as a document (if it is a document gadget). The three CheckBoxes at the right indicate if retrieval from the library should involve retrieving a Reference to the object, retrieving a Shallow Copy of it or retrieving a Deep Copy of it. The latter is selected by default.
+
+[Rename] - Renames the object with the specified name. All changes made to the object will be reflected immediately to the clients of the object. The TextField on the right is used to specify the new name.
+
+[Install] - Inserts the object under the specified name in the library. An object with this name is overwritten. The TextField on the right is used to specify the name. A Reference to the object to install must be placed in the empty RefFrame gadget first.
+
+[Free] - Frees the selected object from the library.
+
+	Public libraries are used for a few tasks in the system. They often contain objects needed by applications, like Icons and pre-fabricated menu bars, or a state that needs to be made global. In the next section, we will discuss one of these topics of particular interest to the end-user.
+
+
+3.11.1	User-Customized Menu Bars
+
+Often, typically when working on a low-resolution display, the standard menu bars used in the viewer system and on the desktop are too big to fit in a track, or do not contain the menu options you want. When opening a TextDoc, the Desktops module requests a document to appear with a different menu bar in the system track, in the user track or in the desktop, depending on where the document viewer should be placed. The system searches for an optional public library named TextDocs.Lib which may contain different prefabricated menu bars as objects. The following tables list the names that must be given to these objects according to the situation:
+
+Table 3.16	Customized menu bars in TextDocs.Lib
+
+Menu	TextDoc	LogDoc
+for
+
+desktop	DeskMenu	LogDeskMenu
+system track	SystemMenu	LogSystemMenu
+user track	UserMenu	LogUserMenu
+
+A similar strategy is used for constructing the menu bar for a PanelDoc:
+
+Table 3.17	Customized menu bars in PanelDocs.Lib
+
+Menu	PanelDoc
+
+desktop	DeskMenu
+system track	SystemMenu
+user track	UserMenu
+
+	If the indicated public library object is missing, a default menu bar is constructed. That is the case for a freshly installed Oberon system, because it is delivered without these public libraries. The default menu bars are detailed in the Chapter 2 and in the descriptions of LogDoc, PanelDoc and TextDoc in Chapter 4.
+	All the menu objects listed (DeskMenu, SystemMenu etc.) are for use with a display width (Display.Width) exceeding 1000 pixels. Another set of menu objects may be constructed for use with small display units. The names of these additional menu objects must be "DeskMenuS", "SystemMenuS", "UserMenuS", "LogDeskMenuS", etc.
+	All these menu objects may easily and accurately be constructed and stored in public libraries using the LayLa [Der96] tool described in Chapter 6. You may of course create your own menu bars from all available gadgets. The default ones are just simple Panel gadgets with a NamePlate and a few (command) Button gadgets. In accordance with these defaults, it is good practice to implement the standard Close, Hide and Grow commands in customized menus. If the opened document should become a persistent object, also include a Desktops.StoreDoc command. To give the Panels a good look, you should at least set their border width to 0 pixels. You may also add Iconizers to the menu bars if you want pull-down (or drop-down) menus. You can use the layout tools in the Align iconizer of the Gadgets.Panel to improve the layout of your own menus. Also, using the Libraries.Panel, you can change the contents of the menu bars stored in these libraries. An example of customized menu bar is given in Chapter 6.

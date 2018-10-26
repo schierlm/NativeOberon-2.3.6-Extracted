@@ -1,0 +1,394 @@
+Tutorial of the Layout Language LayLa
+
+Jrg Derungs, July 1996
+
+
+	Table of Contents
+	
+			1. What is LayLa?
+			2. Simple Objects: NEW
+						2.1. Syntactic Sugar
+						2.2. Virtual Objects: VIRTUAL
+						2.3. Using Public Objects: SCOPY und DCOPY, Lib.Obj
+			3. Containers
+						3.1. Placing the components "by hand": PLACE
+						3.2. Lists: HLIST and VLIST
+						3.3. Tables: TABLE
+						3.4. Breaking the Formatting of Tables: SPAN und BREAK
+			4. Configurations: CONFIG
+			5. Reusing Layouts: INCLUDE
+			6. Representation of Data Types
+						6.1. Size
+			7. The Module Layouts
+						7.1. Definition of the Module Layouts
+						7.2. Creating a Layout Structure
+						7.3. Example
+
+
+
+	1. What is LayLa?
+
+LayLa is a functional layout language to construct arbitrarily complex gadgets. The gadgets can be placed at specific x- and y-coordinates or automatically in lists and tables. Layouts saved as texts can be reused in new layout texts.
+Each text describes one object. Such a description is a list enclosed in parenthesises. The type of the list is defined by its first element, the operator. The following elements are the operator's arguments which can be lists themselves.
+All characters between "{" and "}" are comments and thus ignored. Comments can be nested.
+As an example:
+	(HLIST Panel
+		(LAYOUT (SET border 8))	{ this is a comment }
+		(ATTR (SET Locked TRUE))
+		(NEW Button
+			(LAYOUT (SET w 50) (SET h 20))
+			(ATTR (SET Caption "Open") (SET Cmd "Desktops.OpenDoc &File.Value"))
+		)
+		(NEW TextField
+			(ATTR (SET Name "File"))
+		)
+	)
+
+The outermost list consists of the operator "HLIST" and its arguments "Panel", "(LAYOUT ... )", "(ATTR ... )", "(NEW Button ... )" and "(NEW TextField ... )". All these arguments except for "Panel" are lists as well.
+
+
+
+	2. Simple Objects: NEW
+
+With the operator "NEW" a new object is created. The first argument of "NEW" is a generator of the form Module.NewProcedure and defines the type of the object. This generator is usually an alias.
+The following arguments are the list of layout parameters with the operator "LAYOUT", the list of attributes with the operator "ATTR" (or "ATTRIBUTES") and the list of links with the operator "LINKS". The arguments of these three operators are assignments of the form "(SET name val)" (these are lists too). In a list of attributes, the attribute name is set to value, in a list of links the object val is inserted as link name, and in a list of layout parameters the parameter name is set to val.
+A simple object knows these layout parameters:
+
+name	type	description	default value
+w	Size	width of the gadget	the width and height set in the New Procedure;
+h	Size	height of the gadget	[1] for virtual objects
+
+Example:
+	(NEW BasicGadgets.NewButton	{ <- same generator as "Button" }
+		(LAYOUT (SET w 50))
+		(ATTR (SET Caption "Guide") (SET Cmd "Desktops.OpenDoc LayLa.Guide.Text"))
+	)
+
+
+	2.1. Syntactic Sugar
+
+"(SET name val)" can be written as "name=val".
+The operator "LAYOUT" is optional and can be omitted.
+Thus "(name = val)" is the same as "(LAYOUT (SET name val))".
+
+
+	2.2. Virtual Objects: VIRTUAL
+
+If you don't want to build a new container for a list or a table, or if you want some blank space (e.g. an empty cell in a table), then you need virtual objects. Virtual objects are "constructed" if the New Procedure is "VIRTUAL". "VIRTUAL" as an argument (not as a New Procedure) is the same as "(NEW VIRTUAL (w=[] h=[]))".
+
+
+	2.3. Using Public Objects: SCOPY und DCOPY, Lib.Obj
+
+"SCOPY" makes a shallow and "DCOPY" a deep copy of a public object. Its name of the form Library.Name is given as the first argument. The other arguments are, as in "NEW", the lists of the layout parameters, the arguments and the links.
+If a public object (not a copy thereof) is to be used as a link, the argument is Library.Object.
+Example:
+	(VLIST Panel (border=10 hjustify=CENTER)
+		(NEW Icon (w=50 h=50)
+			(ATTR Caption="Diskette")
+			(LINKS Model=Icons.Diskette2)
+		)
+		(SCOPY Test.Slider (w=75 h=15))
+	)
+
+
+
+	3. Containers
+
+The Operators "PLACE", "HLIST", "VLIST" and "TABLE" make containers. The operator defines the way the components are inserted. As with simple objects, the first argument is the generator, followed by the list of layout parameters, the list of attributes and the list of links. The components to be inserted are appended as further arguments of the operator that makes the container.
+The default width and height of a container are as big as the bounding box of its components plus the border defined by the containers layout parameters. These layout parameters are:
+
+name	type	description	default value
+hborder	Integer	size of the border at the left and the right	0
+vborder	Integer	size of the border at the top and the bottom	0
+border	Integer	sets the same size for top and bottom	0
+
+
+	3.1. Placing the components "by hand": PLACE
+
+The position at which "PLACE" inserts a component in a container is defined as a vector in the component. To do that, two further layout parameters have to be defined in the components:
+
+name	type	description	default value
+x	Integer	x-coordinate of the gadget	0
+y	Integer	y-coordinate	0
+
+The point (0, 0) is in the lower left corner inside the border. You don't have to consider the size of the border when placing the components.
+
+Example:
+	(PLACE Panel
+		( border = 5 )	{ without syntactic sugar: (LAYOUT (SET border 5)) }
+		(ATTR Locked=TRUE)	{ (ATTRIBUTES (SET Locked TRUE)) }
+		(NEW List (y=10 w=70 h=100))
+		(NEW Button (x=80 y=80 (SET w 60) h=20)
+			(ATTR Caption="Press Me")
+		)
+	)
+
+
+	3.2. Lists: HLIST and VLIST
+
+"HLIST" and "VLIST" do not place the components with vectors like "PLACE" but insert them automatically in a vertical ("VLIST") or horizontal ("HLIST") list. Besides hborder, vborder and border, lists know further layout parameters:
+
+name	type	description	default value
+hdist	Integer	horizontal distance between components	5
+		irrelevant for HLIST
+vdist	Integer	vertical distance between components	5
+		irrelevant for VLIST
+dist	Integer	sets the same value for hdist and vdist	5
+sameWidth	Boolean	TRUE: all components are made as wide as the widest	FALSE
+sameHeight	Boolean	TRUE: all components are made as high as the highest	FALSE
+sameSize	Boolean	sets sameWidth and sameHeight to the same value	FALSE
+hgrid	STATIC /	STATIC: all columns are made as wide as the widest	DYNAMIC
+	DYNAMIC	(not the components however)
+vgrid	like hgrid	STATIC: all rows are made as high as the highest	DYNAMIC
+grid	like hgrid	sets the same value for hgrid and vgrid	DYNAMIC
+hjustify	LEFT / RIGHT	the components are placed left / right / in the middle	LEFT
+	/ CENTER	(horizontal placement)
+vjustify	TOP / BOTTOM	the components are placed at the top / bottom / in the	BOTTOM
+	/ CENTER	middle (vertical placement)
+
+hjustify and vjustify can be overruled locally by the components:
+
+name	type	description	default value
+hjustifyMe	like hjustify	overrides the hjustify of the container for this gadget	hjustify and
+vjustifyMe	like vjustify	overrides the vjustify of the container for this gadget	vjustify of the
+			container
+
+Example:
+	(HLIST Panel (border=5 vjustify=TOP hgrid=STATIC)
+		(NEW Button)
+		(NEW List)
+		(NEW Button (vjustifyMe=CENTER hjustifyMe=CENTER))
+		(NEW TextGadget)
+		(NEW Button)
+	)
+
+
+	3.3. Tables: TABLE
+
+A table is a list that is several rows/columns wide. The number of rows in a horizontally oriented table, that is a table where the components are inserted rowwise, depends on the number of components and is counted automatically. Equally, the number of columns in a vertically oriented table is counted automatically. The layout parameters of the lists are extended by:
+
+name	type	description	default value
+orientation	HOR / VERT	table is horizontally / vertically oriented	HOR
+cols	Integer	number of columns (ignored in vertically oriented tables)	1
+rows	Integer	number of rows (ignored in horizontally oriented tables)	1
+
+
+	3.4. Breaking the Formatting of Tables: SPAN und BREAK
+
+The formatting of tables can be broken with "SPAN" and "BREAK".
+"(SPAN rows cols Object)" reserves rows rows and cols columns for the object Object.
+If the components are inserted rowwise, "(BREAK Object)" replaces the distance to the following row with the object Object. The next component of the table appears at the beginning of the next line. In a vertically oriented table, "BREAK" replaces the distance to the next column. If the table is empty except for a "BREAK", the container is made empty. "SPAN" and "BREAK" can also be used in lists.
+Example:
+	(TABLE Panel (border=8 cols=3)
+		(ATTR Locked=TRUE)
+		(BREAK (HLIST Panel (border=8) (NEW Caption (ATTR Value="Break 1"))))
+		(NEW Button (ATTR Caption = "1"))
+		(SPAN 2 1 (NEW Button (w=[1] h=[1]) (ATTR Caption = "2")))
+		(NEW Button  (ATTR Caption = "3"))
+		(NEW Button  (ATTR Caption = "4"))
+		(NEW Button  (ATTR Caption = "5"))
+		(NEW Button  (ATTR Caption = "6"))
+		(NEW Button  (ATTR Caption = "7"))
+		(BREAK (HLIST Panel (h=60 w=[1] border=8)
+			(NEW Caption (vjustifyMe=CENTER) (ATTR Value="Break 2"))
+			(NEW Button (hjustifyMe=RIGHT) (ATTR Caption="hello"))
+		))	
+		(NEW Button  (ATTR Caption = "8"))	
+		(NEW Button  (ATTR Caption = "9"))
+		(BREAK (HLIST Panel (border=8) (NEW Caption (ATTR Value="Break 3"))))	
+	)))
+
+
+
+	4. Configurations: CONFIG
+
+Configurations allow the definition of values, objects and lists which can be used inside this definition. For example you can define an integer object and use it in two gadgets as link Model. Now these two gadgets share their model. Like "SCAN" and "BREAK", "CONFIG" is an object and can be inserted into containers as a component or be used as a layout.
+The last argument of the "CONFIG" operator is the object, all the others are definitions of the form "(DEF name value)", where value is optional. A defined identifier can be used in all following definitions and in the object itself. If value is an object and name is used twice, the SAME object is inserted twice. This can cause serious problems and should ONLY be done in links!
+If value is an object, "(NEW name)" makes a deep copy of value. Other than with "DCOPY" and "SCOPY", no attributes, links or layout parameters can be set.
+However, if value is a configuration, its definitions can be replaced by means of a parameter list. This parameter list is an additional argument of "NEW" like the list of arguments. Its operator "PARAMS" is optional and can be omitted.
+Example:
+	(CONFIG
+		(DEF IntGadget
+				(CONFIG
+					(DEF Int (NEW Integer (ATTR Value=25)))
+					(VLIST VIRTUAL (dist=0)
+						(NEW Slider (w=100 h=20)
+							(LINKS Model=Int))
+						(NEW TextField (w=100 h=20)
+							(LINKS Model=Int)))))
+
+		(HLIST Panel (border=10 dist=10)
+			(NEW IntGadget)
+			(NEW IntGadget (PARAMS Int = (NEW Integer (ATTR Value=75))))))
+
+
+
+	5. Reusing Layouts: INCLUDE
+
+"INCLUDE" reads the file whose name is given as the first argument and inserts it in the text. If the object in this file is a configuration, parameters can be passed to it as a second argument.
+Example (see also Include.Config):
+	(CONFIG
+		(DEF int1 (NEW Integer (ATTR Value=75)))
+		(HLIST Panel (border=8)
+			(VLIST VIRTUAL (border=4)
+				(NEW Slider (w = 100 h = 20) (LINKS Model=int1))
+				(NEW TextField (w = 100 h = 20) (LINKS Model=int1)))
+			(INCLUDE Include.Config (PARAMS (SET int int1) (SET MyBorder 4)))
+			(INCLUDE Include.Config (MyBorder=4))
+		)
+	)
+
+
+
+	6. Representation of Data Types
+
+String = '"' < any char except '"' > '"' | "'" < any char except "'" > "'".
+Char = '#'< any char >.
+Integer = < digits >.
+Real = < digits > "." [ < digits > ].
+Boolean = "TRUE" | "FALSE".
+Size = [ ( Integer | "DEFAULT" ) ] "[" [ Integer ] "]"  |  Integer.
+
+
+	6.1. Size
+
+w=50 [3] : 50 is the minimal width of the gadget, 3 the expansion factor. This means that the gadget gets at least 50 pixel wide. If the container (list or table) offers more space, the gadget is expanded accordingly. "[]" is equivalent to "[1]"; "w=50" is the same as "w=50[0]", which means that the gadget's width does not expand.
+
+It's function is best shown with an example:
+LayLa.OpenAsDoc
+(HLIST Panel (w=120 dist=0 vjustify=CENTER)
+	(NEW Button (w=30[]))
+	(NEW TextField (w=[2]))
+)
+Since "Button" has the expansion factor 1 and "TextField" has the expansion factor 2, "TextField" gets twice as wide as "Button".
+
+(HLIST Panel (w=120 dist=0 vjustify=CENTER)
+	(NEW Button (w=50[]))
+	(NEW TextField (w=[2]))
+)
+If "TextField" was twice as long as "Button" here, "Button" would become smaller than its minimal size. However, "Button" is at least 50 pixels wide, and "TextField" only gets the remaining 70 pixels. "Button" only starts to grow when "Panel" is more than 150 pixels wide (and the size of "TextField" is twice the size of "Button").
+
+The expansion factor of a row/column is the largest expansion factor of all gadgets inside it. The expansion factor of a row/column is zero, if a gadget inside the row/column has a fixed height/width.
+
+"DEFAULT" is the width/height the gadget is assigned in the new procedure (e.g. "w=DEFAULT []").
+
+
+
+	7. The Module Layouts
+
+The module Layouts is an API to build layouts. Here, the layout is not described in a text and translated but built as a data structure and evaluated.
+
+
+	7.1. Definition of the Module Layouts
+
+DEFINITION Layouts;
+
+	IMPORT Objects;
+
+	CONST	(* Node id constants *)
+		Inval = Objects.Inval;
+
+		(* data types *)
+		String = Objects.String; Int = Objects.Int; Real = Objects.Real; Bool = Objects.Bool; Char = Objects.Char;
+		Format = 8; Ident = 9;
+
+		(* operators *)
+		Def = 20; Set = 21;
+		Params = 22; Layout = 23; Attributes = 24; Links = 25;
+		Instance = 26; Obj = 27; Break = 28;
+
+		(* special layout constants used in NewFormat *)
+		Left = 60; Right = 61; Bottom = 62; Top = 63; Center = 64;
+		Static = 65; Dynamic = 66; Hor = 67; Vert = 68;
+
+	TYPE
+		Node = POINTER TO NodeDesc;
+		NodeDesc = RECORD
+			id: INTEGER;
+		END;
+
+	PROCEDURE Insert (node, dsc: Node);
+			(*	insert dsc into node	*)
+	PROCEDURE SetParams (node, params: Node);
+			(*	set parameters when a Config is used	*)
+	PROCEDURE CopyOf (node: Node): Node;
+			(*	make a deep copy of node	*)
+	PROCEDURE IsVirtual (node: Node): BOOLEAN;
+			(*	TRUE if node is an object and virtual	*)
+	PROCEDURE Realize (node: Node): Objects.Object;
+			(*	once an object is realized, it can't be changed anymore	*)
+
+(*	convert data to Node	*)
+	PROCEDURE NewString (str: ARRAY OF CHAR): Node;
+	PROCEDURE NewIdent (str: ARRAY OF CHAR): Node;
+	PROCEDURE NewChar (ch: CHAR): Node;
+	PROCEDURE NewInt (int: LONGINT): Node;
+	PROCEDURE NewSize (MinSize, ExpandFactor: INTEGER): Node;
+	PROCEDURE NewReal (real: REAL): Node;
+	PROCEDURE NewBool (bool: BOOLEAN): Node;
+	PROCEDURE NewFormat (sym: INTEGER): Node;	(*	sym = Left | Right | Bottom | Static ...	*)
+
+(*	create new Nodes	*)
+	PROCEDURE NewNode (id: INTEGER): Node;		(*	LAYOUT, ATTR, LINKS, PARAMS	*)
+			(*	id = Layout | Attributes | Links | Params.	*)
+			(*	Params are not inserted but set with "SetParams (node, params)".	*)
+	PROCEDURE NewSet (Name: ARRAY OF CHAR; Value: Node): Node;		(*	SET	*)
+	PROCEDURE NewDef (Name: ARRAY OF CHAR; Value: Node): Node;		(*	DEF	*)
+	PROCEDURE NewObject (NewProc: ARRAY OF CHAR): Node;		(*	NEW NewProc	*)
+			(*	NewProc = "": virtual object	*)
+	PROCEDURE NewInstance (Ident: ARRAY OF CHAR): Node;		(*	NEW Ident	*)
+	PROCEDURE NewPlace (NewProc: ARRAY OF CHAR): Node;		(*	PLACE	*)
+	PROCEDURE NewHList (NewProc: ARRAY OF CHAR): Node;		(*	HLIST	*)
+	PROCEDURE NewVList (NewProc: ARRAY OF CHAR): Node;		(*	VLIST	*)
+	PROCEDURE NewTable (NewProc: ARRAY OF CHAR): Node;		(*	TABLE	*)
+	PROCEDURE NewSpan (rows, cols: INTEGER): Node;		(*	SPAN	*)
+	PROCEDURE NewBreak (): Node;		(*	BREAK	*)
+	PROCEDURE NewConfig (): Node;		(*	CONFIG	*)
+	PROCEDURE CopyPublicObj (name: ARRAY OF CHAR; deep: BOOLEAN): Node;	(*	SCOPY, DCOPY	*)
+			(*	if name can't be found, a virtual object is returned	*)
+	PROCEDURE WrappedObject (obj: Objects.Object): Node;
+			(*	obj = NIL: make virtual object	*)
+
+END Layouts.
+
+
+	7.2. Creating a Layout Structure
+
+For each operator a node is created by calling the according procedure. Most of the times, the first argument is passed as a parameter to this procedure. For each of the other arguments, a node is created and inserted into the operator node by the procedure Insert. All arguments are inserted with the procedure Insert, except for parameter list, which are inserted by SetParams.
+	WrappedObject turns an Objects.Object into a Layouts.Node. Realize evaluates a layout structure and yields the according object. A node can be realized more than once; the same object is returned every time Realize is called. However, after being created with Realize, an object cannot be changed any more (i.e. you cannot set layout parameters, attributes and such).
+
+
+	7.3. Example
+
+The panel
+
+	(HLIST Panel (border=8)
+		(NEW Button (w=50 h=20)
+			(ATTR Caption="Open" Cmd="Desktops.OpenDoc &File.Value"))
+		(NEW TextField
+			(ATTR Name="File"))
+	)
+
+is created by following procedure:
+
+	PROCEDURE HList () : Objects.Object;
+	VAR hlist, gadget, list : Layouts.Node;
+	BEGIN
+		hlist := Layouts.NewHList ("Panel");
+		list := Layouts.NewNode (Layouts.Layout); Layouts.Insert (hlist, list);
+		Layouts.Insert (list, Layouts.NewSet ("border", Layouts.NewInt (8)));
+		
+		gadget := Layouts.NewObject ("Button"); Layouts.Insert (hlist, gadget);
+		list := Layouts.NewNode (Layouts.Layout); Layouts.Insert (gadget, list);
+		Layouts.Insert (list, Layouts.NewSet ("w", Layouts.NewSize (50, 0)));
+		Layouts.Insert (list, Layouts.NewSet ("h", Layouts.NewSize (20, 0)));
+		list := Layouts.NewNode (Layouts.Attributes); Layouts.Insert (gadget, list);
+		Layouts.Insert (list, Layouts.NewSet ("Caption", Layouts.NewString ("Open")));
+		Layouts.Insert (list, Layouts.NewSet ("Cmd", Layouts.NewString ("Desktops.OpenDoc &File.Value")));
+		
+		gadget := Layouts.NewObject ("TextField"); Layouts.Insert (hlist, gadget);
+		list := Layouts.NewNode (Layouts.Attributes); Layouts.Insert (gadget, list);
+		Layouts.Insert (list, Layouts.NewSet ("Name", Layouts.NewString ("File")));
+		
+		RETURN Layouts.Realize (hlist)
+	END HList;

@@ -1,0 +1,191 @@
+A Guide to Oberon's Line Drawing System
+
+N. Wirth, 21.7.90 / 1.1.92
+
+
+Introduction
+
+The system called Draw serves to prepare line drawings. They contain lines, text captions, and other items, and are displayed in graphic viewers (more precisely: in menu viewers' graphic frames). A graphic viewer shows an excerpt of the drawing plane, and several viewers may show different parts of a drawing. The most frequently used commands are built-in as mouse clicks and combinations of clicks. Additional commands are selectable from texts, either in viewer's menus (title bar) or in the text called Draw.Tool. The mouse buttons have the following principal functions;
+
+left:  draw / set caret	middle:  move / copy	right:  select 
+
+A mouse command is identified (1) by the key k0 pressed initially, (2) by the initial position P0 of the cursor, (3) by the set of keys k1 of buttons pressed until the last is released, and (4) the cursor position P1 at the time of release.
+
+The basic system consists of the modules Draw, GraphicFrames, and Graphics. These modules contain the facilities to generate and handle horizontal and vertical lines, text captions, and macros. Additional modules serve to introduce other elements, such as rectangles and circles, and the system is extensible, i.e. further modules may be introduced to handle further items.
+
+
+Basic Commands
+
+The command Draw.Open opens a new viewer and displays the graph with the name given as parameter. If no parameter is specified with the command, the last text selection is taken as parameter. We suggest that file names use the extension Graph.
+
+Drawing a line. In order to draw a horizontal or vertical line from P0 to P1, press the button with the cursor at P0 and, while holding the button, move the mouse and cursor to P1. Then release the button. If P0 and P1differ in both their x and y coordinates, the end point is adjusted so that the line is either horizontal or vertical.
+
+Writing a caption. First place the cursor where the caption is to appear. Then click the left button, causing a cross to appear. This is called the caret. Then type the text. Only single line texts are accepted. The DEL key may be used to retract characters (backspace).
+
+Selecting. Most commands require the specification of operands, and many implicitly assume the previously selected elements - the selection - to be their operands. A single element is selected by pointing at it with the cursor and then clicking the right mouse button. This also causes previously seleted elements to be deselected. If their selection is to be retained, also click the left button. This action is called an interclick. If you wish to select several elements at once, move the cursor from P0 to P1 while holding the right key. Then all elements lying within the rectangle with diagonally opposite corners at P0 and P1 are selected. Selected lines are displayed as dotted lines, selected captions (and macros) by inverse video mode. A mocro is selected by pointing at its lower left corner.
+
+Moving. If you wish to move (displace) a set of elements, first select them, and then move the cursor from P0 to P1 while holding the middle button. The vector from P0 to P1 specifies the movement and is called the displacement vector. P0 and P1 may lie in different viewers displaying the same graph. Small displacements may be achieved by using the keyboard's cursor keys.
+
+Copying. Similarly, the selected elements may be copied (duplicated). In addition to pressing the middle button while indicating the displacement vector, interclick the left button. The copy command may also be used to copy elements from one graph into another graph by moving the cursor from one viewer into another viewer displaying the destination graph. A text caption may be copied from a text frame into a graphic frame and vice-versa. There exist two ways to achieve this: 1. First place the caret at the destination position, then select the text and interclick the middle button. 2. First select the text to be copied, then place the caret at the destination point by clicking the left and interclicking the middle button.
+
+Shifting the plane. You may shift the entire drawing plane behind the viewer by specifying a displacement vector pressing the middle button (like in a move command) and interclicking the right button.
+
+Moving and resizing a viewer. A viewer can be enlarged or shrunk by placing the cursor into the title bar and then moving it, while holding the left button to the desired new position. If the viewer is to be moved, additionally interclick the middle button.
+The following table shows a summary of the mouse actions:
+
+left	draw line
+left (no motion)	set caret
+left + middle	copy selected caption to caret
+left + right	set secondary caret
+middle	move selection
+middle + left	copy selection
+middle + right	shift drawing plane
+right	select area
+right (no motion)	select object
+right + middle	copy caption to caret
+right + left	select without deselection
+
+
+Menu Commands
+
+The following commands are displayed in the menu (title bar) of every graphic viewer. They are activated by being pointed at and by clicking the middle button.
+
+System.Close 	The viewer is closed.
+System.Copy	A new viewer is opened showing the same drawing.
+System.Grow	The viewer is enlarged to cover the entire track (screen).
+Draw.Delete	The selected elements are deleted.
+Draw.Store	The drawing is written as file with the name shown in the title
+ 	bar. The original file is renamed by changing its extension to Bak.
+
+
+Further Commands 
+
+The following commands are listed in the text Draw.Tool, but may appear in any text. 
+
+Draw.Store name	The drawing in the marked viewer is stored as a file with 
+	the specified name. 
+Draw.Print Server *	The drawing in the marked viewer is printed by the
+	named print server. 
+Draw.Print Server {Filename}.	The named files are printed.
+
+The subsequent commands pertain to attributes of drawing elements, such as line width, text font, and color. The Set-commands determine the respective attributes of subsequently created elements, the Change-commands to those of the most recent selection.
+
+System.SetFont fontname	default = Oberon10.Scn.Fnt
+System.SetColor c 	default = white
+Draw.SetWidth w	default = 1,   0 < w < 7.
+Draw.ChangeFont fontname
+Draw.ChangeColor c
+Draw.ChangeWidth w	(0 < w < 7)
+
+The SetColor and ChangeColor commands either take a color number in the range 1 .. 15 or a string as parameter. The latter case serves to select the color from the character immediately following the caret position (see Draw.Tool).
+
+
+Control Key Commands
+
+The following commands are initiated by control keys and apply to the graph in which the caret is placed:
+
+DEL	the selected elements are deleted
+Cursor keys	the selected elements are moved by one unit in the indicated direction.
+"No scrll"	the graph is redrawn (cleanup).
+Cntl / "No scrll"	the graph is positioned with its origin in the lower left corner of 
+	the frame (reset).
+
+
+Macros 
+
+A macro is a (small) drawing that can be identified as a whole and be used as an element within a (larger) drawing. Macros are typically stored in collections called libraries, from where they can be selected and copied individually.
+
+Draw.Macro lib mac	The macro mac is selected from the library named lib and inserted	in the drawing at the caret's position.
+
+Macros are typically used for drawing electronic circuits. The basic library file containing frequently used TTL circuits is called TTL0.Lib, and a drawing showing its elements is called TTL0.Graph.
+
+
+Rectangles
+
+Rectangles can be created as individual elements and are frequently used as frames around a set of other elements. They consist of four lines which are selectable as a unit. The attribute commands SetWidth, SetColor, ChangeWidth, and ChangeColor also apply to rectangles. Rectangles are selected by pointing at their lower left corner and are created by the following steps:
+
+	1. Place the caret where a corner of the new rectangle is to lie.
+	2. Place a secondary caret where the opposite corner is to lie (left + right).
+	3. Activate the command Rectangles.Make.
+
+Rectangles may be filled with a shade pattern. The shade is specified as a number s (0 # s # 9). 
+
+Rectangles.SetShade s	default = 0: no shading
+
+In the current implementation, all shades appear as the same pattern on the display but differ on the printer.
+
+
+Oblique Lines, Circles, and Ellipses
+
+Further graphic elements are (oblique) lines, circles, and ellipses. The sensitive area of circles and ellipses is at their lowest point. They are created by the following steps:
+
+Lines:	1. Place the caret where the starting point is to lie. 
+	2. Place a secondary caret at the position of the end.
+	3. Activate the command Curves.MakeLine.
+
+Circles:	1. Place the caret where the center is to lie. 
+	2. Place a secondary caret. Its horizontal distance from the first caret specifies the 		radius.
+	3. Activate the command Curves.MakeCircle.
+
+Ellipses:	1. Place the caret where the center is to lie. 
+	2. Place a second caret. Its horizontal distance from the first caret specifies one axis.
+	3. Place a third caret. Its vertical distance from the first caret specifies the other axis.
+	4. Activate the command Curves.MakeEllipse.
+
+
+Spline Curves
+
+Spline curves are created by the following steps:
+
+	1. Place the caret where the starting point is to lie. 
+	2. Place secondary carets at the spline's fixed points (at most 20).
+	3. Activate the command Splines.MakeOpen or Splines.MakeClosed .
+
+
+Constructing New Macros
+
+A new macro is constructed and inserted in the library lib under the name mac as follows:
+
+	1. Select all elements which are to belong to the new macro.
+	2. Place the caret at the lower left corner of the area to be spanned by the macro.
+	3. Place a secondary caret at the upper right corner of the area to be spanned by the 		macro.
+	4. Activate the command Draw.MakeMacro lib mac.
+
+An existing macro can be expanded (opened) into its parts as follows:
+
+	1. Select the macro to be opened.
+	2. Place the caret at the poition where the expansion is to appear.
+	3. Activate the command Draw.OpenMacro.
+	
+The following commands are available for loading and storing libraries. Their parameter is a file name, and its first part is taken as library name.
+
+Draw.LoadLibrary	name
+Draw.StoreLibrary	name
+
+For example, the command Draw.StoreLibrary Parts.Lib stores the library Parts as file Parts.Lib. Only the macros presently loaded are considered as belonging to the library. If you wish to add some macros to an existing library file, first load all of its elements. This best done by opening a graph containing all macros of the desired library.
+
+
+Extending the Draw system with additional element classes
+
+Additional element classes may be incorporated by programming further modules which import Graphics. The following notes are a brief guide for the design of such extensions, and module Rectangles is shown as an example. In the following explanations, the reader should have this source available.
+
+The data type for the new element class is declared as an extension of Graphics.ObjDesc with fields x, y (position), w (width), h (height), col (color), selected, and the method field do. A new instance is created by the exported command New. Its position is taken from the caret, namely mark.x and mark.y of the frame descriptor with the most recent selection. If several coordinates are required, as in the case of rectangles and circles, they are specified by secondary carets. The list of secondary carets is rooted in the field mark.next of the frame descriptor. The field do must be initialized with a (pointer to a) method table, i.e. a record of type Graphics.MethodDesc containing handlers for the following operations:
+
+copy, draw, selectable, change, read, write, print
+
+The record is typically stored in a global variable called method. The field method.name must be given the name of the module implementing the extension.
+In draw(obj, f, col, x, y, mode), the mode parameter has the following significance:
+
+mode = 0:	the object is to be drawn fully, according to the value of obj.state,
+mode = 1:	the state changes from normal to selected,
+mode = 2: 	the state changes from selected to normal.
+
+Parameters x and y denote a relative offset within frame f.
+In change(obj, msg) the msg parameter specifies the nature of the change. Its type is an extension of Graphics.ChangeMsg:
+
+msg IS GraphicsColorMsg	change color to msg.col
+msg IS Graphics.WidMsg 	change width to msg.w
+msg IS Graphics.FontMsg 	change font to msg.fnt
+
+Procedure read(obj, R) reads the values of the extended object record.
+Procedure write(obj, W) writes the values of the extended object record.

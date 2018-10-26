@@ -1,0 +1,279 @@
+Oberon System 3 with Gadgets, Release 2.3.6
+
+Copyright (C) 1990-1999 by Institut fr Computersysteme, ETH Zrich
+
+Welcome to Oberon!
+
+1. The basic Oberon System 3
+2. The Gadgets System
+3. Installing optional packages
+4. Configuring the system
+5. User forum
+6. Disclaimer
+
+Blue colored parts in this document are Oberon commands. They can be activated simply by pointing at their beginning with the mouse and then clicking the middle key (or, if a three button mouse is not available the Ctrl key on the keyboard). For example, the Script.Open UserGuide.Text command can be activated by clicking middle at Script.Open. It connects to a brief tutorial for new Oberon users. By its activation, an extra viewer is popped up that can be used, manipulated and closed again independently.
+
+We welcome suggestions and problem reports.  Use Script.Open Feedback.Text to fill in the user feedback form and send it to us.
+
+1. The basic Oberon System 3
+
+After first startup, the Oberon system presents itself to the user in the original two-track Oberon look, showing a user track on the left and a system track on the right, the latter containing two text viewers: System.Log and System.Tool. System.Log is used to chronologically report activities and errors. System.Tool is the root of Oberon's textual user interface (TUI). It contains a set of frequently used commands.
+
+In particular, the System.Tool includes commands to open other basic tools such a those listed in the following table:
+
+Tool	Function
+Edit.Tool	Program editor tool
+Script.Tool 	Formatted text editor tool
+Compiler.Tool	Programming tool
+Backup.Tool	Support for diskettes
+Miscellaneous.Tool	Format conversions etc.
+
+It is noteworthy that Oberon tools are ordinary texts that are freely editable or, in other words, that Oberon's textual interface is highly customizable to a particular user's needs.
+
+2. The Gadgets System
+
+In addition to Oberon's original textual user interface framework, System 3 has a richly-featured document oriented interface framework (DOI) called Gadgets. Gadgets tools are represented as textual or graphical documents that are laid out on the tiling screen or, alternatively, on a desktop. Two generic opening commands exist (when the Gadgets package has been installed): Desktops.OpenDoc and Desktops.Open. For example, Desktops.OpenDoc ColorSystem.Panel opens a graphical color tool document and Desktops.Open Oberon.Desk opens an entire desktop.
+
+To enable the Gadgets user interface, install the Gadgets package as described in the next section.  To configure the Gadgets interface as the startup default, see the section 4(a).
+
+3. Installing optional packages
+
+Some optional packages are available with this release.  They are distributed as Oberon-format .arc files that must be copied to the Oberon file system and then uncompressed.  The packages are:
+
+gadgets.arc - Graphical user interface & WWW tools
+docu.arc - Guides, examples & book (requires Gadgets)
+apps.arc - Additional applications (requires Gadgets)
+tutorial.arc - Old Hypertext tutorials (requires Gadgets)
+pr3fonts.arc - 300 dpi Oberon Fonts for printing
+pr6fonts.arc - 600 dpi Oberon Fonts (for PostScript printer only)
+eamon.arc - Client-server system (ETH only)
+source1.arc - Source of basic system
+source2.arc - Source of Gadgets
+source3.arc - Source of Applications
+
+The package files can be copied from a DOS FAT16-format diskette or hard drive.  Change the source directory name ("c:/native") in the command below to the actual location of the .arc files (e.g. "a:/").
+
+(a) List available packages:
+  DOS.Directory "c:/native/*.arc"
+
+(b) Copy packages to Oberon file system
+  DOS.CopyFrom "c:/native" 
+    gadgets.arc docu.arc apps.arc tutorial.arc 
+    pr3fonts.arc pr6fonts.arc eamon.arc 
+    source1.arc source2.arc source3.arc ~
+
+(c) Uncompress packages:
+  CompressTools.Install gadgets.arc ~
+  CompressTools.Install docu.arc ~
+  CompressTools.Install apps.arc ~
+  CompressTools.Install tutorial.arc ~
+  CompressTools.Install pr3fonts.arc ~
+  CompressTools.Install pr6fonts.arc ~
+  CompressTools.Install eamon.arc ~
+
+To check free disk space:
+  System.Watch
+
+To list files in a package before uncompressing:
+  CompressTools.Directory ^ or Desktops.OpenDoc ^
+
+Fetching the files with FTP (after configuring network, section 4c)
+  FTP.Open ftp.inf.ethz.ch ~
+  FTP.ChangeDir "/pub/Oberon/System3/Native/"
+  FTP.CompactDir  FTP.ChangeDir ^  (select directory)
+  FTP.CurDir  (show current directory)
+  FTP.GetFiles ^  (select required file)
+    gadgets.arc ~ docu.arc ~ apps.arc ~ tutorial.arc ~
+    pr3fonts.arc ~ pr6fonts.arc ~ eamon.arc ~
+    source1.arc ~ source2.arc ~ source3.arc ~
+  FTP.Close
+
+4. Configuring the system
+
+Native Oberon has a single configuration text that is accessed by the different modules of the system.  It can be opened for editing with the commands Edit.Open Oberon.Text or Desktops.OpenDoc Oberon.Text .
+
+For example, the System section of the configuration text might be:
+
+	System = {
+		InitCommands = {
+			{ !TextDocs.ReplaceSystemEditor }
+			{ System.OpenLog }
+			{ System.Open System.Tool }
+		}
+		TimeDiff = "+0200"	{* time difference of PC clock to GMT *}
+	}
+
+This example illustrates several points:
+
+o The text is free-format and white-space is insignificant outside of quotes.
+o A group is an arbitrary part of the text surrounded by { and }.
+o A section is a labeled group, e.g. System = { ... }
+o Sections may be nested, for example, InitCommands is nested in System (thus we refer to System.InitCommands).
+o On the right-hand side of an = sign must be a single scanner token (e.g. the string "+0200") or a group surrounded by { and }.
+o The syntax inside an inner group is not fixed, for example, the InitCommands section consists of a list of groups that define commands to be executed at system startup, with their parameters.  Here the convention is used that a ! in front of a command disables it.
+o Comment groups may be included between sections.  We use the convention of writing comments between {* and *}, but the *'s are only eye-catchers, and may be left out.
+
+Important Note: If you are updating an existing Oberon system, your previous Oberon.Text configuration file was saved in the Oberon.Text.Bak file.  Do not restore the old version, but rather merge it with the newly installed Oberon.Text by hand.  TextDocs.SearchDiff may be of help here (see TextDocs.Tool in the Gadgets package).
+
+(a) Configuring Gadgets as the default user interface
+
+To configure Gadgets as the default user interface at system startup, remove the "!" before the command TextDocs.ReplaceSystemEditor in the System.InitCommands section of Oberon.Text.  At least a 800x600 display resolution is recommended for Gadgets, although it will work on a lower resolution.  If you want a hypertext version of the System.Tool, change the name after System.Open to System3.Tool. This tool contains hyperlinks to the other commonly used tools.  If you want to use the Gadgets desktop by default, use the following commands in the InitCommands section: Desktops.Open Oberon.Desk and System.Grow.
+
+You may customise the system further by calling your own commands in the System.InitCommands section.
+
+Important Note: If you only see a grey screen after startup, something could be wrong in the System.InitCommands section.  Press Ctrl-Break to open a trap viewer and type Edit.Open Oberon.Text in it to fix the configuration.
+
+(b) Configuring the printer
+
+A new printer driver is installed with an install command:
+
+Driver	Command
+HP LaserJet	HPLaserPrinter.Install
+PostScript	PSPrinter.Install
+PostScript LPR Client	LPRPrinter.Install
+PostScript Eamon Client	EamonPrinter.Install (in Eamon package)
+
+The default printer at system startup can be configured with the Printer.Default setting in Oberon.Text.
+
+The print commands in the default tool texts assume the printer is connected to the first parallel port, i.e. LPT1.  Edit this name in the tool if the printer is connected to a different port, e.g. COM1 for the first serial port.  Local print output is printed by a spool task, which will write in the system log when it has finished sending the file to the printer.
+
+The PSPrinter and HPLaserPrinter sections of Oberon.Text define the margins, paper size (default A4) and printer resolution (300 or 600 dpi) for the PostScript and HP Laser printers respectively.  When modified, the settings become active after the next printer Install command.
+
+The communication parameters of a serial printer can be configured with the Printer.COMn setting, where n is the com port number.
+
+The PostScript driver and its derivatives (LPR and Eamon client printer drivers) support 2-up, 4-up and encapsulated PostScript output using options \l, \d and \e respectively.  Only one of the three options should be used at a time.  Specify the option directly after the printer name, e.g. Desktops.PrintDoc LPT1\l * .  When printing to a file with suffix .eps or .EPS, encapsulated PostScript is automatically generated, e.g. Desktops.PrintDoc export.eps Test.Text ~
+
+(c) Configuring networking
+
+For Ethernet networks, the 3Com EtherLink III (e.g. 3c509) and the 3Com FastEtherLink (3c905B) are supported.  For modem dial-up connections, SLIP and PPP (beta) protocols are supported.  PPP is used by most Internet Service Providers, though sometimes SLIP is still used.
+
+Common network setup (Ethernet, SLIP and PPP):
+
+1. Edit.Open Oberon.Text and locate the NetSystem section.
+2. Set your full domain name in the Domain field (e.g. bluewin.ch).  Note that the example values are provided for illustration only!
+3. Set the IP addresses of up to three domain name servers in the DNS0 to DNS2 fields (e.g. 195.186.1.110 & 195.186.1.111).  The DNS host name is not important.
+4. Set the host name of your SMTP and POP3 servers in the SMTP and POP fields respectively (e.g. mail.bluewin.ch & pop.bluewin.ch).  This is required for sending and reading mail.
+5. Set the host name of your NNTP server in the NNTP field (e.g. news.bluewin.ch).  This is required for reading and posting Usenet News.
+6. Set your complete email address in the EMail field (e.g. me@bluewin.ch).  This is required for sending email and for anonymous FTP passwords.
+7. If your Service Provider requires you to use proxy servers, set ProxyDomain to your local domain, and set HTTPProxy, FTPProxy and GopherProxy to the full hostnames of the proxy servers (e.g. proxyzh.bluewin.ch:8080 for an HTTP proxy).  Otherwise leave these fields as-is.
+
+PPP dial-up setup:
+
+1. Do the common network setup above.
+2. In the NetSystem section, change the Device0 line to:
+  Device0 = { "PPPMain.InstPPP", "COM1"}
+  Use COM1 or COM2 for the port the modem is connected to.
+3. Change the Route0.Mode = "arp" setting to Route0.Mode = "".
+4. Change the DIAL.Init setting for your modem port and speed.
+5. Edit the DIAL.Dial script to dial and log in to your Internet Service Provider (see "Dial-up Script Setup" below).
+6. DIAL.Host, Route0.Host, Route0.Gateway and Route0.Netmask are not used in the case of PPP.
+7. Refer to the instructions below for starting and stopping the connection.
+Note that there are debugging commands for PPP at the end of the NetSystem.Tool.  PPPMain.Stats will show the PPP status, and PPPTest.ShowLog will show a log of the PPP protocol.
+
+LAN setup (3Com509 & 3Com905B) Ethernet only):
+
+1. Do the common network setup above.
+2. Change the <drivemodule.initproc> entry in the Device0 section to Net3Com509 or Net3Com905B to enable the respective Ethernet driver.
+3. Set your full host name and IP address in the Route0.Host field (e.g. blue.bluewin.ch & 195.186.123.123).
+4. Set the gateway IP address in the Gateway field (e.g. 195.186.123.1).  The gateway host name is not important.
+5. Set the netmask value of your subnet in the Netmask field (e.g. 255.255.255.192).
+
+SLIP dial-up setup:
+
+1. Do the common network setup above.
+2. In the NetSystem section, change the Device0 line to:
+  Device0 = { "SLIP.InstallDevice", "COM1 compressed"}
+  Use COM1 or COM2 for the port the modem is connected to.
+  Use "compressed" or "uncompressed" as a SLIP option.
+3. Change the Route0.Mode = "arp" setting to Route0.Mode = "".
+4. Set your full host name and IP address in the Route0.Host field (e.g. blue.bluewin.ch & 195.186.123.123).
+5. Change the DIAL.Host to your SLIP server name (Internet Service Provider).
+6. Change the DIAL.Init setting for your modem port and speed.
+7. Edit the DIAL.Dial script to dial and log in to your Internet Service Provider (see "Dial-up Script Setup" below).
+8. Route0.Gateway and Route0.Netmask are not used in the case of SLIP.
+9. Refer to the instructions below for starting and stopping the connection.
+
+Remember to store the modified Oberon.Text!  After the next system startup the network will be usable.  Refer to NetSystem.Tool for commands to start up dial-up networking.
+
+Dial-up Script Setup (PPP and SLIP):
+
+Both PPP and SLIP require you to set up a Dialer script to call and log in to your Internet Service Provider (ISP).  An example script is contained in the DIAL.Dial section of the Oberon.Text.  You must adapt this script to your specific ISP.
+
+A script is basically just a series of wait and send commands (the syntax is defined below).  First you must send modem commands to dial your ISP.  For more information on your modem commands ("AT" commands), refer to its manual.  The example script starts by sending the reset command "ATZ" to the modem.  Then it waits up to 10 seconds for the response "OK" from the modem.  The real response of the modem is written in the system log, with newline characters replaced with "|" characters.  If at any time an expected response does not come in the specified time, the Dialer will display "Timed out" and abort the script.
+
+After receiving the "OK" response from the modem, the example script sends the "ATD #######" command to make the modem dial the specified phone number (replace ####### with the dial-in number of your ISP's local point-of-presence).  Then it waits up to 60 seconds for the modem to reply "CONNECT", indicating that a modem connection has been established.  If the modem returns "BUSY", for example, the script will continue waiting until 60 seconds have passed, and then abort.
+
+After the modem connection has been established, any strings that you send to the modem will no longer be interpreted as modem commands, but rather will be sent by the modem to the ISP.  Likewise, anything the ISP sends to you will be received by the modem and sent to you.  The script now has to log in to the PPP or SLIP account.  The example script does this by waiting for the ISP to send the "Login:".  Then it sends the user name you entered with the NetSystem.SetUser dialup:... command.  This is done by specifying the USER keyword in the script.  Alternatively, you could enter your user name directly in the script, and not use the USER keyword.  If the username is accepted, the ISP will send a "Password:" prompt, and you have to send your password.  Similarly, you could use the PASSWORD keyword, or code the password directly as a string in the script (the latter might be less secure, because it could be viewed on your screen by your visitors).
+
+Finally, the script must wait for the acknowledgement from your ISP that you have correctly logged in.  This normally consists of a string like "Login successful" or "PPP enabled".  After this confirmation has been received, the script must execute a CALL PPPMain.StartInst or CALL SLIP.StartDevice command for PPP or SLIP respectively.  This will start the PPP or SLIP protocol, which finally connects you to the Internet!
+
+If you try your script and it connects to the ISP, but does not display any legible information (no "login:" prompt or anything, just garbage), then your ISP may be expecting to use the Password Authentication Protocol (PAP) for login.  In this case you can try to do CALL PPPMain.StartInst directly after the "CONNECT" response in the dial script.  Your must also enter your username and password in the PAPName and PAPPassword sections in Oberon.Text.  If you still have problems, contact Edgar.Schwarz@z.zgs.de, who ported PPP to Native Oberon.
+
+You must configure the dial script correctly, and then activate it every time you want to connect to the Internet.  See "Starting and stopping a dial-up connection" below.
+
+Script Syntax (in EBNF):
+  script = { snd | rcv | macro } .
+  snd = string .
+     the specified string is sent to the modem
+  rcv = int string .
+    wait up to int seconds for string to be received, abort on failure
+  macro = "USER" | "PASSWORD" | "CALL Mod.Proc" .
+    USER sends SLIP user name.  PASSWORD sends SLIP password.
+    CALL calls the specified command (PPPMain.StartInst or SLIP.StartDevice)
+
+Starting and stopping a dial-up connection (PPP and SLIP):
+
+1. Use System.Open NetSystem.Tool to see the relevant commands.
+2. Execute NetSystem.Start to initialize the net system.
+3. Execute the NetSystem.SetUser command (with your PPP/SLIP user name filled in) and enter your PPP/SLIP link password.
+4. Execute Dialer.Dial to start the dial script.
+5. After the connection is established, you can test it by using Telnet.Open <servername> to connect to some telnet server.
+6. To hang up the connection, use the commands NetSystem.Stop and Dialer.Hangup, or in the case of PPP, PPPMain.StopInst.
+
+The PPP.Tool text contains more information on PPP by Edgar Schwarz.
+
+(d) Configuring Sound/CD
+
+The SoundBlaster driver and CD drivers are included in the Applications package.
+
+1. Activate the command corresponding to your CD below.
+  No CD (default)
+    System.CopyFiles Empty.CD.Obj => CD.Obj ~
+  ATAPI/IDE CD
+    System.CopyFiles Atapi.CD.Obj => CD.Obj ~
+  Mitsumi CD
+    System.CopyFiles Mitsumi.CD.Obj => CD.Obj ~
+2. Edit.Open Oberon.Text
+3. Locate the "Sound" section.
+4. Change the settings in the Audio section.
+5. Change the settings in the CDAtapi or CDMitsumi section.
+6. Store the modified Oberon.Text
+
+This completes sound and CD driver installation.  After the next system startup the Sound.Tool will be usable.
+
+Note that the ATAPI/IDE CD driver is incompatible with the ATA disk driver.  The CD functions will be incorporated directly in the ATA disk driver later.
+
+5. User forum
+
+comp.lang.oberon provides an electronic forum on usenet.
+
+For technical correspondence, contact:
+  Institute for Computer Systems
+  Oberon System 3 Team
+  ETH Zentrum
+  CH-8092 Zrich
+  Switzerland
+
+  email: oberon@inf.ethz.ch
+  web: http://www.oberon.ethz.ch/native/
+  fax: ++41 1 632 1307
+
+6. Disclaimer
+
+Permission to use, copy, modify and distribute this software and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of ETH not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. ETH makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+
+ETH disclaims all warranties with regard to this software, including all implied warranties of merchantability and fitness. In no event shall ETH be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software.
+
+Jrg Gutknecht and Pieter Muller, May 1999
+
+Script.Open Acknowledgements.Text

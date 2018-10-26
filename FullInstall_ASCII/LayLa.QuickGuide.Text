@@ -1,0 +1,82 @@
+LayLa QuickGuide
+
+
+The Layout Language LayLa can be expressed by following EBNF:
+
+Object = New | Copy | Container | Break | Span | Config | Include | "VIRTUAL" | PublicObj | Ident.
+
+New = "(" "NEW" ( NewObj | Instantiation ) ")".
+NewObj = ( Generator | "VIRTUAL" ) ObjBody.
+Instantiation = Ident [ Params ].
+Copy = "(" ( "SCOPY" | "DCOPY" ) PublicObj ObjBody ")".
+Container = "(" ( "PLACE" | "HLIST" | "VLIST" | "TABLE" ) NewObj {Object} ")".
+
+ObjBody = { Layout | Attr | Links }.
+Layout = "(" [ "LAYOUT" ] {Set} ")".
+Attr = "(" ( "ATTR" | "ATTRIBUTES" ) {Set} ")".
+Links = "(" "LINKS" {Set} ")".
+Params = "(" [ "PARAMS" ] {Set} ")".
+Set = "(" "SET" Ident Value ")" | Ident "=" Value.
+
+Break = "(" "BREAK" Object ")".
+Span = "(" "SPAN" Int Int Object ")".
+
+Config = "(" "CONFIG" {Def} Object ")".
+Def = "(" "DEF" Ident [ Value ] ")".
+
+Include = "(" "INCLUDE" FileName [ Params ] ")".
+
+Value = Int | Real | Bool | Char | String | Ident | Object | Size.
+
+Generator = Qualident | Ident.
+PublicObj = Qualident.
+FileName = Qualident | Ident.
+String = '"' { not " } '"' | "'" { not ' } "'".
+Char = "#"<any character>.	(e.g. #t)
+Size = [ Int | "DEFAULT" ] "[" [ Int ] "]" | Int.
+
+
+
+Layout Parameters
+
+Any Object:
+name	type	description	default value
+w	Size	width of the gadget	the width and height set in the
+h	Size	height of the gadget	Generator; [1] for virtual objects
+x	Integer	x-coordinate of the gadget	0
+y	Integer	y-coordinate	0
+hjustifyMe	like hjustify	overrides the hjustify of the container for this gadget	hjustify and
+vjustifyMe	like vjustify	overrides the vjustify of the container for this gadget	vjustify of the container
+
+PLACE:
+name	type	description	default value
+hborder	Integer	size of the border at the left and the right	0
+vborder	Integer	size of the border at the top and the bottom	0
+border	Integer	sets the same size for top and bottom	0
+
+
+HLIST, VLIST: all of PLACE plus
+name	type	description	default value
+hdist	Integer	horizontal distance between components	5
+		irrelevant for HLIST
+vdist	Integer	vertical distance between components	5
+		irrelevant for VLIST
+dist	Integer	sets the same value for hdist and vdist	5
+sameWidth	Boolean	TRUE: all components are made as wide as the widest	FALSE
+sameHeight	Boolean	TRUE: all components are made as high as the highest	FALSE
+sameSize	Boolean	sets sameWidth and sameHeight to the same value	FALSE
+hgrid	STATIC /	STATIC: all columns are made as wide as the widest	DYNAMIC
+	DYNAMIC	(not the components however)
+vgrid	like hgrid	STATIC: all rows are made as high as the highest	DYNAMIC
+grid	like hgrid	sets the same value for hgrid and vgrid	DYNAMIC
+hjustify	LEFT / RIGHT	the components are placed left / right / in the middle	LEFT
+	/ CENTER	(horizontal placement)
+vjustify	TOP / BOTTOM	the components are placed at the top / bottom / in the	BOTTOM
+	/ CENTER	middle (vertical placement)
+
+
+TABLE: all of HLIST/VLIST plus
+name	type	description	default value
+orientation	HOR / VERT	table is horizontally / vertically oriented	HOR
+cols	Integer	number of columns (ignored in vertically oriented tables)	1
+rows	Integer	number of rows (ignored in horizontally oriented tables)	1

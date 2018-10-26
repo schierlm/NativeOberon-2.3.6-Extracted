@@ -1,0 +1,165 @@
+3D-Engine
+
+David Ulrich
+
+Introduction
+
+Dim3 is a package for visualizing and exploring three_dimensional scenes that are built from polygons.
+It is based on an earlier package called PolyWorlds, which it extends by adding specular reflections,
+Gouraud shading and textured surfaces.  The Dim3.Panel
+
+If you are familiar with PolyWorlds, you will already know the elements on Dim3.Panel.
+
+  Clear - clear the current scene
+  Statistics - print the number of shapes, points, and polygons in the log text
+  Performance - print the current frame rate in the log text
+  Reset - resets the view point
+  Align - aligns the selected object in the frame
+  Horizon - switches the horizon on and off
+  Flying - sets the navigation model to flying (see below)
+  Planar - sets the navigation model to planar (see below)
+  Field of View - sets perspective distortion
+  Show - list scene files on disk
+  Open - load selected scene file into frame
+
+You can navigate inside the frame in the right half of the panel by pressing the left mouse
+and moving the mouse while keeping the left mouse button pressed.
+
+  Planar model (default)
+  Moving the mouse up/down moves the camera forward/backward
+  Moving the mouse left/right moves the camera left/right
+  Pressing "a"/"z" on the keyboard moves the camera up/down
+  Note that the planar model doesn't let you look up or down, but keeps your line of sight
+  leveled
+  
+  Flying model
+  Moving the mouse up/down changes the current pitch acceleration
+  Moving the mouse left/right accelerates/decelerates the current bank turn rate
+  Pressing "a"/"z" on the keyboard accelerates/decelerates the current speed
+  The flying navigation model simulates a very primitive plane. It is harder to control than
+  planar navigation but gives you more degrees of freedom.
+
+A shape within the scene can be selected with the right mouse button. Currently, the
+only operation that uses selected shapes is the align function, which makes the camera
+coordinate system coincide with the coordinate system of the selected object. Some
+attributes of a selected shape can also be viewed and modified in an inspector panel.
+
+Clicking with the middle mouse button on a shape executes an associated command
+(try clicking on one of the three shapes in the example scene).
+
+
+Scene Description Files
+
+Opening one of the sample scene files will unveil that all sample scenes are described
+as Oberon texts. This section describes the format of Dim3 scene files. The text for
+the sample scene in the Dim3.Panel can be found in Example.poly.
+
+A scene definition consists of two parts. First comes a declaration section where all
+used shapes are defined. The second section sets global parameters and instantiates
+shapes.
+
+Comments start with "#" and last until the end of the line they appear on.
+
+While the scene is parsed, a set of current shape attributes is maintained and
+used whenever a new shape is instantiated. These attributes control where
+shapes are positioned and how their surface is rendered.
+
+  color r g b - set current shape color; r, g, b must be in range [0..1] (default = white)
+  diffuse kd - set coefficient for diffuse reflection (default = 0.5)
+  font name r g b - sets font name and color for shapes with text texture (default = Oberon12.Scn.Fnt, black)
+  shading (constant|gouraud) - sets shading type to flat or smooth shading (default = constant)
+  smooth (yes|no) - enables/disables normal averaging (default = no)
+  dither (yes|no) - enables/disables 2x2 ordered dither (default = no)
+  specular (yes|no) - enables/disables specular highlights (default = no)
+  speccoef ks - coefficient of specular reflection (default = 1.0)
+  specexpo n - exponent for specular reflection, defines how focused the highlight is (default = 10)
+  
+  identity - replaces current transformation matrix by identity matrix
+  matrix (m00 m10 m20) (m01 m11 m21) (m02 m12 m22) (m03 m13 m23) - specify current matrix with four column vectors
+  translate (dx dy dz) - translate all following coordinates by (dx dy dz)
+  rotate angle (x y z) - rotate all following coordinates by angle around axis (x y z) through origin
+  scale (sx sy sz) - scale all following coordinates by given factors along the three current coordinate axes
+  
+  save - push current attributes on stack
+  restore - pop previously saved attributes from stack
+
+A shape definition consists of a list of points, a list of polygons, and/or a list of included shapes.
+
+  shape name ... end - starts and terminates a shape definition
+  points (x0 y0 z0) (x1 y1 z1) ... - defines one or several points in the current coordinate system
+  polygon p0 p1 ... - defines a polygon using a sequence of point numbers (the first defined point has number 0).
+     At least three points must be specified in counter-clockwise order. The polygon doesn't have to be convex,
+     but the corner described by the first three points does.
+   polygon texture [transparent] filename p0 u0 v0 ... - defines a polygon that is displayed using the texture from the
+     picture file specified by name. For every point number, a pair of texture coordinates for the corresponding point is
+     required.
+   polygon text [transparent] string p0 u0 v0 ... - similar to previous, but converts given string to texture instead of
+     using an existing picture.
+   light direct (x y z) intensity - defines (local) directional light source
+   light point (x y z) intensity - defines (local) point light source
+   add name [command string] - adds an instance of the corresponding shape definition to the current shape,
+     applies current attributes to new instance.
+
+
+Global definitions affect all shapes and follow the shape definitions. All commands except points and polygon are
+allowed, plus the following:
+
+  ambient ka - defines intensity of ambient light (default = 1)
+  clear - initializes the scene and all attributes. Is usually the first command in a scene description but may be left
+    out if the description should be added to an already existing scene
+  horizon (yes|no) - enables/disables the horizon
+  
+
+Grammar
+
+World =
+  {ShapeDef}
+  { clear 
+  | horizon (yes | no) 
+  | ambient number 
+  | ShapeCmd
+  }.
+
+ShapeDef =
+  shape ident
+  {points {Vector}}
+  {PolygonDef | ShapeCmd}
+  end.
+
+PolygonDef =
+  polygon 
+  ( {number}
+  | texture [transparent] ident {number number number}
+  | text [transparent] string {number number number}
+  ).
+
+ShapeCmd =
+  ( add ident [command string]
+  | LightDef
+  | Attribute
+  ).
+
+LightDef =
+  light ([direct] Vector number | point Vector number).
+
+Attribute =
+  ( save 
+  | restore
+  | color number number number
+  | diffuse number
+  | font ident number number number
+  | shading (constant | gouraud)
+  | smooth (yes | no).
+  | dither (yes | no).
+  | specular (yes | no).
+  | speccoef  number
+  | specexpo number
+  | identity 
+  | matrix Vector Vector Vector Vector
+  | translate Vector
+  | rotate number Vector
+  | scale Vector
+  ).
+
+Vector =
+  "(" number number number ")".

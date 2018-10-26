@@ -1,0 +1,1045 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+<HEAD>
+<TITLE> PC Native Oberon Release History</TITLE>
+</HEAD>
+<BODY>
+<font size=-1>Site index: [ <A HREF="http://www.oberon.ethz.ch/native/">Native home</A> | Release History | <A HREF="Tech.html">Technical Info</A> | <A HREF="Screen.html">Screenshots</A> | <A HREF="Installation.html">Installation</A> | <A HREF="Registry.html">Registry</A> ]
+<P>
+Page index: [ <A HREF="#req">Requirements</A> | <A HREF="#R236">2.3.6</A> | <A HREF="#R235">2.3.5b</A> | <A HREF="#R234">2.3.4b</A> | <A HREF="#R233">2.3.3b</A> | <A HREF="#R232">2.3.2</A> | <A HREF="#R231">2.3.1</A> | <A HREF="#R230">2.3.0</A> | <A HREF="#R226">2.2.6 (CD)</A> | <A HREF="#R225">2.2.5</A> | <A HREF="#R220">2.2 (and older)</A> ]</font>
+<P>
+<H1>PC Native Oberon: Release History</H1>
+<P>
+<!-- Latest updates: 
+-->
+<P>
+The most recent release is listed after the requirements below.  Releases not shown here were available internally only.
+<H2><A NAME="req">System requirements for latest release</A></H2>
+The following are supported by beta release 2.3.6:
+<UL>
+<LI> Processor: 80386, Pentium or compatible (Cyrix, AMD).
+<LI> Bus: ISA, EISA or PCI.
+<LI> RAM: 4Mb or more (configuring the system for 2Mb is also possible).
+<LI> Hard disk controller: IDE, EIDE, ESDI, Adaptec AIC 7xxx SCSI (beta), Adaptec 1520 SCSI or NCR 810 SCSI.
+<LI> Hard disk space: 3Mb minimum (30Mb for all packages and sources).
+<LI> Display controller: Standard VGA (640x480x4 only).  S3-805, S3-924, S3Trio64, S3Aurora, Video7 Mirage, Tseng ET4000, Tseng W32, Cirrus Logic GD 54xx, Cirrus Logic GD 542x, 3Dlabs Permedia 2 (e.g. Diamond FireGL 1000) or Vesa 2.0 generic (all up to 1280x1024x8).  Also ATI Mach64 (e.g. Rage Pro Turbo) and ATI Mach32 (1024x768x8 only).  For Gadgets at least 800x600 resolution is recommended, otherwise TextFrames should be used.
+<LI> Diskette controller: Standard drive supporting 720k and/or 1.44Mb media.
+<LI> Mouse: PS/2-type 3-button mouse recommended (e.g. Logitech Pilot).  Also serial-port mice on COM1 or COM2: Logitech (3 types), Mouse Systems compatible (4 types), Microsoft 2-button and Microsoft serial IntelliMouse.
+<LI> Keyboard: US, UK, Swiss German, German, Canadian, Norwegian, Turkish, Polish, French or Dvorak.
+<LI> Network adapter (optional): 3Com Etherlink III family (e.g. 3C509) or 3Com FastEtherLink (3C905B).
+<LI> Modem (optional): Any modem on COM1 or COM2 (not WinModem).
+<LI> Dialup account (optional): SLIP or PPP.
+<LI> Sound adapter (optional): Soundblaster-compatible.
+</UL>
+Also see <A HREF="Installation.html">installation reports</A>.
+<H2><A NAME="R236">Release 2.3.6, 13 May 1999</A></H2>
+The most relevant changes for users and programmers since release 2.3.2 are:
+<UL>
+<LI> Simpler mouse configuration in Oberon-0.  No more rebooting required.
+<LI> Beta version of Adaptec AIC 7xxx SCSI driver included (Thanks Patrik Reali).  To access this driver in Oberon-0, go to the end of Install.Tool and execute Config.Options Disk.
+<LI> Standard ATA/EIDE disk driver is now compatible with more drives, and supports drives larger than 8Gb.
+<LI> Support for truecolor added in Display, Display3 and Printer3.  Only the S3Trio64 driver currently supports truecolor, but others will follow later.  Execute Watson.ShowDef Display and read comments 17 to 21 at the end for more information.
+<LI> TextGadgets: ML-MM interclick uses the recall buffer if no selection available for copy.
+<LI> Object files and symbol files are now combined into one .Obj file.  The restrictions on module keys have been relaxed, as the object (or fine-grained) symbol table model is now used.
+<LI> FTPTool has been renamed to FTP and can now be used in the basic system (no longer requires Gadgets).  The old FTP module requiring Gadgets is now called FTPDocs.
+<LI> Mail.Send now supports list of text names as parameter, allowing off-line composition of email.  See Mail.Tool for syntax.
+<LI> Support for accurate timing added in Kernel for device driver writers (MilliTimer, SetTimer, Expired).
+<LI> Compiler now has \1 option to compile only Oberon-1 code with POINTER TO ARRAY.  See Compiler.Tool for options.
+<LI> Oberon-0 can now write noboot.exe and native.par to a DOS partition for DOS-based booting.  See Configure.Tool option 4.
+<LI> Many errors were fixed and small updates made.  See the detailed lists below.
+</UL>
+Detailed changes since release 2.3.5b:
+<UL>
+<LI> install.txt: Disk drivers documentation improved.
+<LI> Gfx*, Leo*: Updated to 1.30.
+<LI> ATADisk: Improved parsing of IDE# parameter.
+<LI> MathH: Get and Set added (alfreed).
+<LI> InstallFiles.Tool, Configure.Tool: c:/system3 changed to c:/native.
+</UL>
+<H2><A NAME="R235">Beta Release 2.3.5b, 11 May 1999</A></H2>
+Detailed changes since release 2.3.4b:
+<UL>
+<LI> Kernel: Trace code added if TraceHeap # 0.
+<LI> Browser, Watson0, Watson: Fixed initialization of obj file extension (prk).
+<LI> OberonDrivers.Text: Removed AIC7890.
+<LI> SCSI, Adaptec7Script, Adaptec7: Updated (prk).
+<LI> System.Tool, System3.Tool: Removed *.Sym references.
+<LI> Compress, CompressTools: Export ratio field.
+<LI> Modules, Watson0, Release, BasicSystem.Text: .Obf -> .Obj.
+<LI> Desktops: Export menuButtonW, namePlateW, menuC.
+<LI> MenuViewers, Desktops: Undo "lost viewer" fix.
+<LI> AIC7890, AIC7890Disk: Replaced by Adaptec7.
+<LI> Bitmaps: Replaced with SharkOberon version (asigner).
+<LI> SVGAH.Display: Generic Hicolor driver added (paulreed).
+<LI> Config: Generate command added.  Boot.Bin renamed to Native.Bin.
+<LI> Input: Removed DCT and double-click MM emulation.
+<LI> vesainfo.exe: Also show non-8-bit modes.
+<LI> ConfigMouse: Cosmetic changes.
+<LI> OPP: Fixed open array problem (prk).
+<LI> OPB: Fix spurious error messages with NEW (prk).
+<LI> Permedia2.Display, OberonDrivers.Text: Beta accellerated truecolor version (fkuhn).
+<LI> Watson: Constant spacing fixed (prk).
+<LI> MathH: Fixed DIV/MOD, ENTIER added (alfreed, prk).
+<LI> Keyboard, OberonDrivers.Text, Configure.Tool, KeyFR.Bin: French keyboard table added (gmeunier).
+<LI> Compiler: Option parsing fixed (prk).
+<LI> OPT: Object file trap because of type re-export fixed (prk).
+<LI> TerminalFrames: replace mode replaced with paint mode.
+<LI> Leonardo: Removed from beta distribution.
+<LI> NetSystem.Tool: Added FTP commands.
+<LI> Oberon: Set FG and BG colors to black and white if Default.Pal is missing.
+<LI> OPM: Removed FileDir import.
+<LI> BootLinker: Cosmetic NL added.
+<LI> ATADisk: Ability to disable IDE0 or IDE1 by setting it to 0.  50ms pause in Identify, and select device 0.
+<LI> MathH: Unary "-" optimized (prk).
+<LI> LPRPrinter: Options can be specified.
+<LI> FTP, FTPDocs, Definitions.Tool, FTP.Tool: FTP to FTPDocs, FTPTool to FTP (ejz).
+<LI> FTPTool: No longer requires Gadgets, now usable in basic system (ejz).
+<LI> Desktops: Fixed size problem & iconizer default position (ejz).
+<LI> Partition: More partition types from Jacques Eloff.
+<LI> Documents: Allow colon in file names.
+<LI> Files: Replaced CODE with new SYSTEM functions.
+<LI> OPB, OPT: SYSTEM.HALT (prk).
+<LI> OPL: SYSTEM.MOVE optimized (prk).
+<LI> Gfx*: Updated to 1.30 state with 5,6,5 truecolor fixes (eos).
+<LI> Watson0, Watson: Problem with Sym files and ";" fixed (prk).
+<LI> OPP: Fixed problem with := overloading (prk).
+<LI> LPRPrinter: Use "l" (direct) option instead of "o" (postscript) option.
+<LI> Files: Max file name is 31 characters, plus 0X.
+<LI> System: Directory \d now also shows file details with 0 date.
+<LI> ATADisk: Fixed for Compaq laptop.
+<LI> Partition: "OS/2" changed to "NTFS/HPFS".
+<LI> Mail: Send button in mailto: url fixed (ejz).
+<LI> HTTPDocs: Ln removed in "not supported" message.
+<LI> Attributes: Echo command skips first space, and stops before first ~.
+<LI> Oberon.Report.Text: Removed Geneva font references.
+<LI> FATFiles: DOS.Copy file c:/dir/ ~ now gives error message.
+<LI> Backup.Tool, DOS: Delete and Rename commands implemented.
+<LI> OberonDrivers.Text, S3Trio.Display: Use DDepth instead of DColor, cleaner setup.
+<LI> MathH: 64-bit integer math module with operator overloading added to release (prk).
+<LI> OPP: Check that := operator is correct - no return type, first par must be var (prk).
+<LI> Compiler, OPP, Compiler.Tool: \1 option to compile only Oberon-1 with POINTER TO ARRAY (prk).
+<LI> Tar: Size may contain spaces (eos).
+<LI> Desktops: Menu syntax: { cmd [ title ] } .  cmd = name | string .  string = "'" chars "'" .  title = "[" chars "]" .
+<LI> RandomNumbers: Double precision computation to be more portable for SharkOberon.
+<LI> Desktops: Lock view by default (ejz).
+<LI> ScrollViews, Views: Locked attribute added (ejz).
+<LI> SCSI, Adaptec7Script, Adaptec7: Updated in oberon0.dsk (prk).
+<LI> Watson: Spacing error in procedure parameters fixed (ejz).
+<LI> Mail: Mail.Send * | {textfile} ~ allows offline composition of email (es).
+<LI> ATADisk: Bus-master kernel log messages made more clear.
+<LI> Mail.Tool: Section on topics at end extended.
+<LI> Snapshot: Support for truecolor (very slow!).
+</UL>
+<H2><A NAME="R234">Beta Release 2.3.4b, 6/8 April 1999</A></H2>
+Known problems in this beta release:
+<UL>
+<LI> The new ATADisk driver (Standard ATA/EIDE) is incompatible with the old Atapi CD driver.  Symptom: When a button on the CDAudio.Panel is pressed, a TRAP 8 occurs in Kernel.InstallIP.  Workaround: Use the old IDEDisk driver (Standard IDE).  Note that this driver does not support big disks.
+<LI> Middle button emulation using Ctrl is not reliable when using a Microsoft IntelliMouse on the PS/2 port.  Workaround: Set MB=2 at the OBL prompt or in native.par.
+</UL>
+Detailed changes in April 8 update of oberon0.dsk:
+<UL>
+<LI> Adaptec7: Error in card detection fixed (prk).
+<LI> Adaptec7Script, Adaptec7: Better handling of selection timeout (prk).
+<LI> Modules: resMsg fixed.
+<LI> NetSystem: Trace cleanup.
+<LI> OberonDrivers.Text: Setup for S3Trio64V Truecolor driver fixed (DColor="2")
+</UL>
+Detailed changes since release 2.3.2:
+<UL>
+<LI> Net3Com905B: Media type init fixed.
+<LI> Kernel: Updated to 6 Apr 1999.
+<LI> Oberon.Text: Obsolete TeleNews config removed.
+<LI> TextGadgets0: Undo MM-MR change.
+<LI> Oberon-0: Intro graphic removed.
+<LI> System: Cosmetic change.
+<LI> System.Text: Version number fixed.
+<LI> OBL intro screen: Double-spacing removed.
+<LI> Documentation: Definitions.Arc added.
+<LI> ConfigMouse: Finalized and added to release.
+<LI> Config: Copy all configuration strings entered at OBL prompt.
+<LI> Diskette0: Number of retries increased.
+<LI> Input, Oberon, ConfigMouse: Run-time mouse configuration.
+<LI> NetDNS: Write to kernel log when switching to a new DNS server.
+<LI> News: \n option to show new messages only (e.g. "news:comp.lang.oberon@50\n" shows 50 newest message that have not been read), off-by-1 error fixed, / changed to . to make valid filename (es).
+<LI> PPPLCP: Answer smaller echo requests (es, af).
+<LI> Input: Reset added for simpler mouse configuration in Oberon-0.
+<LI> TextGadgets0: ML-MM interclick inserts recall buffer if no selection available.
+<LI> Adaptec7: Initialization speeded up (prk).
+<LI> web.arc, gadgets.arc, apps.arc, install.txt: Packages combined and reorganized.  TDD removed for now.
+<LI> UnZip: Removed from release because of unreliability.  Will be replaced later.
+<LI> Mail: More friendly error messages, TraceMail option added.
+<LI> Gfx.Tool: Edited for release (removed installation commands).
+<LI> Tasks: Module removed from distribution, replaced by System.ShowTasks.
+<LI> Backup.Tool, Miscellaneous.Tool: DOS commands moved to Backup.Tool.
+<LI> TDD*: Moved to additional applications.
+<LI> Display3, Printer3: Truecolor support (ejz).
+<LI> FTP: Fixed url format ;type=... (ejz).
+<LI> Kernel: MilliTimer, SetTimer, Expired added for accurate timing.
+<LI> SCSI, Adaptec7Script, Adaptec7, OberonDrivers.Text: Added Adaptec 7xxx beta driver (prk).
+<LI> OPP: FOR forward reference problem fixed (prk).
+<LI> Partition: Check for large disk placeholder.
+<LI> ATADisk: LBA mode implemented, supporting disks > 8Gb.
+<LI> NamePlates: Error in ConsumeChar fixed (ejz).
+<LI> Kernel: Fixed Shutdown error caused by int 15 change.
+<LI> ARM.OBE.Mod: Fixed DIV ASR error (asigner).
+<LI> Texts, Attributes: Include underscore in names (ejz).
+<LI> System: Allow 4-digit years in Time (ejz).
+<LI> FTP: Passive mode implemented (ejz).
+<LI> Disk, InstDisk: Fixed GetBPB error which caused problems with some DOS FAT16-based installations.
+<LI> ATADisk: New interrupt-driven PIO reading/writing may fix many problems.
+<LI> Kernel: Treat int 15 as unexpected interrupt (possible on systems with an APIC).
+<LI> FTPTool: CompactDir index trap fixed (ejz).
+<LI> NamePlates, Desktops: More user-friendly resizing of viewer (ejz).
+<LI> TextGadgets0, TextFields: Ctrl characters not entered (ejz).
+<LI> HTML: Error with links in pre-formatted text fixed (afi).
+<LI> ATADisk: Fixed CHS setup.
+<LI> Compiler, Builder: Option to set extension of obj file.
+<LI> System.Text: Fixed IIIComEther reference.
+<LI> Net3Com509, Net3Com905B: Renamed from IIICom509, IIICom905B.
+<LI> NetSystem, NetIP, NetBase, NetDNS: NetSystem.Show command added.
+<LI> NetSystem: Automatically get host name if not defined.
+<LI> Partition, Disk, InstDisk: DOS-like drive lettering (ignore NTFS).
+<LI> Oberon: F5/F7 now also works on truecolor.
+<LI> OberonDrivers.Text: Trident, S3Trio hicolor/truecolor modes added.
+<LI> SVGA.Display: Bank switching for Trident 9xxx added (hweaver).
+<LI> Disk: Friendlier error message if partition not found + show partitions.
+<LI> Mail: Display Reply-To: (if available) and From: fields.
+<LI> W32.Display: Updated to newest interface.
+<LI> ATADisk: Cosmetic changes.
+<LI> TextFrames, NetSystem: Parameter fix for recursive Calls.
+<LI> MenuViewers, Desktops: Avoid "lost viewer" problem (ejz).
+<LI> Watson: CONST Test* = ASH(1, 2) fix (ejz).
+<LI> Mail: Empty Subject fixed (ejz).
+<LI> Watson0: Cmd button on Watson.Panel fixed (prk).
+<LI> Mail: Reply-To fixed, UIDL fix (ejz).
+<LI> Magnifier: Rewritten with Display.TransferBlock (ejz).
+<LI> Display.*: New Format encodings, TrueColor() added (ejz).
+<LI> TextGadgets0, Display3: TrueColor invertC update.
+<LI> News: Undocumented nolinks switch removed, News.ShowAllGroups writes out URL (ejz).
+<LI> Gfx*, Leo*: Gfx and Leonardo 1.11 (eos).
+<LI> Mail: LoadMsgs buffering, Reply-To change to From, ordering of fields different (ejz).
+<LI> TextFields: Update for atribitrary character mappings.
+<LI> Kernel: MapPhysical allows efficient mapping of 640k-1M area.
+<LI> TextGadgets0: InvertC update for truecolor.
+<LI> Watson0: Sym file decoding fixed (prk).
+<LI> Decoder: LODSW/D decoding fixed (prk).
+<LI> OPB: Auto-deferencing of pointer to array removed, now according to Oberon language report.  SYSTEM.VAL(ARRAY OF T, x) not allowed (prk).
+<LI> OPP: Error 1009 removed.  Undefined identifier error fixed. Warning for Active Oberon relaxed type order (prk).
+<LI> MultiMail: Message seperator error fixed (ejz).
+<LI> Keyboard, KeyTR.Bin: Turkish keyboard updated (ne).
+<LI> PPP*: Logging commands added in PPPTest.  More information in PPP.Tool (es).
+<LI> S3Trio.Display: Finished and tested TransferBlock.
+<LI> Effects: Use TransferBlock (if available) in GetBlock and RestoreBlock.
+<LI> Display3: Set invertC = Display.FG if Display.Depth = 24.
+<LI> System: ShowModules cleaned up.
+<LI> VGA.Display, Permedia2.Display, SVGA.Display, Trace.Display, GD54xx.Display, S3C805.Display, S3C924.Display: Updated interface for truecolor.
+<LI> S3Trio.Display: DisplayBlock for hicolor and truecolor.
+<LI> Permedia2.Display: SetResolution simplified.
+<LI> Empty.Display: Truecolor-capable interface.
+<LI> Miscellaneous: ShowMod added.  Uses System.FilePrefixes ;-seperated list in Oberon.Text (ejz).
+<LI> Kernel, DMA, Diskette0: DisposeDMA added.
+<LI> internal release (oswald)
+<LI> *.Display: Format and TransferBlock added.
+<LI> Kernel, Modules: Init=9090 will trigger trace mode.
+<LI> Desktops: Printer.DefaultName setting in Oberon.Text defines printer named "Default".
+<LI> Out, Attributes, NamePlates: Out.Echo moved to Attributes.Echo.  Out now same as in Reiser.
+<LI> In, Out: Cleaned up.  Out.Open now opens new viewer, like Reiser's.
+<LI> Outlines: Added InsertText, Remove, RemoveAll (gs).
+<LI> Compiler, OP*: Compiler sources cleaned up (prk).
+<LI> Miscellanous: Fixed overflow in MakeDOSText.
+<LI> FPA, Kernel: Cleaned up, disable interrupts in WriteChar.
+<LI> System: Removed bp, flags from Trap.
+<LI> TextGadgets0: Write simplified and invertC modified (ejz).
+<LI> NamePlates, TextFields: Home/End added (ejz).
+<LI> TextGadgets: Debug halt 99 and small color printing changes (ejz).
+<LI> HTTPDocs: Relocate of POST done as GET (ejz).
+<LI> OPP, Oberon.Text: Warn about Oberon X and Active Oberon extensions (prk).
+<LI> OPP: Superfluous 305 warning removed (prk).
+<LI> OPL: Unused size variable in FloatGen1 removed (prk).
+<LI> Watson, Watson0: Support Active Oberon & Init procedures and fixed .Sym browser error (prk).
+<LI> OPP: now accepts "X = POINTER TO RECORD ..... END X" (prk).
+<LI> OPT, OPB: Endless loop fix in FindField and Lock (prk).
+<LI> Chapter7.Text: Oberon X documentation added.
+<LI> UserGuide.Text: Documented SHIFT-extended selection.
+<LI> GfxFonts, GfxPens: Fixed (eos).
+<LI> OT*, Coroutines: Updated to release 0.4 from eos.
+<LI> Gfx*, Leo*: Updated to release 1.02b from eos.
+<LI> Watson: Fixed ARRAY N OF formatting problem (prk).
+<LI> Kernel, System, Mail, HTTPDocs: Central version string.
+<LI> NetTools: Processor-dependent timeout fixed (prk).
+<LI> OPP: Condition update (prk).
+<LI> NetSystem: Task was not installed.
+<LI> HTML: All red paragraphs at the start of the text will end up in the HEAD section.  The first red paragraph will be the title, as usual (pjm).
+<LI> OPB, OPC, OPT, OPP: symtable export problem fixed (prk).
+<LI> Mail: Fix for deleted messages (prk).
+<LI> HTTPDocs: Do not identify user.
+<LI> PSPrinter: Optimized UseColor to generate smaller PostScript files.
+<LI> TextGadgets: Support printing of coloured text.
+<LI> ATADisk: Ability to disable secondary controller for testing.
+<LI> Diskette, Backup: Renaming of files in ReadFiles, WriteFiles supported with => .
+<LI> System: Error in trap fixed (NIL VAR param incorrectly written).
+<LI> Release, BasicSystem.Text, Config: .Obj + .Sym = .Obf
+<LI> Disk, Partition: Type 12 partition is not extended, but FAT32E.
+<LI> ATADisk: Index out of range in GetATAString fixed.
+<LI> Modules: Removed +3 from const array len in BuildModuleBlock.
+<LI> Miscellaneous: GetObjSize fixed for new object file format.
+<LI> NetBase: Added DebugQueues.
+<LI> V24Gadgets: Changed HALT into a log write.
+<LI> Analyzer: Removed from distribution because of porting difficulty.
+<LI> Decoder, Watson0, Watson: Updated for new object and symbol file format (prk).
+<LI> NetSystem: More elegant recovery when no driver configured.
+<LI> FileDir: Enumerate parameter renamed.
+<LI> Kernel, System: GetLog and GetInit added, GetConfig "=" hacks removed.
+<LI> Release: Include \X files in Copyright.Replace.
+<LI> FPA: Error in FFREE fixed (prk).
+<LI> System: Error in FindProc fixed, and ShowModules modified.
+<LI> Compiler, OP*, Browser, Kernel, Modules, BootLinker: BIG change to fine-grained symbol table model (object fingerprinting).  Object flags, operator lists and handling of forward references cleaned up. Efficient implementation of ARRAY OF Type return types.  Assignment as operator.  Oberon X extensions.  SYSTEM.PTR and PTR aliased.  Array header now uses only 4 bytes per dimension, instead of 8 (prk).
+<LI> NetSystem: Parameter fix in SetDevices.
+<LI> Mail: Always set Topic0 on new mail.
+<LI> TextPopups: TYPE x = PROCEDURE; error fixed (prk).
+<LI> Disk: Trace code added to display partition table.
+<LI> ATADisk: Cleaned up PORTIN.
+<LI> Kernel: GC always enabled.
+<LI> Modules: All module size limits removed.
+<LI> Swarm: added to Applications.Tool.
+<LI> IIICom905B: updated (rs).
+<LI> NetTCP: ShowState added for tracing, ProcessText tracing added.
+<LI> Configuration: Fix in Marker (ejz).
+<LI> Partition: Cosmetic changes for large partitions.
+</UL>
+<H2><A NAME="R233">Beta Release 2.3.3b</A></H2>
+Beta version 2.3.3 was an ETH-internal beta release.
+<H2><A NAME="R232">Release 2.3.2, January 4, 1999</A></H2>
+The most relevant changes for users and programmers since Release 2.3.0 are:
+<UL>
+<LI> A left click in a NamePlate Gadget now always sets the caret.  To resize a viewer in the viewer system, click in the menu bar outside the NamePlate (ejz).
+<LI> Debugging support improved in Trap viewer and System.State display.
+<LI> System.OpenKernelLog displays low-level boot-up and trace information.
+<LI> Dvorak and Polish keyboard tables added (webb & grciszew).
+<LI> More technical information included in on-line documentation.  See end of Documentation.Tool (requires installation of Gadgets, Documentation and Web packages).
+<LI> ATA disk driver added for EIDE drives.  Also supports bus-mastering on Intel chipsets.
+<LI> All the bugfixes and updates from beta release 2.3.1 are included.
+</UL>
+Detailed changes since beta release 2.3.1:
+<UL>
+<LI> Config: Allow setting of only one disk driver, to avoid conflicts.
+<LI> OberonDrivers.Text, Install.Tool: ATA driver added to normal options.
+</UL>
+<H2><A NAME="R231">Beta Release 2.3.1</A></H2>
+Detailed changes since release 2.3.0:
+<UL>
+<LI> Documentation.Tool: Added WebInfo link and local web pages.
+<LI> HTMLDocs: Color fix, target option (ejz).
+<LI> IntroToGadgets.Text: updated.
+<LI> FindFile: Added to Applications.Tool.
+<LI> Mail: Error in CutLines fixed.
+<LI> Oberon-0: Update with new NetSystem and ATADisk.
+<LI> Modules: Initialize importing variable (prk).
+<LI> Web pages: Links modified for inclusion in distribution.
+<LI> HTML: 12pt normal text, 10pt pre-formatted, independent of font family.
+<LI> Release: Cosmetic changes.
+<LI> System.Text, NetSystem.Tool, Oberon.Text: Network device name now device0, device1, etc.
+<LI> IIIComEther: Renamed to IIICom509 to avoid confusion (?) with IIICom905B.
+<LI> NetBase, NetIP, NetTCP, NetSystem, IIIComEther, IIICom905B, SLIP, PPPMain: Most uses of module Oberon removed.
+<LI> ATADisk: IdentifyATA now uses words 1,3,6 instead of words 54,55,56.  Show both CHS values if they differ.
+<LI> SLIP, PPPTools, PPPIPCP, PPPTools, PPPMain, Tasks: Imports renamed.
+<LI> IP, Ports, UDP, TCP, DNS: Renamed to NetIP, NetPorts, NetUDP, NetTCP, NetDNS.
+<LI> TCP & IP: HALT removed.
+<LI> IP: Send removed.
+<LI> IP: ArpReceive & SetDirectedCast simplified.
+<LI> OutLines: CollapseFromTo added and CollapseAll modified (afi).
+<LI> TextDocs: Attachment support added (ejz).
+<LI> LayLaDemo, ColorTools, Rembrandt: Simplified (ejz).
+<LI> Rembrandt: Zoom attributed added (wi).
+<LI> Config: Added ATABM and IDE1 settings.
+<LI> TextDocs: Fixed .Log change.
+<LI> Watson: Fixed spacing.
+<LI> TextDocs: If file ends in .Log, set autoscroll option.
+<LI> Oberon-0: Update with new trapping.
+<LI> System, Kernel: Beta version renamed 2.3.1.
+<LI> System: Display arrays (also open arrays), procedures and sets in Trap and State.  Watch improved.
+<LI> Kernel: More compact stack traceback display.
+<LI> System: Formatting cleaned up.
+<LI> IIIComEther, PCI, FileDir, Permedia2.Display, Fonts: Minor trace info change.
+<LI> Kernel: Limit max memory to 192Mb.
+<LI> Keyboard, OberonDrivers.Text, KeyPL.Bin: Polish keyboard driver added (grciszew@cyf-kr.edu.pl).
+<LI> IIICom905B: Initialization updated.
+<LI> Oberon-0: Update for beta-testing ATADisk.
+<LI> System, System3.Tool, System.Tool: OpenKernelLog added, TraceDetail removed.
+<LI> OberonDrivers.Text, ATADisk: New ATA driver.
+<LI> TextGadgets0: Error in UpdateChild fixed (ejz).
+<LI> Desktops: Delegate input message to menu before handling it, for NamePlate (ejz).
+<LI> Kernel: Experimental trace ring buffer.
+<LI> Fonts: Default font mapping.
+<LI> PSPrinter: Mapped font size problem fixed, font aliases PSPrinter.family = psfamily.
+<LI> TextPopups: VAR problem fixed (prk).
+<LI> Partition: Partinfo URL updated.
+<LI> Decoder: Support extended reference block.
+<LI> Outlines: More portable (ejz).
+<LI> Input: MT and MouseType now interchangable.
+<LI> Partition: Improved signature checking.
+<LI> Config: Copy ExtMemSize setting.
+<LI> Partition: Log missing signature.
+<LI> Configure.Tool, OberonDrivers.Text, KeyDV.Bin, Keyboard: Dvorak keyboard added (webb).
+<LI> PSPrinter: Fixed font conversion.
+<LI> System.FreeLibraries: ^ parameter fixed.
+<LI> Objects: Alias support.
+<LI> Finder: Fixed initialization of writer.
+<LI> Sisiphus: Walk on black in screensaver mode.
+<LI> Fonts: Fixed font conversion.
+<LI> Oberon: A trap in a command could stop any non-safe task that happended to run.
+<LI> Files.ReadNum: Cleaned up.
+<LI> Decoder: Fixed labelling.
+<LI> TextGadgets0: selection no longer sets caret automatically (ejz).
+<LI> BasicSystem.Text: Include Kernel.Obj..Modules.Obj.
+<LI> FileDir: Made more robust against corrupted disk structures.
+<LI> ATADisk: Cosmetic change.
+<LI> OPB: ASH(x, 0) error fixed (prk).
+<LI> Partition: Fixed parameter mapping error.
+<LI> System: Trap modified for LNO.
+<LI> SVGA.Display: Removed tracing.
+<LI> Compiler: Fixed \e message (prk).
+<LI> OPB: Allow open array in SYSTEM.VAL (prk).
+<LI> Documents.Panel: Added Copy, Rename and Delete (ejz).
+<LI> Install: ReadInstallDiskette error message improved.
+<LI> TextGadgets0, TextGadgets: Clean up writer (ejz).
+<LI> OPM, Compiler, TextPopups, Builder, Analyzer, Watson0, Release, CalculatorGadgets: Fixed prefix.
+<LI> FileDir, InstFileDir, VirtFileDir: PathChar set to "/".
+<LI> Panels: Error in PrintPanel fixed (ejz).
+<LI> TextDocs: ReplaceAll selection fixed (ejz).
+<LI> OPB, OPP: Cleaned up and fixed REPEAT UNTIL error position error (prk).
+<LI> IDEDisk: Ignore error 6002, which was too strong.
+<LI> Mail: Speed up startup (ejz).
+<LI> News.Mod*: Nolink option to speed up ShowAllGroups and ShowNewGroups (ejz).
+<LI> ObjExplorer, ObjExplorer.Panel, System3.Tool: Added ObjExplorer for exploring display space (ejz).
+<LI> Mail.Mod: Added tracing.
+<LI> Clocks.Mod, System3.Tool: Added LineupHY Attribute (ejz).
+<LI> Files.Mod - Read made slightly faster.
+<LI> TextGadgets.Mod - Style resize with Columbus problem fixed (ejz).
+<LI> Definitions.Tool - Text updated.
+</UL>
+<H2><A NAME="R230">Release 2.3.0, October 20, 1998</A></H2>
+The most relevant changes for users and programmers since Release 2.2 are:
+<UL>
+<LI> Large text selections now made by holding SHIFT during selection extension (ps).
+<LI> Height of stored documents retained on desktop, by popular demand!
+<LI> Attributes, Texts: Scan allows German and path characters in names.
+<LI> TextDocs, TextFrames, ET: ReplaceSystemEditor command sets default editor.
+<LI> Configuration.Do renamed to DoText, DoCommands added (previously Miscellaneous.Do).
+<LI> Intel compiler: SYSTEM.EAX,AX,AL,... defined for SYSTEM.GETREG/PUTREG (prk).
+<LI> Three Dimensional Dreams application added (ck).
+<LI> Documentation updated (af).
+<LI> Mail rewritten (ejz).
+<LI> New display drivers: 3Dlabs Permedia 2 (prk), ATI Mach64, ATI Mach32, SVGA generic.
+<LI> New network drivers: 3COM905B (rs), PPP dialup (es).
+<LI> New mouse drivers: Microsoft IntelliMouse, Mouse Systems, left-handed mouse.
+<LI> New keyboard mapping: Turkish (ne).
+<LI> Floating-point emulator added (es).
+<LI> Installable printer drivers: only PostScript (also EPS) and HPLaser supported.
+<LI> OpenType package added for TrueType fonts, see Tools.Tool or Applications.Tool (eos).
+<LI> Assembler requires target specification, e.g. CODE &#123;SYSTEM.i386} (prk).
+<LI> Compiler size limits removed & stack clearing on by default.
+<LI> System3.Tool redesigned & installation simplified.
+</UL>
+Detailed changes (latest changes first):
+<UL>
+<LI> System: Removed "write-protection" message from Watch (LNO support).
+<LI> OBL, FDInstall, Install: Boot.Bin position now relative to Oberon file system start.  Partition can now be moved around, as long as offset 1Ch in the boot sector is the sector offset of the boot sector from the start of the disk.
+<LI> HTTPDocs: Extension for mime type application/binary fixed (ejz).
+<LI> NetSystem: If no Gateway configured, use derivative of host address and subnet mask: x.x.x.1.
+<LI> Oberon-0: Mach64 initialization problem fixed, and more modes added.  Also try Vesa 2.0 driver.
+<LI> UnZip: Allow unpacking of files with invalid names (ejz).
+<LI> Gages, TextDocs: Small corrections (ejz).
+<LI> Columbus: Small correction & display more information about components of a container (ejz).
+<LI> QuotedPrintable: Decoder added (ejz).
+<LI> CompressTools: Fixed index overflow.
+<LI> (changes above where made after beta release).
+<LI> NetSystem: Removed "not found" message seen with PPP.
+<LI> Kernel, System: Support for error beeping.
+<LI> TDDRender: Pressing a key will stop rendering of the current object (LNO support).
+<LI> Dim3Frames: Poll mouse during benchmark (LNO support).
+<LI> Partition: Show disk throughput in Check.  Ignore last cylinder in Create.
+<LI> OBL: Larger stack for boot loader.
+<LI> Package organization: Tools package combined with basic system on Oberon-0 diskette.  LPRPrinter moved to basic system.
+<LI> PPPMain: Small cleanup for installation.
+<LI> OT*: OpenType package added in Tools.Tool and Applications.Tool (eos).
+<LI> DBF, DBFDump: Simple dBase file dumper added in Applications.Tool (ejz).
+<LI> GD54xx.Display, SVGA.Display: Support for other modes & better default for DMem setting.
+<LI> Texts: Error when storing text with partially loaded objects fixed (ejz, reported by ne).
+<LI> Input: Simpler way to set mouse type (MT=...).  By default Ctrl emulation of the middle button is now switched on, until a real middle button click is seen from the mouse.
+<LI> IIICom905B: Interrupt setup corrected (prk).
+<LI> Builder: Small cleanup (ejz).
+<LI> TextFrames, ScriptFrames: MM-MR interclick support.
+<LI> TextDocs: Hanging RepAll and style copy errors fixed (ejz, reported by oj).
+<LI> Kernel: Scope agent removed.
+<LI> Permedia2.Display: Small cleanup.
+<LI> OPP: Small problem with run-time error position fixed (prk).
+<LI> AHA1520: Small optimization in TestHi/TestLo (prk).
+<LI> Effects: Fixed cursor overflow error at top and right of screen.
+<LI> PPP*: Debug flag off by default.
+<LI> Attributes, Texts: Treat LF as whitespace in Scan, and allow german characters in scanned names (gf).
+<LI> Config: Configuration improved.
+<LI> FDInstall, Install, CompressUtil, Diskette1: Improved compression of Oberon-0 disk.
+<LI> Install, Partition, ...: Improved installation.
+<LI> CRC32: Overflow error fixed.
+<LI> PPPHDLC: Modification in ReceivePacket to stop HALT(99).
+<LI> Partition: Adapt disk parameters to BIOS limits when creating first partition on disk.
+<LI> Oberon: Collect performs immediate garbage collection independent of GC task.
+<LI> System, Kernel: Start-up message updated.
+<LI> TextDocs: Show strips trailing ":" from name.
+<LI> Texts: LoadAscii exported (ejz).
+<LI> TextFields: MR-ML interclick error in TextField with two views fixed (ejz).
+<LI> Attributes, Texts: Allow ":", "/" and "." to start a name - consistent across all ports (ejz/pjm).
+<LI> FileDir, InstFileDir: Removed unused procedure SpecialChar.
+<LI> TextGadgets0: Unexported implementation procedure DrawChanges (ejz).
+<LI> IIICom905B: Ethernet address initialization fixed (prk).
+<LI> PPPDebug, PPPHDLC, PPPLCP, PPPMain: PAP login support and better tracing (es).
+<LI> Builder: Insert ErrorGadgets automatically on Builder.Compile * (oj).
+<LI> Decoder: Error in movzx instruction fixed (prk).
+<LI> Mail: Error in Synchronize fixed (ejz).
+<LI> NetSystem: Automatically append domain name to NetSystem.hostName if required.
+<LI> NetSystem: Host table support (Oberon.Text NetSystem.Hosts.Table syntax: &#123; ethernet ","  host "," ip }).
+<LI> Gadgets: NIL trap in FindObj fixed (ejz).
+<LI> MIME: Fixed index overflow in FindParam (ejz).
+<LI> TextGadgets0: Fixed double printing of title and page number on first page of a document (ejz).
+<LI> Config, SVGA.Display: Added ATI Mach32 driver.
+<LI> SVGA.Display: 800x600 error in DisplayBlock fixed.
+</UL>
+<H2><A NAME="R2210">Release 2.2.10, August 26, 1998</A></H2>
+Detailed changes:
+<UL>
+<LI> Desktops: Error in LoadDocGadget fixed (ejz).
+<LI> Kernel: GetClock can be configured for polling (ClockMode=1).
+<LI> TextDocs, HyperDocs, System: Default desktop document sizes are smaller, and the stored document height is used during loading (by popular demand!).  Set Gadgets.FixedDocs = Yes if you prefer the release 2.2 full-height documents and automatic height adjustment on load.
+<LI> Builder: MarkErrors now places caret at first error (ejz).
+<LI> TextGadgets0: Scrolling during insert removed (ejz).
+<LI> PPPDebug: Ring buffer (es).
+<LI> Panels, TextGadgets0, Gadgets: FindObj fixed for linked objects (ejz).
+<LI> System3.Tool: redesigned.
+<LI> Decoder: Updated refblk.
+<LI> System: Small fix in Locals.
+<LI> OPO: Optimization in GenLEA (prk).
+<LI> Panels: Deep/shallow copy error fixed in CopyPanel (ejz).
+<LI> TextFrames: Line overflow error fixed.
+<LI> Builder: AddModule parameter opts added (prk).
+<LI> OPM, OPT, OPB, OPC: Defined register constants SYSTEM.EAX, AX, AL, etc. for SYSTEM.PUTREG/GETREG (prk).
+<LI> Desktops: MenuCmd added for executing commands in a document context (ejz).
+<LI> Oberon, Kernel: Kernel.Idle added, PowerSave cleaned up.
+<LI> InstDisk: Fixed DOS driver letter assignment.
+<LI> PCI, Fonts: Tracing cleaned up.
+<LI> Kernel: Support to detect more than 63Mb of extended memory, and override extended memory size (ExtMemSize=Mb).
+<LI> S3C805.Display, S3C924.Display, S3Trio.Display, VGA.Display, GD54xx.Display: Cache palette to avoid snow during GetColor.
+<LI> Oberon: PowerSave on by default (PowerSave=0 to disable).
+<LI> Tools: 3Com905B beta driver added (Reto Strobl).
+<LI> Config, Permedia2.Display: Added 3Dlabs Permedia 2 / Diamond FireGL 1000 Pro driver (prk).
+</UL>
+<H2><A NAME="R229">Release 2.2.9, August 14, 1998 (ETH-internal release)</A></H2>
+Detailed changes:
+<UL>
+<LI> OPV, OPL: Fix in method entry numbers (prk).
+<LI> OPP: Additional ";"'s allowed in record definitions (prk).
+<LI> SVGA.Display: More linear frame buffer support (SVGA=6, DLinBuf=physadr), cache palette to avoid snow.
+<LI> Modules: Allow display driver prefix to be up to 15 characters long.
+<LI> Kernel: MapPhysical procedure added (module keys changed!).
+<LI> OPT: Fixed problems with export and import of circular structures (prk).
+<LI> OPT: SYSTEM.EAX, EBX, ECX, EDX, ESI, EDI, ESP, EBP constants defined (ejz).
+<LI> Dialer: Error messages improved.
+<LI> Modules: Maximum imports per module now 48, maximum types per module 128.
+<LI> TCP: Return error when reading past end of stream (prk).
+<LI> Telnet: Allow port to be specified.
+<LI> System.Text: Dial-up instructions improved.
+<LI> V24: Exported result constants.
+<LI> Definitions.Tool: Only portable interfaces listed.
+<LI> OPP: Fixed problem with arrays that use a forward reference of the base type (Marc Frei, prk).
+<LI> Partition: Better display when no disks found.
+<LI> Keyboard, Config: Added Turkish keyboard driver (fnecati@penta.gyte.edu.tr).
+<LI> OPP: If type cannot be fixed, set it to undef to avoid nil traps.  Also forward fix. (prk).
+<LI> Configuration:  Do renamed to DoText.  DoCommands added (previously Miscellenaneous.Do).   Configuration modules automatically executes Configuration.Text (or text defined by System.Configuration) when loaded.
+<LI> Miscellaneous: Do removed (moved to Configuration).
+<LI> ColorTools: Fix in printing of ColorPicker (ejz).
+<LI> Definitions.Arc: Portable/Non-portable interfaces flagged (ejz, pjm).
+<LI> Partition, Disk: Naming of DOS partitions fixed.
+<LI> OPS: Error in scanning of comments fixed (prk).
+<LI> Strings: Error in Strings.StrToDate fixed (ejz).
+<LI> System.Text, System.Tool, Network.Tool: Improved dialup instructions, tool ordering, and added direct reference to NetSystem.Tool.
+<LI> NetSystem: Case error in SetUser fixed.
+<LI> Dialer: Abort dial script on Hangup, error fixed in Dial.
+<LI> TextGadgets0, TextFrames, ScriptFrames: Error fixed in copy looks (ML-MR interclick) (ejz).
+<LI> Modules, BootLinker: Support for up to 64k of constants per module.
+<LI> OPO, OPL: Allow up to 64k of constants per module (prk).
+<LI> OPV: Record body name fixed (prk).
+<LI> Input: Mouse Systems mouse fix (type 8, 9) & beta Microsoft Intellimouse support (type 7).
+<LI> UDP: Receive and Send check if enough buffer space available.
+<LI> Config: NumLock state at boot time now configurable (default off).
+</UL>
+<H2><A NAME="R228">Release 2.2.8, July 23, 1998</A></H2>
+This beta version has many small improvements, as well as a beta version of PPP, a generic SVGA driver, a new 3D graphics tool (TDD).  Starting with this version all changes will be logged here.
+<P>
+Detailed information (latest changes first):
+<UL>
+<LI> Book.Tool: Oberon Companion updated (af).
+<LI> System3.Tool: Experimental new look.
+<LI> OPL: Made compiler tables dynamic, errors 221, 222, 223, 226 should no longer occur (prk).
+<LI> Leonardo: Various small fixes (eos).
+<LI> Compress: Error in delete fixed (ejz).
+<LI> System: Small fixes for Linux Native Oberon compatibility.
+<LI> TextMail: Auto-cc by default.
+<LI> Config: Power save option configurable during installation.  Enabling this will cause the Oberon idle loop to execute the HLT instruction, conserving less power.
+<LI> Printer, Centronics: Print spooling implemented for local ports.  Serial port parameters configurable.  Serial printer must use hardware handshaking.
+<LI> PSPrinter, LPRPrinter, EamonPrinter: 2-up, 4-up and encapsulated PostScript printer options implemented (\l, \d and \e respectively).  Only one of the three options should be used at a time.  Specify the option directly after the printer name, e.g. Desktops.PrintDoc LPT1\l * .  When printing to a file with suffix .eps or .EPS, encapsulated PostScript is automatically generated, e.g. Desktops.PrintDoc export.eps Test.Text ~
+<LI> Printer, PSPrinter, HPLaserPrinter, LPRPrinter, EamonPrinter, Printer3, Draw, Desktops, Edit: Switched to installable printer interface.  Some printer drivers not yet available (HP550C, HP500).
+<LI> TextGadgets0: Trap when growing and closing fixed (ejz).
+<LI> ASCIITab, AsciiCoder, Asteroids, Backdrops, BartSimpson, BookDocs, Books, BooksHelp, CRS, CRT, Calc, Cards, Clocks, Coco, Columbus, Conversions, Curves, Desktops, DiffGadgets, Dim3Engine, Dim3Paint, Dim3Read, EditTools, Examples, FontEditor, Freecell, GIF, Gadgets, GraphicFrames, Graphics, Graphs, HPCalc, HSV, HTML, HTMLDocs, LayLa, LayLa2, LayLa2S, LayLaDemo, LayoutPanels, LayoutPanels0, MenuViewers, MineSweeper, NamePlates, NetTools, PPM, RXA, Rectangles, Rembrandt, Rembrandt0, RembrandtDocs, Script, ScriptFrames, ScriptGadgets, Sort, Spider, Splines, Styles, TelnetGadgets, TerminalGadgets, TextDocs, TextFields, TextFrames: Small fixes (ejz).
+<LI> System, TextGadgets: System.LoadGadgets configuration option removed.  Rather use the TextDocs.ReplaceSystemEditor command in System.InitCommands to load Gadgets.
+<LI> PS: Updated (ejz).
+<LI> HTMLDocs: Greek and Math font support added (af).
+<LI> OPP, OPC: Error with constant folding of forward-declared identifiers fixed (prk).
+<LI> OPV, OPC, OPL: Structured return fixed (prk).
+<LI> Watson0: Index overflow with ShowObj avoided.
+<LI> OPP: Forward reference problem fixed (prk, reported by cp).
+<LI> OPA: ASM module renamed (prk).
+<LI> OBL: Better support for large disks.
+<LI> Mail: Fix in DecodeMessage (ejz).
+<LI> Documents, Desktops: Improved error messages (ejz).
+<LI> Sisiphus: Printing fixed (ejz).
+<LI> TextGadgets: Replace message fix (ejz, reported by fh).
+<LI> NetSystem: DNS config is DNS0-3, not DNS1-4.
+<LI> PPP*: Beta version of PPP (by es) added to release.
+<LI> Disk, Config: FileSystem -> DiskFile, fix for dos-based installation.
+<LI> Fonts, Objects: Default font, Syntax-Oberon conversion only if font not available (ejz/pjm).
+<LI> ColorModels: Config syntax changed to make module more portable (ejz).
+<LI> Mail: Reply-to fix (ejz).
+<LI> OPL: Stack clearing simplified (prk).
+<LI> Client.Printer: eps option added - \e.
+<LI> HTTPDocs: Problem with downloading http file fixed (ejz).
+<LI> OPT: Fix for equal open array types (pj).
+<LI> MenuViewers: Forward AttrMsg to menu (ejz).
+<LI> Columbus: Libraries.Panel error fixed (ejz).
+<LI> Partition, Disk: More partition types learnt.  Less strict checks on extended partitions.  Recognize W95 extended partitions.
+<LI> Attributes: Scan fixed.
+<LI> Browser: Fixed ARRAY OF error (prk).
+<LI> DocumentSkeleton: Fix in Load (ejz).
+<LI> Panels, PanelDocs: Better error messages.
+<LI> AsciiCoder: No longer requires Gadgets (ejz).
+<LI> GadgetsIn, NamePlates, XYplane, Desktops, Texts, Out, Display3, Gadgets, Views, Lists, Finder, Sisiphus, BookCompiler, UnZip, HyperDocs, HTMLDocs, ViewSkeleton, In, Dates, Strings, Styles, Telnet, UDPExample, Printer3, BasicGadgets, TextFields, ListModels, ListDags, Scrollbars, Organizers, Complex, SetGadgets, Gages, AudioGadgets, PanelDocs, Icons, Navigators, BinHex, BartSimpson, Cups, Coco, Sort, EditKeys: Made more portable (ejz).
+<LI> Effects: InitPalette removed and buttons error fixed (ejz).
+<LI> Rembrandt, Scramble, Finder, Freecell, GIF: Small fixes (ejz).
+<LI> PanelDocs: RemovePanel fixed (ejz).
+<LI> Dialer: CALL command for PPP and SLIP configuration.
+<LI> FDInstall, Install, OBL: Offset 1Ch now points to boot sector.
+<LI> Mail: recipients error fixed (ejz).
+</UL>
+<H2><A NAME="R227">Release 2.2.7, June 19, 1998 (ETH-internal release)</A></H2>
+This version was released internally for use in a new ETH PC laboratory.
+<UL>
+<LI> Compiler features: Warn if a variable is never used (use \w).  Pentium Pro instructions added to assembler.  CODE statement requires specification of target, e.g. "CODE &#123;SYSTEM.i386}".  Command line options cleaned up. Compiler.Compile [\GlobalOptions] "@"[\LocalOptions].  Compiler.Compile [\GlobalOptions] "*"[\LocalOptions].  Compiler.Compile [\GlobalOptions] "^".  Compiler.Compile [\GlobalOptions] &#123;filename[\LocalOptions]} "~".  Stack clearing on by default.
+<LI> Compiler fixes: Out of registers situation improved.  Import problem.  When pushing a static string on the stack, alignment wasn't done.  Support POINTER TO ARRAY * OF and POINTER TO ARRAY *,* OF notation.  ENTIER code simplified.  Error in stack clearing.  Error in expression parsing.  Type test on dereferenced ptr.  Forward errors.  WITH forward problem.  POINTER TO RECORD error.  SELF.  Avoid a NIL trap when parsing empty oberon inlines.  Pointer name fix.  NEW( ...., p) didn't work with p as Procedure type.  Allow LEN of static array in constant expression.  Stack clearing improved.  VAR SYSTEM.PTR improved.  Fix in operators with VAR parameters.  Removed the annoying duplicate errors (prk).
+<LI> TextFrames, ScriptFrames, TextGadgets0: Selection improved (ps).
+<LI> Input: NumLock=0 to switch off NumLock.  Buttons=-2 or -3 for parallel mouse & ctrl support.  MouseMap="210" for left-handed, "021" for cordless (pjm).
+<LI> SVGA.Display: New generic driver, support for ATI Mach64, Vesa 2.0, ET4000, GD542x (pjm).
+<LI> OBL: Support for more than 64Mb memory (pjm).
+<LI> Objects: Now up to 64 generators per library (pjm).
+<LI> Kernel: Workaround for user-defined operators (pjm).
+<LI> Kernel: Power save option, enabled with PowerSave=1 config string (pjm).
+<LI> Kernel: GetClock maps year 0..89 to 2000..2089 (pjm).
+<LI> Disk: New caching options for lab setup (pjm).
+<LI> Oberon: GetClock comment fixed: year = 1900+d DIV 512 (pjm).
+<LI> Texts: Default date format dd.mm.yyyy (Texts.WriteDate) (pjm).
+<LI> MIME, Mail, News, PS, FATFiles, Strings: Fixed date problems (pjm/ejz).
+<LI> Mail, News, MultiMail, MIME: Mail rewritten, new mail storage concept.  APOP support added (ejz).
+<LI> MIME: If no timezone, use local time.  Content type fix.  Quoted-printable support improved (ejz).
+<LI> Partition: Better consistency checks (pjm).
+<LI> HTMLDocs: FTP proxy fix, background error fixed (ejz).
+<LI> HTTPDocs: Referer fix (ejz).
+<LI> Panels: Bring panel child to front on move, fixed uninitialized message fields (ps/pjm).
+<LI> ListGadgets: Save delete buffer temporarily used in list (ps).
+<LI> Documents: Propagate FindMsg (ejz).
+<LI> ColorWells: Updated with left button popup (eos).
+<LI> S3Trio.Display: Fixed Dot and ReplConst paint/replace mode (pjm).
+<LI> Gadgets: Fix res in TrackFrame (ps).
+<LI> Lists: load version error fixed, FileMsg error fixed (ejz).
+<LI> Compress: Encryption option & 0-length file fix (ejz/gs).
+<LI> Tar: Doc updated (ejz).
+<LI> HTML: Default white background (pjm).
+<LI> HPCalc: Hex entry (prk).
+<LI> Columbus: SetObject do LONGREAL -> REAL conversion (ps).
+<LI> Finder: Larger string (ejz).
+<LI> Greek.Tool, Math.Tool added (pjm).
+<LI> Desktops: AdjustDocGadget fixed absolute coordinates.  Menu size error fix.  Allow moving of document on title bar (ps/ejz).
+<LI> System: Only close offending viewer if not trace trap (ps).
+<LI> Builder: Allow list of filenames in Preprocess (prk).
+<LI> NetTools: SplitHostPort fixed (ejz).
+<LI> Texts, TextGadgets: col < 0 fix in ChangeLooks and DisplayLine, slight flicker fixed (ps/pjm).
+<LI> Texts, Reals: Support for INF printing.  Also allow signalling NaNs (prk).
+<LI> FPA: Fixed (Edgar Schwarz).
+<LI> Courier12.Pr3.Fnt & Courier12.Pr6.Fnt Tab fixed (eos).
+<LI> IDE.Disk, IDE.InstDisk, Config: SingleBlocks config (pjm).
+<LI> Pictures, *.Display: DisplayBlock off-by-1 (pjm).
+<LI> TextFields: GetValue res field set, Recall support (ps/prk).
+<LI> Strings: SetToStr & StrToSet & ISOToOberon fix (ps).
+<LI> Scrollbars: AdjustKnoblen fix (ps).
+<LI> Hex: Printing implemented (ejz).
+<LI> Sort: Error fixed (pjm).
+<LI> Builder: Handle out-of-order errors (pjm).
+<LI> Pictures: Init all 256 colours on new picture.
+<LI> GIF: Load colorconversion fix, uninitialized variable fix, trap fix (ejz/pjm).
+<LI> RefGadgets: Reference drop fix (ps).
+<LI> Gadgets: Execute fixed (ejz).
+<LI> DocumentSkeleton: Load attachment error fixed (ejz).
+<LI> EditTools: Change supports wildcard, added LocateLine, FlipCase (pjm/ejz).
+<LI> Decoder: Method output fixed (prk).
+<LI> Watson: MakeHistoryCmd fixed (pjm).
+<LI> Oberon.Text: TEXTAREA tag fixed for web browser (ejz).
+<LI> TextGadgets0: RemoveMarks in RestoreFrameArea (pjm).
+<LI> Printer3: Fixed Picture color (pjm).
+<LI> TextPopups: Active & Oberon-2 methods & speeded up (prk).
+<LI> TextPopups, EditKeys: Sign-on messages (pjm).
+<LI> Math, MathL: e & pi constants (pjm).
+<LI> XYplane: Support for larger frames (ejz).
+<LI> TextDocs: Fixed "Store!" indicator.  ReplaceSystemEditor command (ejz/pjm).
+<LI> TextMail: 1000 limit removed (pjm).
+<LI> TextFrames, ScriptFrames, Draw, Display3, *.Display: Better monochrome support, no red selection any more & no funny characters on cursor keys (pjm).
+<LI> V24Gadgets, SLIP, Dialer: Support for COM1-4 in parsing config (pjm).
+<LI> IP, DNS, NetSystem, Dialer: Route computation optimized.  Check arpopt when using NetMatch.  Route setup improved for PPP.  Tracing improved.  Dialer simplified.  Dialer uses "dialup" as tag for password, and script tag as host (pjm).
+<LI> ASCIITab, Histogram, BartSimpson, BasicFigures, BasicGadgets, Clocks, ColorSystem, ColorTools, Desktops, Finder, FontEditor, Gadgets, Gages, Icons, NamePlates, Navigators, PanelDocs, Panels, Printer3, ProgressMeters, RefGadgets, Rembrandt, RembrandtDocs, Script, ScriptFrames, ScriptGadgets, SetGadgets, Sisiphus, Skeleton, Suitcases, TelnetGadgets, TerminalGadgets, TextDocs, TextFields, TextGadgets, TextGadgets0, TimeStamps, Views: 10000 -> Display.Unit (pjm).
+<LI> Diskette0, IDE.Disk, IDE.InstDisk, Sound, Oberon, System, TCP, DNS, SLIP, UDPExample, V24Log, TCPExample, NetTools, HTTPDocs, Shanghai, V24Gadgets, Services, ListGadgets, Lists, Scrollbars, Sisiphus, Teletext:	Fixed timer wrap problems (pjm).
+</UL>
+<H2><A NAME="R226">Release 2.2.6, November 7, 1997</A></H2>
+Notes:
+<UL>
+<LI> This is the release included on CD with the Oberon Companion book.
+<LI> The adapted floating-point emulator did not make it to the CD deadline.
+<LI> Note that FAT32 file systems are not supported by the DOS-based installation.
+</UL>
+Errors fixed:
+<UL>
+<LI> Font name fixed in Leonardo.Lib.
+<LI> Trap display for NIL procedure variable calls improved.
+<LI> Small fixes in: LeoTools, ScriptGuide.Text, Script.Tool, Mail, MIME, Desktops.
+</UL>
+<H2><A NAME="R225">Release 2.2.5, October 31, 1997</A></H2>
+New features:
+<UL>
+<LI> Tools cleaned up for publication.  All useful tools and applications now have links to them from System.Tool or System3.Tool.  Latest version of the Oberon Companion included.
+<LI> Simple backward scrolling implemented in TextFrames and ScriptFrames.
+<LI> New style multi-viewer selection.  For an extended selection, all visible parts of the large text has to be selected, up to the edge of die viewer.  This reduces the number of accidental "false selections" drastically.
+<LI> Esc defaults to Neutralize, can be configured to CHR(27).  F2 is always Neutralize.  F5 is toggle screen.  F7 is reset palette from Default.Pal.  F9 is redraw.
+<LI> Experimental Oberon-X language extensions:  Dynamic array values, structured return types & user-defined operators.  See SamplePrograms.Tool (Documentation package).
+<LI> New tools: Partition.Tool, Tools.Tool (Tools package)
+<LI> New procedures: Gadgets.Clone, Oberon.MarkedFrame, Oberon.MarkedText, Reals.SetFCR, Reals.FCR, System.ShowTasks, Out.Echo, Miscellaneous.SplitFile, Miscellaneous.JoinFiles
+<LI> New gadgets: Histogram, TimeStamps.NewRev
+<LI> New attributes: Button.Led, Button.LedColor, Complex.Rho, Complex.Phi
+<LI> Implementation improvements: DNS caching implemented.  Better support for large disks in IDE driver.  FileDir made more robust against damaged file directories.  FAT host file can be in any directory.  Disk full trap improved.  System trap numbers improved.  DOS file access tool rewritten.
+<LI> Various errors have been fixed.
+</UL>
+<H2><A NAME="R220">Release 2.2, February 19, 1997</A></H2>
+New features:
+<UL>
+<LI> Disk caching improved
+<LI> SLIP networking has been added (Thanks Martin Gitsels).
+<LI> S3 Trio64 display driver (Thanks Peter Matthias).
+<LI> Vesa 2.0 display driver (Thanks Martin Pirker and Peter Matthias).
+<LI> Cirrus Logic 542x display driver.
+<LI> NCR 810 SCSI driver (Thanks Peter Ryser).
+<LI> Automatic power-off on System.Quit if machine supports APM.
+<LI> New Leonardo drawing tool (Thanks Erich Oswald).
+<LI> Compiler package for Oberon-2 language (Thanks Patrik Reali).
+<LI> Many compiler improvements (Thanks Patrik Reali).
+<LI> Many improvements in Gadgets (Thanks Patrick Saladin and Emil Zeller).
+<LI> Documentation updated (Thanks Andre Fischer).
+<LI> Tools and Texts cleaned up.
+</UL>
+<H2><A NAME="R210">Release 2.10, September 3, 1996</A></H2>
+Notes:
+<UL>
+<LI> First public release available by anonymous ftp.
+<LI> The module interfaces in Native Oberon 2.1 are almost identical to those of Windows and Mac Oberon 2.1.  Porting program between these environments should present no problems.  We attempted to make these interfaces identical, but in some low-level modules complete compatibility is difficult to achieve.  Lack of manpower for porting projects also restrict these efforts.
+<LI> The main difference is that Native Oberon is a full operating system, which is in complete control of the machine.  In contrast the Windows and Mac versions run as applications on host operating systems.  This has obvious advantages and drawbacks.
+<LI> Native Oberon has modest machine requirements (see end of this page).
+<LI> It only supports a small subset of available PC hardware.  Using drivers for other operating systems (in a clean way) is not possible, because they are tightly coupled with their host operating system.  Drivers for Native Oberon are written in Oberon and assembly language (an assembler is integrated in the compiler).
+<LI> Differences with older versions of Oberon System 3 are mainly in the Gadgets modules, which have evolved quickly in the past few months.
+<LI> Some low-level interfaces (e.g. Kernel) also changed, but as few programmers use these non-portable modules, the effect is not too disasterous.
+<LI> Development of Native, Windows and Mac Oberon continue independently (the latter at the University of California at Irvine, in cooperation with ETH, and the former two at ETH).  Therefore some experimental features, e.g. self-contained documents, are not supported equally in these three versions.  The Omega code (aka OMI), which forms the basis of Juice, is being ported to Native Oberon.
+</UL>
+New features:
+<UL>
+<LI> Net tools updated.  Note that the new mailbox format is incompatible with the old.  Use Mail.Convert oldmailbox newmailbox to convert.  See Network.Tool. (Thanks Emil Zeller).
+<LI> Gadgets updated.  PrintMsg and DisplayMsg merged.  See Skeleton.Mod for example code. (Thanks Patrick Saladin).
+<LI> Objects loaded on demand (Thanks Patrick Saladin).
+<LI> Texts support for demand-loading and scanning objects (Thanks Emil Zeller).
+<LI> More robust Display.Broadcast prevents system crashes.
+<LI> BMP viewer in WWW browser (thanks Patrick Saladin).
+<LI> More flexible Display settings.  Different modes supported.
+<LI> SoundBlaster driver updated (Thanks Thomas Burri).
+<LI> Basic system menus made more VGA-friendly.
+<LI> Draw and Script now also support 600dpi printing.
+<LI> LF is now generated with Ctrl-Enter, like in other releases.  Keypad Enter is identical to normal Enter.
+<LI> Canadian keyboard driver (Thanks Paul Floyd)
+</UL>
+Errors fixed:
+<UL>
+<LI> Problems reported with FAT file system.  Installation successful, but first few sectors of disk corrupted after using system.  Fixed.  oberon0.lzh, oberon0.dsk.gz and DEVELOP.ARC updated on huxley.
+<LI> There are some errors in Mail.  Fixed.  NETWORK.ARC updated on huxley.
+<LI> There are some errors in Net.  Fixed.  EAMON.ARC updated on huxley.
+<LI> Sokoban is missing from the Games.  Fixed.  APPS.ARC updated on huxley. 
+<LI> Some compiler errors discovered: missing PUSH modes in assembler, constant boolean expression in loops caused compiler trap, size of ARRAY OF SYSTEM.BYTE wrong for extended records, COPY wrong in some complex cases.  (all fixed by Patrik Reali)
+<LI> Errors in VGA display driver fixed.
+<LI> Clipping error in Sisiphus fixed.
+<LI> Centronics no longer HALTs because of paper out errors.
+<LI> Errors in DosDisk fixed (Thanks Jan de Kruyf).
+<LI> Error in Attributes scanner fixed.
+</UL>
+<H2><A NAME="R207">Release 2.07, July 26, 1996</A></H2>
+New features:
+<UL>
+<LI> Most of the source code now available, contact author.
+<LI> Object and Symbol files are back to .Obj and .Sym
+<LI> New Columbus browser (thanks Patrick Saladin).  Look at Libraries.Panel and Columbus.Book.
+<LI> "+" sign is allowed in front of numbers in Texts.Scan.
+<LI> PS tool to convert .Pict files to PS or EPS files.
+<LI> Pointer initialisation on the stack has been optimised (thanks Patrik Reali).
+<LI> Video drivers for Cirrus Logic GD54xx cards (thanks J&ouml;rg Derungs) and Video7 Mirage cards (S3C805 driver with a different init string!).
+<LI> Kernel.TimeUnit (and Input.TimeUnit!) is now 1000.  This means that Kernel.GetTimer, Input.Time and Oberon.Time now return the time in microseconds.
+<LI> Kernel interface cleanup.  Kernel.RemoveIP now also takes the name of the interrupt handler to deinstall.  Kernel.NewDMA is provided for allocating memory for DMA.  Kernel.Copy, Kernel.SetTimeout, Kernel.Expired, Kernel.GetCMOS removed.
+<LI> Mouse type 4 is an alternate Mouse Systems driver, for the cases where the type 1 driver does not work.
+<LI> Pressing Ctrl-Break twice will perform a "hard" break, to break out of any loop.  The old distinction between soft and hard breaks (Ctrl-Break & Ctrl-Alt-Break) is no longer made.  Ctrl-Alt-Del can also be used as reboot.
+<LI> A very basic Mitsumi CD driver is now available.  Pause/Resume is not implemented.
+<LI> GadgetsIn and GadgetsOut modules simplify I/O.
+<LI> Tetris, Scramble and Sokoban games now available.
+<LI> HP500 printer driver now included.
+<LI> Texts.Scan now treats objects as whitespace instead of scanning them as arbitrary characters.
+<LI> More than 255 objects may now be stored in a text.  Texts.WriteObj no longer requires the lib parameter.
+<LI> Compiler.Compile\f * and Builder.Compile\f * now skip to the found position.
+<LI> Calculator now available (thanks Patrik Reali).
+<LI> Keyboard mouse emulation.  Activate ScrollLock and use keypad 12346789 for movement and 05. for buttons.
+<LI> Optional DOS-based bootstrap loader (thanks Bruno Essmann).
+<LI> Files now carry the last time and date of modification, not creation.  Files.SetDate implemented.
+<LI> Colour 10 and 11 in the palette are now the same as in Windows/Mac Oberon.  System.DarkPalette and Gadgets.Hardlook options added in Oberon.Text for compatibility with Windows/Mac Oberon.
+<LI> SoundBlaster driver, .wav and .au player/recorder (thanks Thomas Burri).
+<LI> Scavenger added to install disk for rebuilding damaged directories.  After Config.Disk, use Scavenger.Scan, Scavenger.Display and Scavenger.WriteDirectory in this order, but only in case of emergency.  Deleted files may also re-appear if their disk space have not be re-used.
+<LI> New V24 module, with 16550 support.  Interface cleaned up.  Same interface will be implemented in Windows Oberon.
+<LI> Password handling integrated in NetSystem.  NetSystem.user & NetSystem.passwd removed.  Use NetSystem.GetPassword instead.  Passwords module removed.  NetSystem.Start no longer required, instead use NetSystem.SetUser to set a password.
+<LI> More information in System.ShowModules, System.Directory, System.ShowLibraries and System.Watch.  System.Free ^ now also works.
+<LI> Miscellaneous.PrintFiles implemented for sending files uninterpreted to printer.
+<LI> Printer.Open now takes a second "options" parameter for specifying options.
+<LI> Fast file system startup.  File system GC is now only performed at startup when less than x% of the disk is free.  x is 10 by default and is configurable with the DiskGCThres config string.  Warning: If you alternately use old and new versions of Oberon on the same file system, set DiskGCThres=100, otherwise the old version may damage the new version's file system.
+<LI> New feature for tracing.  HALT(MAX(INTEGER)) will produce a trap viewer, but execution continues after the HALT.
+<LI> Gadget layout language (LayLa) for defining Gadgets (thanks J&ouml;rg Derungs).
+<LI> LCPanels example module for defining Gadgets with layout constraints.
+<LI> Visual catalog of Gadgets.  Use the View button in the Gadgets.Panel.
+<LI> Pentium-specific setup in Kernel.  Allows use of fine-grained timing instruction in user programs.
+<LI> Gadgets list scrolling speed configurable with Gadgets.ListScrollDelay in Oberon.Text.
+<LI> Gadgets updated (thanks Patrik Saladin, Hannes Marais, Thomas Kistler, Emil Zeller, et al.).
+<LI> Gadgets network tools updated (thanks Emil Zeller).
+<LI> ETH client software updated (thanks Andreas Disteli).
+<LI> System.LoadGadgets option in Oberon.Text provides better integration of Gadgets.
+<LI> Adaptec SCSI driver added to distribution (thanks Wolgang Ibl).  The driver has not been tested with the new distribution.
+<LI> LEDA publishing system is now available as a package.
+<LI> Installation process cleaned up and simplified.
+</UL>
+Errors fixed:
+<UL>
+<LI> There is a typo in section 2.1 of install.txt.  Instead of entering ".dsk", you should enter "oberon0.dsk" at the rawrite prompt (fixed).
+<LI> The ET4000 driver is missing from the release (found by Peter Matthias).  It is now available in the beta directory.  To install it, first install with the VGA driver, then write the ET4000 driver to a DOS floppy and read it into Oberon with a Backup.ReadFiles command.  Then rename it to ET4000.Display.obj and boot Oberon-0 to reconfigure the display in section 4 of Install.Tool.  The driver will be present in the next release (fixed).
+<LI> The INSB, INSW and INSD instructions are assembled incorrectly.  Use DB to define the instruction explicitly as a temporary workaround (fixed).
+<LI> A complex expression with SYSTEM.VAL causes compiler trap (found by Wolfgang Ibl, fixed).
+<LI> The disk driver may trap with error = 6013 on very slow machines (found by Peter Matthias, fixed).
+<LI> If an extended partition contains deleted logical drives, the Disk module and Install tool can't handle it (fixed).
+<LI> There is a small problem with the left and right arrows in the ET editor when at the start or end of a text (found by Patrik Reali, fixed).
+<LI> Oberon.GetSelection returns an undefined text when no selection is active (found by Josef Templ, fixed).
+<LI> Assembler errors: MOV AX,SS; MOVSW; MOV CR3,EBX; INSB/W/D; JE 128; JE -129; JMP Rel16 (fixed by Patrik Reali)
+<LI> TextHyperlink in Gadgets.Panel does not exist.  An alias "TextHyperlink = TextGadgets.NewControl" is missing in Oberon.Text (found by F.Necati Ecevit, fixed).
+<LI> The EtherNet module is not in Network.Arc, but in Develop.Arc! (fixed)
+<LI> Assembler errors: RET imm16, CALL Rel16, LEA Reg32,M16, const size (fixed by Patrik Reali).
+<LI> Compiler: CHR/ORD do not accept SYSTEM.BYTE (fixed by Patrik Reali).
+<LI> The information in section 5 of install.txt is incorrect.  Instead of "Video=3", it should say "Init=" (fixed).
+<LI> The PostScript Printer module's Picture procedure could overflow on large pictures (found by Peter Matthias, fixed).
+<LI> There is an error in the Ports module of the net system (fixed by Martin Gitsels).
+<LI> Gadgets does not display error message when module loading fails (found by F.Necati Ecevit, fixed).
+<LI> Miscellaneous.Snapshot does not work (fixed by Harry Lewis - Tseng/VGA only).
+<LI> The 3Com Ethernet driver does not work if an AUI port and external transceiver is used (fixed).
+<LI> Sisiphus is not working because data file is missing (fixed).
+<LI> When creating the first partition on a drive, the partition does end on a cylinder boundary (fixed).
+<LI> OBL does not allow set strings which only differ in the last character (fixed).
+<LI> If a drive has deleted logical drives on it, the partition table reading code could trap (fixed).
+<LI> The 3Com EtherNet driver does not work with twisted-pair networks (fixed).
+<LI> Only 60 NewPatterns could be defined in the Display module (fixed).
+<LI> Errors in the Analyzer (fixed by Stefan Ludwig).
+<LI> Pressing F1/F2 at the same position leaves garbage on screen (fixed).
+<LI> Compiler/Builder does not always display correct module name (fixed).
+<LI> Error in Outlines (fixed by Patrik Saladin).
+<LI> Install program does not support PartType config string (fixed).
+<LI> Home/End not mapped (fixed).
+</UL>
+<H2><A NAME="R206">Release 2.06, March 28, 1996</A></H2>
+Notes:
+<UL>
+<LI> Stack clearing is on by default with the new compiler.  This means that programs will run slower, but safer, because the run-time system can not be corrupted by uninitialised pointers.  Currently all local variables are initialised for this purpose.  This code will be optimised later to only initialise pointers [done in release 2.2.6].
+<LI> When installing version 2.06 over an existing version (2.04 or 2.05), the boot loader has to be updated.  Use the Install.InitBootLoader command in section 2 of Install.Tool.  Re-initialising the file system with Install.InitFileSystem is optional.  Executing the latter will wipe all existing Oberon files.  That is why the Install program has an "Unsafe" mode! (found by Peter Matthias).
+<LI> The compiler does not recognise the Oberon-2 extensions: read-only export and type-bound procedures.
+<LI> The floating-point emulator does not work with the new compiler, so a processor with floating-point coprocessor is required [done after release 2.2.6].
+</UL>
+New features:
+<UL>
+<LI> Oberon.OptionChar is now "\" and "/" characters are allowed as part of a Text.Name.  This is for consistency with the Windows and Mac versions of Oberon System 3, and for compatibility with URLs.  Use Oberon.OptionChar in code instead of "\".
+<LI> The Ctrl key is now used (instead of Alt) to emulate the middle mouse button with two-button mice.  This is for consistency with the Windows and Mac versions.  Both Ctrl keys can be used, which is more friendly to lefties!
+<LI> System.Trap now uses the in-memory reference block and no longer requires the presence of the .obj files.  It is also faster.
+<LI> Stefan Ludwig's Analyzer is now included.  See Analyzer.Tool in the basic system.  The compiler no longer displays any warnings.
+<LI> The mouse driver now has a speedup option.  If the mouse is moved faster than a certain threshold rate, the cursor moves at a faster rate than the mouse.
+<LI> Francis Bogsanyi's ATAPI CD audio driver is now available, as well as Emil Zeller's Audio CD player.  See Audio.Tool.
+<LI> New command System.Reboot.  System.Quit now just stops all tasks and then waits patiently for the machine to be shut off.
+<LI> Then Install tool now gives a warning and a second chance before overwriting an existing installation.
+<LI> New installation procedure with only one boot floppy.  This is must more convenient when installing from the net.
+<LI> Object files and symbol files now have the extensions .obj and .sym respectively.  This is only a temporary measure so that version 2.04 and version 2.06 can co-exist on the same disk.
+<LI> The Linker was renamed to BootLinker to avoid a name conflict.
+<LI> Boot loader more user-friendly.
+<LI> New Gadgets look.
+</UL>
+Errors fixed:
+<UL>
+<LI> Hard break does not work well (fixed).
+<LI> There are several errors in the decoder (fixed).
+<LI> The VGA driver does not work well (fixed).
+<LI> The Install tool can only create new partitions at the end of the disk (fixed).
+<LI> Miscellaneous.GetObjSize does not work for the new format .obj files (fixed).
+<LI> Builder.MarkErrors does not work (fixed).
+<LI> Watson does not understand the assembler extension (fixed).
+<LI> Multiplication of an INTEGER with a SHORTINT/INTEGER constant (found by Peter Matthias, fixed).
+<LI> SYSTEM.LSH(shortint const, shortint const) now returns a longint (found by Peter Ryser, fixed).
+<LI> RealVar := ORD(AnyChar) (found by Erich Oswald, fixed).
+<LI> SYSTEM.PUT(x, NIL) now allowed (found by Andreas Disteli, fixed).
+<LI> Assembler-Functions could not be written (fixed).
+<LI> SETx - wrong opcode generated (fixed).
+<LI> the syntax [base + index * scale] and [index * scale + base] was not accepted (fixed).
+<LI> [index * 1] was not accepted (fixed).
+<LI> off[ESP] was wrong (fixed).
+<LI> jmp -130: the relative address was a 1-byte value (but needs 2-bytes!) (fixed).
+<LI> MOV RM16, SReg and MOV SReg, RM16  were wrong (fixed).
+<LI> MUL RMxx was not accepted (shortcut for MUL Accumulator, RMxx) (fixed).
+<LI> DIV RMxx was not accepted (shortcut for DIV Accumulator, RMxx) (fixed).
+</UL>
+<H2><A NAME="R205">Release 2.05, February 10, 1996</A></H2>
+New features:
+<UL>
+<LI> We have switched to a totally new compiler and assembler with this version.  It has not been tested extensively yet.  Only experienced Native Oberon users should install this version.
+<LI> An adapted version of the OP2 compiler with an inline assembler is used to build this release.  It includes an integrated assembler.
+<LI> A JPEG viewer is now available.  Just use Desktops.OpenDoc on a file with a .jpg extension.  The image/jpeg MIME type is now also supported by the WWW browser (Thanks ejz,du).
+<LI> All the gray keys are now mapped to key codes.  PgUp, PgDn etc. can be used in TextDocs.
+<LI> NumLock on by default.
+</UL>
+Errors fixed:
+<UL>
+<LI> There is an error in FOR statement compilation for complex upper bound expressions (fixed).
+<LI> The Icon * button in the Documents.Panel does not work (found by Francis Bogsanyi, fixed).
+<LI> There is an error with constant floating point expressions (fixed by Andreas Disteli).
+<LI> Oberon20.Scn.Fnt and Oberon24.Scn.Fnt are missing (found by Peter Matthias, fixed).
+<LI> S3C805 Display module does not handle patterns wider than 32 pixels (found & fixed by Erich Oswald).
+<LI> The Lissajous.Panel is missing (found by Prof. Gutknecht, fixed).
+<LI> The Oberon-0 RAM disk was bigger than neccessary (fixed).
+<LI> The floppy driver did not work reliably on a PS/2 model L40SX (fixed).
+<LI> The mouse could be jerky with graphical editors (found by Erich Oswald, fixed).
+<LI> The 2.88M floppy on a DEC PC is not recognised (found by Michael Raps, fixed).
+<LI> Subnet broadcast addresses are not recognised in the net system (fixed by Martin Gitsels).
+<LI> Some .gif files can not be loaded (fixed by Emil Zeller).
+<LI> The PostScript printer does not recognise Oberon fonts (fixed).
+<LI> The source address on outgoing EtherNet packets is not set (fixed).
+</UL>
+<H2><A NAME="R204">Release 2.04, January 13, 1996</A></H2>
+Errors fixed:
+<UL>
+<LI> The brand new ET4000 driver was not included!  The file ET4000.Display.Obj is now available on the beta site.  Copy it to the Oberon file system and then re-run Oberon-0 to set up the ET4000 display (found by Wolfgang Ibl, fixed).
+<LI> The "Call error:" message from TextGadgets is displayed incorrectly (found by Peter Matthias, fixed).  New TextGadgets0.Obj available on huxley.
+<LI> There is an error in the FAT file system code.  It is not possible to install version 2.03 to a DOS file (found by Jon Trygve, fixed).
+<LI> There is a serious error in the Disk module.  The first 6 sectors of the partition after the Oberon partition could potentially be overwritten when the Oberon file system is full (found by Beat Christen, fixed).
+<LI> The ReadMe.Book contains a reference to Profiler.Book, which is not included (found by Thomas Burri, fixed).
+</UL>
+<H2><A NAME="R203">Release 2.03, January 8, 1996</A></H2>
+New features:
+<UL>
+<LI> Swiss keyboard support.
+<LI> Compatibility with the Ontrack disk manager from Maxtor.  Other disk managers may also work.
+<LI> System.ClearLog command replaced by System.Clear, which works on any TextFrame.  Default System.Log menu updated.
+<LI> NetSystem updated.  Errors in UDP, TCP & DNS were fixed & sending and receiving were speeded up.  NetSystem.SendData and ReceiveData were renamed SendDG and ReceiveDG.  Also, if you define "User" in the NetSystem section of Oberon.Text, and use the Passwords tool, it is no longer necessary to run NetSystem.Start.
+<LI> Gadgets updated.  The Links module was added.
+<LI> A lot of time has been spent by Hannes Marais to write Watson documentation for the module interfaces.  His documentation has been merged into the Native Oberon modules.
+<LI> The compiler now allows comparison of character constants with strings.  Some type checking errors were fixed.
+<LI> Compatibility with the 80387 coprocessor.  (Trap handling works differently).
+<LI> NetSystem updated again.  Counters were introduced to help with configuration debugging.
+<LI> The Find.Panel for searching for a string in files was added (Thanks Patrik & Thomas).
+<LI> Oberon.OptionChar added.
+<LI> Kernel interface was cleaned up.  GetEnv renamed to GetConfig.  TimeUnit for GetTimer exported.
+<LI> Asynchronous break (Ctrl-Alt-Break) made safer.  Will no longer interrupt the garbage collector halfway.
+<LI> File system sector size changed from 1k to 2k.  Largest file is now 12Mb.
+<LI> Mail.Panel Settings updated.  It is no longer neccessary to define the SMTP and POP server there.  The values are taken from Oberon.Text instead.
+<LI> Optimised memory copy in Kernel, Files, NetSystem, EtherNet.
+<LI> Help procedures added to make Gadgets programming simpler.  Attributes: added GetBool, GetInt, GetReal, GetLongReal, GetString, SetBool, SetInt, SetReal, SetLongReal, SetString.  Links: added GetLink, SetLink.  Texts: added WriteObj.  Gadgets: added CopyPublicObject.  Desktops: added IsInMenu.
+<LI> The second and third parameter of Printer.Open was removed.  The username and password parameters were a leftover from older versions of Oberon and were never used.
+<LI> F3 & F4 can now be used in Draw to redraw or reset the draw window.
+<LI> ET4000 driver supporting many 256-colour video modes (Thanks Wolfgang Pircher & Wolgang Ibl).
+</UL>
+Errors fixed:
+<UL>
+<LI> NetSystem.Text is missing (fixed).
+<LI> DInline does not work (found by Peter Ryser, fixed).
+<LI> The ISO-8859-1 button in the Mail.Panel Settings was not functional (fixed by Emil Zeller).
+<LI> FTP.Open ignores the passwords file (fixed by Emil Zeller).
+<LI> Netmask setting is ignored, gateway is always queried to get netmask (found by Alan Freed, fixed by Martin Gitsels).
+<LI> Miscellaneous.MakeUnixText & Miscellaneous.MakeAscii don't work (found by Peter Matthias, fixed).
+<LI> The German keyboard driver is selected by a D, not a G (found by Peter Matthias, fixed).
+<LI> "a, "u, "o are not mapped correctly with the German keyboard, they appear capital, "A, "O, "U don't appear (found by Peter Matthias, fixed).
+<LI> Backup.InitDOS Label labels the Disk LXXXX (found by Peter Matthias, fixed).
+<LI> Backup.ReadFiles doesn't read files starting with a number  from a DOS Disk (found by Peter Matthias, documented).
+<LI> When adding a package to an existing system, the Install program would corrupt the first existing file on the disk.  If all packages are installed to a new file system (as most people did) the problem does not occur.  (found by Peter Matthias, fixed).
+<LI> Clicking on the hyperlinks in Net.Text causes a stack overflow, which causes a reboot (Found by Chuck Thacker).  To fix it, make the following changes to Oberon.Text in the "Gadgets.Documents" section:  delete the 2 entries "file = HTTPDocs.NewDoc;" and "mci = MCI.NewDoc;" and add the 3 entries "file = HyperDocs.NewDoc;", "mailserver = Mail.NewDoc;" and "gif = RembrandtDocs.NewDoc;" (fixed).
+<LI> Some .Books are missing (found by Peter Matthias, fixed).
+<LI> The Molecules function of the Backdrops tool had a small error (found by Patrik Reali, fixed).
+<LI> BooksUser.Panel is damaged (found by F.Necati Ecevit, fixed).
+<LI> On 256-colour displays, only the first 16 palette entries were initialised.  The F5-F7 keys only worked with the first 16 palette entries (fixed).
+<LI> Simulator.Panel & PhonePad.Panel are missing (found by Prof. Gutknecht, fixed).
+<LI> Sisiphus does not work (fixed).
+<LI> 1-bit pictures don't work (found by Peter Matthias, fixed).
+<LI> Stack overflows cause a reboot (fixed).
+<LI> There is a problem with LONGREAL.  Some LONGREAL expressions seems to be evaluated in single precision (found by F. Necati Ecevit, fixed with help from Bernd Moesli).
+<LI> The compiler does not allow more than one pointer to a forward declared record, even though this is allowed by the language.  In most cases a workaround can be found.  The error message was made clearer (found by Markus Kottmann, fixed).
+<LI> The compiler traps when parsing an open array variable declaration (found by Francis Bogsanyi, fixed).
+<LI> There was an error in the GIF reading code in RembrandtDocs (found by Patrik Reali, fixed).
+<LI> The Draw tool had some problems (found by Prof. Gutknecht, fixed).
+<LI> There was an error in Texts.OpenReader (found by Patrik Reali, fixed).
+<LI> Passwords.Delete seems to have an error.
+</UL>
+<H2><A NAME="R202">Release 2.02, November 30, 1995</A></H2>
+New features:
+<UL>
+<LI> Support for Norwegian & German keyboards.
+<LI> 720k floppies are now supported.  The floppy driver was also made more robust (11.10.95).
+<LI> Backup.Format was implemented (17.10.95).
+<LI> More Watson-documented modules.
+<LI> Faster reading of installation floppies & more debugging info for installation problems.
+<LI> More buffers in Files.
+<LI> Floating point emulator ported from DOS Oberon (07.11.95).
+<LI> Static linker updated (09.11.95).
+<LI> More memory will now be available.  The heap initialisation has been cleaned up (09.11.95).
+<LI> Stack size is now configurable.  Default is 128k.  Hardware stack checking was added (10.11.95).
+<LI> FAT file system drive numbering fixed in Disk (10.11.95).
+<LI> Error in Garbage Collector fixed.  Occurence was very rare (13.11.95).
+<LI> Compiler.Pedantic & warnings 303-305 removed (16.11.95).
+<LI> Switched to new Oberon font.  Syntax automatically converted to Oberon on loading (17.11.95).
+<LI> Compiler now evaluates const REAL expressions.  Some REAL errors were fixed (17.11.95).
+<LI> Standard system can be used on black & white (or low quality) screen (17.11.95).
+<LI> 300dpi printer fonts now distributed.  Math font also distributed (20.11.95).
+<LI> New network tools.  Thanks Emil Zeller! (29.11.95).
+<LI> Updated documentation.  Thanks Andre Fischer! (30.11.95).
+</UL>
+<H2><A NAME="R201">Release 2.01, October 3, 1995</A></H2>
+First public beta release to 50 volunteers from comp.lang.oberon.
+<H2><A NAME="R100">Release 1.0, October 1994</A></H2>
+A prototype implemented during a week-long visit to the ETH.  Based on the author's Gneiss microkernel and Hybrid Oberon (by Johan de Villiers) developed at Stellenbosch University in South Africa.
+<HR>
+<ADDRESS> 
+<A HREF="mailto:muller@inf.ethz.ch">Pieter Muller</A> 
+May 13, 1999 (page created with HTML.Tool on Oberon)<br> 
+ETH Z&uuml;rich: Departement of Computer Science<br> 
+</ADDRESS>
+<HR>
+</BODY>
+</HTML>

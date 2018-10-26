@@ -1,0 +1,215 @@
+DEVICE Display "Standard VGA" Display="VGA."
+  MODE 640 480 4 DEFAULT
+    Init="b81200cd10"
+
+DEVICE Display "Vesa 2.0" Display="SVGA." MapVesa="1"
+  MODE 1280 1024 8 
+    Init="b8014fb90701cd10268b4d28268b552abb0741b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="b8014fb90501cd10268b4d28268b552abb0541b8024fcd10"
+  MODE 800 600 8 
+    Init="b8014fb90301cd10268b4d28268b552abb0341b8024fcd10"
+  MODE 640 480 8 
+    Init="b8014fb90101cd10268b4d28268b552abb0141b8024fcd10"
+
+DEVICE Display "ATI Mach64" Display="SVGA." MapVesa="1" DMem="2048"
+  MODE 1600 1280 8
+    Init="b815a0b3008cc233ffcd1026800e08001fb815a0b3018cc233ffcd10"
+      "b802a0b98284cd10b805a0b101cd10b806a0cd108bd3c1e20433c9"
+  MODE 1280 1024 8
+    Init="b815a0b3008cc233ffcd1026800e06001fb815a0b3018cc233ffcd10"
+      "b802a0b98283cd10b805a0b101cd10b806a0cd108bd3c1e20433c9"
+  MODE 1024 768 8 DEFAULT
+    Init="b815a0b3008cc233ffcd1026800e04000fb815a0b3018cc233ffcd10"
+      "b802a0b98255cd10b805a0b101cd10b806a0cd108bd3c1e20433c9"
+  MODE 800 600 8
+    Init="b815a0b3008cc233ffcd1026800e02000fb815a0b3018cc233ffcd10"
+      "b802a0b9826acd10b805a0b101cd10b806a0cd108bd3c1e20433c9"
+  MODE 640 480 8
+    Init="b815a0b3008cc233ffcd1026800e000060b815a0b3018cc233ffcd10"
+      "b802a0b98212cd10b805a0b101cd10b806a0cd108bd3c1e20433c9"
+
+DEVICE Display "ATI Mach32" Display="SVGA." SVGA="7"
+  MODE 1024 768 8 DEFAULT
+    Init="b86400cd10"
+  MODE 800 600 8
+    Init="b86300cd10"
+  MODE 640 480 8
+    Init="b86200cd10"
+
+DEVICE Display "3Dlabs Permedia 2" Display="Permedia2."
+  MODE 1280 1024 8
+  MODE 1024 768 8 DEFAULT
+  MODE 800 600 8
+  MODE 640 480 8
+  MODE 1280 1024 32
+  MODE 1024 768 32
+  MODE 800 600 32
+  MODE 640 480 32
+
+DEVICE Display "S3 Trio64" Display="S3Trio."
+  MODE 1280 1024 8 
+    Init="bb0701b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10"
+  MODE 800 600 8 
+    Init="bb0301b8024fcd10"
+  MODE 640 480 8 
+    Init="bb0101b8024fcd10"
+    
+  MODE 1280 1024 16 
+    Init="bb1a01b8024fcd10" DMem="4096"
+  MODE 1024 768 16 
+    Init="bb1701b8024fcd10" DMem="2048"
+  MODE 800 600 16 
+    Init="bb1401b8024fcd10"
+  MODE 640 480 16 
+    Init="bb1101b8024fcd10"
+
+  MODE 1024 768 32 
+    Init="bb1801b8024fcd10" DMem="4096"
+  MODE 800 600 32 
+    Init="bb1501b8024fcd10" DMem="2048"
+  MODE 640 480 32 
+    Init="bb1201b8024fcd10" DMem="2048"
+
+DEVICE Display "S3 Aurora64" Display="SVGA." SVGA="1"
+  MODE 1280 1024 8 
+    Init="bb0701b8024fcd10ba00e0b90000" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10ba00e0b90000"
+  MODE 800 600 8
+    Init="bb0301b8024fcd10ba00e0b90000"
+  MODE 640 480 8 
+    Init="bb0101b8024fcd10ba00e0b90000"
+
+DEVICE Display "S3 805 OEM" Display="S3C805."
+  MODE 1280 1024 8 
+    Init="bb0702b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0502b8024fcd10"
+  MODE 800 600 8 
+    Init="bb0302b8024fcd10"
+  MODE 640 480 8 
+    Init="bb0102b8024fcd10"
+
+DEVICE Display "S3 805 Vesa" Display="S3C805."
+  MODE 1280 1024 8 
+    Init="bb0701b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10"
+  MODE 800 600 8 
+    Init="bb0301b8024fcd10"
+  MODE 640 480 8 
+    Init="bb0101b8024fcd10"
+
+DEVICE Display "S3 924 OEM" Display="S3C924."
+  MODE 1280 1024 8 
+    Init="bb0702b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0502b8024fcd10"
+  MODE 800 600 8 
+    Init="bb0302b8024fcd10"
+  MODE 640 480 8 
+    Init="bb0102b8024fcd10"
+
+DEVICE Display "S3 924 Vesa" Display="S3C924."
+  MODE 1280 1024 8 
+    Init="bb0701b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10"
+  MODE 800 600 8 
+    Init="bb0301b8024fcd10"
+  MODE 640 480 8 
+    Init="bb0101b8024fcd10"
+
+DEVICE Display "Tseng ET4000" Display="SVGA." SVGA="2"
+  MODE 1280 1024 8
+    Init="b83f00cd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="b83800cd10"
+  MODE 800 600 8
+    Init="b83000cd10"
+  MODE 640 480 8
+    Init="b82e00cd10"
+
+DEVICE Display "Tseng ET4000 Vesa Hicolor" Display="SVGAH." SVGA="2"
+  MODE 800 600 16 DEFAULT
+    Init="bb1401b8024fcd10"
+
+DEVICE Display "Tseng W32" Display="W32."
+  MODE 1280 1024 8 
+    Init="b83f00cd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="b83800cd10"
+  MODE 800 600 8 
+    Init="b83000cd10"
+  MODE 640 480 8 
+    Init="b82e00cd10"
+
+DEVICE Display "Tseng VGA 72Hz" Display="VGA."
+  MODE 640 480 4 DEFAULT
+    Init="31c08ec026800e880440b81200cd10"
+
+DEVICE Display "Cirrus Logic GD543x" Display="GD54xx."
+  MODE 1600 1200 8
+    Init="b87800cd10"
+  MODE 1280 1024 8
+    Init="b86d00cd10"
+  MODE 1024 768 8 DEFAULT
+    Init="b86000cd10"
+  MODE 800 600 8
+    Init="b85c00cd10"
+  MODE 640 480 8
+    Init="b85f00cd10"
+
+DEVICE Display "Cirrus Logic GD542x" Display="SVGA." SVGA="5"
+  MODE 1280 1024 8
+    Init="b86d00cd10"
+  MODE 1024 768 8 DEFAULT
+    Init="b86000cd10"
+  MODE 800 600 8
+    Init="b85c00cd10"
+  MODE 640 480 8
+    Init="b85f00cd10"
+
+DEVICE Display "Cirrus Logic GD542x Vesa" Display="SVGA." SVGA="5"
+  MODE 1280 1024 8
+    Init="bb0701b8024fcd10"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10"
+  MODE 800 600 8
+    Init="bb0301b8024fcd10"
+  MODE 640 480 8
+    Init="bb0101b8024fcd10"
+
+DEVICE Display "Trident 9xxx Vesa" Display="SVGA." SVGA="8"
+  MODE 1280 1024 8
+    Init="bb0701b8024fcd10" DMem="2048"
+  MODE 1024 768 8 DEFAULT
+    Init="bb0501b8024fcd10"
+  MODE 800 600 8
+    Init="bb0301b8024fcd10"
+  MODE 640 480 8
+    Init="bb0101b8024fcd10"
+
+DEVICE Display "Video7 Mirage" Display="S3C805."
+  MODE 1024 768 8 DEFAULT
+    Init="b84d00cd10"
+
+DEVICE Keyboard "United States"
+DEVICE Keyboard "United Kingdom" KeyUK.Bin
+DEVICE Keyboard "Swiss German" KeyCH.Bin
+DEVICE Keyboard "German" KeyD.Bin
+DEVICE Keyboard "Canadian" KeyCA.Bin
+DEVICE Keyboard "Norwegian" KeyN.Bin
+DEVICE Keyboard "Turkish" KeyTR.Bin
+DEVICE Keyboard "Polish" KeyPL.Bin
+DEVICE Keyboard "Dvorak" KeyDV.Bin
+DEVICE Keyboard "French" KeyFR.Bin
+
+DEVICE Disk "Standard ATA/EIDE" ATADisk "PCI"
+DEVICE Disk "Standard IDE (old)" IDEDisk ""
+DEVICE Disk "Adaptec 1520 SCSI" AHA1520Disk "AHA1520"
+DEVICE Disk "NCR 810 SCSI" NCR810Disk "PCI NCRScript ASPI"
+DEVICE Disk "Adaptec AIC7xxx (beta)" Adaptec7 "PCI SCSI Adaptec7Script"

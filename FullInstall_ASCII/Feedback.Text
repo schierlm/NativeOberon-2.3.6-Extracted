@@ -1,0 +1,39 @@
+Oberon System 3 User Feedback
+
+We welcome suggestions and problem reports.  Please fill in this form and send it to the Oberon System 3 development team.
+
+
+Name: 
+
+Email: 
+
+Version: ETH Oberon System 3 / PC Native 2.3.6 (13 May 1999)
+
+Problem/Suggestion: 
+
+
+
+
+(In case of a problem report, please include enough information for us to quickly and correctly identify the problem.  If a trap viewer was displayed, copy at least the first page of information into this form.)
+
+System Configuration (if relevant): 
+
+
+
+
+Sending in this form:
+
+First store the document using the Store command in the menu above.  Then use one of the following methods to send the document to us.
+
+Method 1 - Email
+
+The following two commands will convert the document to a plain ASCII file and copy it to a DOS-format diskette.  This file can then be emailed to us at: oberon@inf.ethz.ch.
+
+  Miscellaneous.MakeDOSText Feedback.Text => feedback.txt ~
+  DOS.Copy feedback.txt => a:/feedback.txt ~
+
+Method 2 - Paper copy
+
+If you have configured a printer, a copy of the document can be printed and then faxed or posted to us.  Use the command below to print the document, and post or fax it to: Oberon System 3 Team, Institute for Computer Systems, ETH Zentrum, CH-8092 Zurich, Switzerland.  Fax: ++41 1 632 1307
+
+  Script.Print LPT1 Feedback.Text ~

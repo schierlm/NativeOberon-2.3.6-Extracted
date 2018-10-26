@@ -1,0 +1,98 @@
+# Computer Room Description
+
+# left wall with window
+shape LWW
+	points (0 0 0) (-5 0 0) (-5 2.5 0) (0 2.5 0) (-1 1 0) (-3 1 0) (-3 2 0) (-1 2 0)
+	points (0 0 0.3) (-4.7 0 0.3) (-4.7 2.5 0.3) (0 2.5 0.3) (-1 1 0.3) (-3 1 0.3) (-3 2 0.3) (-1 2 0.3)
+	polygon 0 1 2 3 0 4 7 6 5 4
+	polygon 4 5 13 12	polygon 5 6 14 13	polygon 6 7 15 14	polygon 7 4 12 15
+	polygon 8 11 10 9 8 12 13 14 15 12
+end
+
+# right wall with window
+shape RWW
+	points (0 0 0) (5 0 0) (5 2.5 0) (0 2.5 0) (1 1 0) (3 1 0) (3 2 0) (1 2 0)
+	points (0 0 0.3) (4.7 0 0.3) (4.7 2.5 0.3) (0 2.5 0.3) (1 1 0.3) (3 1 0.3) (3 2 0.3) (1 2 0.3)
+	polygon 0 3 2 1 0 4 5 6 7 4
+	polygon 4 12 13 5	polygon 5 13 14 6	polygon 6 14 15 7	polygon 7 15 12 4
+	polygon 8 9 10 11 8 12 15 14 13 12
+end
+
+# right wall with door
+shape RWD
+	points (0 0 0) (2 0 0) (2 2 0) (3.5 2 0) (3.5 0 0) (5 0 0) (5 2.5 0) (0 2.5 0)
+	points (0 0 0.3) (2 0 0.3) (2 2 0.3) (3.5 2 0.3) (3.5 0 0.3) (4.7 0 0.3) (4.7 2.5 0.3) (0 2.5 0.3)
+	polygon 7 6 5 4 3 2 1 0
+	polygon 1 2 10 9	polygon 2 3 11 10	polygon 3 4 12 11
+	polygon 8 9 10 11 12 13 14 15
+end
+
+# floor and ceiling
+shape floor
+	points (-5 0 5) (5 0 5) (5 0 -5) (-5 0 -5)
+	polygon 0 1 2 3
+end
+
+shape ceiling
+	points (-5 2.5 5) (5 2.5 5) (5 2.5 -5) (-5 2.5 -5)
+	polygon 3 2 1 0
+end
+
+# room walls
+shape walls
+	color 0.6 0.6 0.6
+	diffuse 0.4
+	save translate (0 0 -5)	add LWW add RWW	restore
+	rotate 90 (0 1 0)
+	save translate (0 0 -5)	add LWW add RWW	restore
+	rotate 90 (0 1 0)
+	save translate (0 0 -5)	add LWW add RWD	restore
+	rotate 90 (0 1 0)
+	save translate (0 0 -5)	add LWW add RWW	restore
+	
+	diffuse 0.0
+	color 0.25 0.25 0.25
+	add floor
+	color 0.7 0.7 0.7
+	add ceiling
+end
+
+
+# table
+shape leg
+	points (0 0.88 0) (0.03 0.88 0) (0.03 0.88 -0.03) (0 0.88 -0.03)
+	points (0 0 0) (0.03 0 0) (0.03 0 -0.03) (0 0 -0.03)
+	color 0.4 0.4 0.7
+	polygon 0 4 5 1	polygon 1 5 6 2	polygon 2 6 7 3	polygon 3 7 4 0
+end
+
+shape table
+	points (-2 0.9 0) (4 0.9 0) (4 0.9 -1.2) (-2 0.9 -1.2) (-2 0.88 0) (4 0.88 0) (4 0.88 -1.2) (-2 0.88 -1.2)
+	color 0.5 0.5 0.3
+	polygon 0 1 2 3
+	polygon 0 4 5 1	polygon 1 5 6 2	polygon 2 6 7 3	polygon 3 7 4 0
+	polygon 7 6 5 4
+	
+	translate (-1.97 0 -0.03)	add leg
+	translate (0 0 -1.11)	add leg
+	translate (5.91 0 0)	add leg
+	translate (0 0 1.11)	add leg
+end
+
+
+shape row
+	diffuse 0.3
+	add table
+end
+
+
+# scene description
+clear
+ambient 1.0
+light (3 -10 1) 1.0
+light (-1.5 0 -4) 1.0
+translate (0 -0.1 0)
+add walls
+add row
+translate (0 0 3)	add row
+translate (0 0 -6)	add row

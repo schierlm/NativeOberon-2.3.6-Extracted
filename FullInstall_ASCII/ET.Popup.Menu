@@ -1,0 +1,12 @@
+Compiler.Compile *
+Compiler.Compile */s
+ET.Open ^
+ET.Left
+ET.Right
+ET.Move
+ET.Search
+ET.Replace
+ET.ReplaceAll
+ET.Show ^
+Browser.ShowDef ^
+Browser.ShowObj ^

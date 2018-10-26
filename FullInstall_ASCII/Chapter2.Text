@@ -1,0 +1,902 @@
+
+Chapter Two
+
+The Basic System
+
+
+
+
+
+
+2.1	Introducing the Oberon User Interface
+
+The most remarkable difference between the Oberon user interface and other graphical user interfaces is its philosophy of presenting the user with a large collection of components that can be composed in arbitrary ways. Components are the basic building blocks of the Oberon system from which everything else is constructed. This should sound familiar to programmers well-acquainted with object-oriented techniques. A crucial difference is however that all components in the Oberon system are directly accessible and interactively composable by end-users. In fact, Oberon users don't make a distinction between pre-fabricated applications and multimedia documents: everything can be composed interactively, and just as easily taken apart or modified at run-time. To drive this point home, imagine reorganizing the contents of dialog boxes in your programs to your taste - this is possible in Oberon. To distinguish components from those used in other systems, we call our components gadgets. Correspondingly, we call the Oberon user interface the Gadgets System.
+	Once composed, collections of components need to be archived for future use (or later modification). To this purpose Oberon introduces documents, the storage medium for components. Documents are typically stored as files on your computer, but also might be components composed by program or constructed from HTML. Because of the ubiquitous use of documents and the flexibility of component composition, we call the Oberon system a document-based system.
+	The document-based nature of Oberon is immediately observed after starting the system. Figure 2.1 illustrates the default configuration of the display into a wider vertical user track to the left and a narrower vertical system track to the right. Each track is further divided into rectangular viewers. Viewers correspond to windows in other systems, and are one of the ways in which documents are viewed in Oberon. Each viewer consists of a horizontal menu bar at the top, and a larger viewing area at the bottom called the main frame. The menu bar contains the name of the document viewed in the main frame and a sequence of buttons that apply to the viewer.
+
+
+
+Figure 2.1	The Oberon startup display
+
+	The main frame of viewers display a graphical view of a document. Often we will refer to viewers simply as documents, because they are often seen together. The Oberon systems uses several different types of documents to display information. The bulk of this chapter refers to a specific document type called text documents, which belong to a predefined class of gadgets named TextDoc. As the name indicates, text documents contain mostly text. We say "mostly" - because Oberon texts may contain arbitrary components that float along inside of the text. For example, the bottom viewer in the system track of Figure 2.1 contains a number of buttons. Note that although we emphasize text documents in this chapter, there are many other document classes that are of completely different nature.
+	We refer to the arrangement of viewers and documents as the viewer system or desktop. The configuration as sketched is called a tiled viewer system because viewers share the screen in a tiled fashion. Oberon also supports an overlapping viewer model, which is discussed in the following chapter. In reality, the structure of viewers is three-dimensional. A new track may in fact overlay one or, more generally, an integral number of existing tracks. The original configuration will be re-established when the overlaying track is later removed.
+	In order to change the size of an existing viewer, simply point with the mouse to its menu bar, press the ML key and move the mouse up or down. Release the key when the viewer has the desired size. You can also conveniently move a viewer to any different place on the display screen by starting exactly as just explained, then interclicking the MM key, dragging the mouse to the new location, and releasing all keys there.
+	Text documents are often distinguished further by their content. The top-most viewer in the system track of Figure 2.1 is called the system log, log viewer, or simply log. Status messages that indicate how a computation was completed are always written to the log. The bottom-most viewer in the system track is an instance of a tool viewer, or simply tool. Tool viewers typically collect related functions together in a set of commands. We will return to commands in a moment. A third type of text document is shown in the user track. This document contains prose text that describes the Oberon system. Although we distinguish between different types of text documents according to content, there is no intrinsic distinctions between them - they are all texts that can be freely edited.
+	In principle, new viewers are allocated their position automatically using heuristics. For example, tool viewers are opened in the system track, and document viewers in the user track. However, you can override any automatic allocation by first placing the marker (sometimes called pointer) at the location where you desire the top of the new viewer to be placed. The marker is star-shaped (*), and it is placed by moving the mouse focus to the desired position and then hitting the F1 key.
+
+
+2.2	Concept of Commands and Tools
+
+Among the classes of possible objects to be handled by a computer system, the class of texts plays a key role. Not only are input and output data frequently represented as text, but also objects and commands are often identified by their name. Text is therefore a predefined class of object in Oberon.
+	A tool viewer contains a list of command names (commands in short), some of them followed by parameters. Commands in Oberon are of the written form M.P, where M designates a module (package) and P a procedure (operation) that is provided by the module. A user activates a command simply by pointing at its name with the mouse and clicking the MM key. For example, activating the command System.Time will result in the current time to be written to the log.
+	Care should be taken not to confuse commands with file names as the latter are written in a similar manner and also appear in tool texts. Commands are written in such a way to specify an action, for example, System.Open, whereas file names can often be recognized by extensions like .Text, .Panel, .Mod and so forth.
+	More often than not, the execution of a command is parameterized. For example, the opening of a document needs the specification of its name, as in Desktops.OpenDoc Gadgets.Panel. Although typical, this is not by far the most general case of a parameter specification. Some commands accept an entire list of names following the command name and execute repeatedly for each member of the list. The list must be terminated by a symbol other than a name, preferably a special character that draws the attention. By convention, Oberon uses for that purpose the tilde character "~" which will be referred to as list terminator. From now on, we shall use the terms parameter and parameter list in the restricted sense of "item following the command name" and "list of items following the command name" respectively. In principle, a text adhering to an arbitrary syntax (understood by the command) could be passed over equally well. Commands may even expect as parameters objects of any kind currently existing in the system such as viewers, text selections, caret, and the star-shaped marker.
+	We shall call a location or an object "marked" if it is visibly or invisibly marked by the marker (*). The visibility of the marker is irrelevant in most cases. As an exception, we mention the explicit allocation (or overriding of the automatic allocation) of a viewer which requests the marker to be visible. The marker is initially invisible and placed in the lower left corner of the display.
+	Some commands even allow different ways of parameter specification. For example, if Desktops.OpenDoc is called with a "^" symbol instead of a file name following the command name, then the file name is taken from the most recent text selection. In general, a "^" symbol following a command name always refers to the current text selection.
+	It is noteworthy that tools are ordinary texts distinguishing themselves from more usual texts only by their structure and contents. Oberon System 3 is delivered with a set of standard tools which are text documents stored in files which have been given the file extension .Tool by convention. In particular, tools are amenable to editing operations. Looking at this differently, we recognize that commands like Desktops.OpenDoc Explanations.Text may well slip into a prose text and be activated directly in place. Obviously, no limits are set to fantasy exploiting this universal scheme of command interpretation.
+	One rather moderate application of the universal scheme discussed above is the construction of interconnected texts. As a matter of fact, the set of standard tools is structured as a tree with the System3.Tool as ancestor and the tools listed in the System3.Tool as its descendants. We recall that the hierarchical tool system may easily be customized on the fly by adjusting command lists (including parameters) to personal requirements, reconfiguring the tool hierarchy, installing new tools, or even providing on-line documentation.
+
+
+2.3	Text Documents
+
+We have stated earlier that extensibility was a key objective in the design of Oberon. It was therefore enticing to realize also system-oriented commands as extensions of the system core on a highest possible level in the modular hierarchy, thereby achieving maximal flexibility. Such a strategy is particularly appropriate for text editing. It manifests itself in the existence of an editing package providing an extensible set of powerful editing commands. As a future programmer of the Oberon system, you will be able to extend the existing text editing facilities with your own special-purpose commands. Nevertheless, several built-in commands are interpreted directly by text objects. They include positioning the text within its viewer, placing the caret, inserting a typed character, selecting a part of text, deleting a selected part of text, copying a selected part of text, copying text attributes and, most importantly, executing an arbitrary command which is specified by its name.
+
+
+2.3.1	Mouse commands
+
+Text positioning. In order to reposition the visible part of a longer text within a viewer, move the mouse into the viewer's scrolling zone first. This is a vertical bar along the left borderline about 5 mm in width. Now, you can scroll forward by pressing the ML key, moving the mouse, and releasing the key when the text line that you want to become the top line is underlined. Notice that every text viewer shows a small crossbeam indicating the current position of the displayed section within the entire text. You can position a text directly by clicking the MM key at the location where you want the crossbeam to be. Scrolling backwards is accomplished in a similar manner with the MR key. The MM key behavior is modified by interclicking the other two keys to scroll to the beginning or end of the text. The MM key combined with a ML key interclick scrolls to the end of the text. The MM key combined with a MR key interclick scrolls to the beginning of the text.
+
+Placing the caret. If you want to place the caret, move the mouse to the desired text, press the ML key and, while keeping it down, move the caret to the desired position. Any subsequent characters typed on the keyboard are then inserted at this position. The font used for typed characters depends on the font that the character just before the caret has. On a PC, the special characters , ,  and  can be typed directly by pressing the CTRL key (or the ALT key for PC Native Oberon) and a, o, u and s respectively and, the uppercase , ,  are obtained by pressing SHIFT at the same time. The four arrow keys (left, right, up, down) are used to move the caret to the previous or next character or text line. Once the caret is set, the Page Up and Page Down keys are used to scroll one page up or down respectively. By default, pressing the ENTER key results in auto-indentation. The same number of TAB or space characters found on the previous text line is inserted on the newly created empty line, a convenient feature when writing Oberon modules. Unfortunately not all computer keyboards have the same keys, so some of the keystrokes mentioned above might be mapped to other keys on your keyboard, or might be missing completely. A platform-specific guide included with your Oberon release provides additional details.
+
+Selecting text. You can select a stretch of text by moving the mouse to the desired beginning, pressing the MR key and, while holding it down, extending or reducing the selection by moving the mouse. If you click twice at the beginning, the selection is automatically extended to the origin of that text line. A separate selection may be active for each displayed text section: the selection is not unique. If several selections exist simultaneously on the display, commands normally refer to the most recent one, or to the most recent ones. If a piece of text is too large to be selectable within a single viewer, use [Copy] in the menu bar to open an adjacent second viewer. Then, select the beginning of the text entirely in one viewer and the entire end of the text in the other viewer. The selection will then extend across viewers. Placing the caret and pressing the right or the left cursor keys on the keyboard, will move the selection in that viewer to the right or to the left. TAB characters are automatically inserted at the beginning of the line or respectively removed.
+	There are interesting interclick variants of caret placing and text selection that combine these marking operations effectively with text editing. But keep this general rule in mind: any mouse-controlled operation that is currently under execution can be nullified by interclicking all remaining mouse keys.
+
+Copying text. If you interclick the MM key while you are placing the caret, the most recent selection is automatically copied to the caret's position as soon as you release the ML key. This feature is particularly convenient for copying a specific template to several different places. Alternatively, if the caret is already set and you click the MM key while you are selecting a piece of text, the selected text is copied to the caret's position when you release the select key. This option is most conveniently used in order to copy a given string to various places.
+
+Copying text attributes. If you interclick the MR key while you are placing the caret, the character attributes (font, color, vertical offset) of the character just after the caret are automatically applied to the most recent selection as soon as you release the ML key.
+
+Deleting text. If you click the ML key while selecting a text, the selected text is deleted. Notice that the copy variant and the delete variant of the select command apply also in the case of large selections involving a viewer with multiple copies.
+
+Activating a command. Activating a named command from within a text viewer is generic and therefore the most general built-in operation. In order to do it, simply point to the command's name and click the MM key or activate key. We shall however speak of "activate key" only when the MM key is used alone inside a gadget. Sometimes, like in a module development and testing phase, it is important that the newest version of the module providing the desired command is loaded before the command is actually executed. In order to force this, interclick the ML key while pressing the MM key and pointing to the command's name.
+
+Opening a document. As Oberon is an example of a document-based system, you can open documents of all types directly without knowing their associated "applications". The conventional way of doing this is with the Desktops.OpenDoc command. As opening a document appears so often, an interclick combination has also been reserved for the task. Simply MM click on the document name you want to open, and interclick with the MR key.
+
+Nullifying a mouse command. Perhaps the easiest and most important rule to remember is that the current action is nullified, if all remaining mouse keys are interclicked, though not necessarily simultaneously, during the action.
+
+Neutralize key. To remove all marks on the display, including the caret, the marker and text selections, press the Neutralize key. The F2 key is defined as Neutralize key for all the Oberon system implementations. In addition, a system can be customized to recognize the ESC key as Neutralize key or as key generating the ESC character CHR(27). By default, the ESC key is a Neutralize key.
+
+	Command execution may lead to an error condition, which when detected by the associated module, is reported directly to the user in the system log. If command execution fails altogether, the system falls into a trap. A trap handler viewer is automatically opened whenever a trap has occurred. It displays the state of the interrupted process, including the stack of procedure activations. If a trap appears often, and you suspect that it is related to a mistake in the Oberon system, you can report it to the ETH developers by mailing the trap contents. It often contains enough information to correct the fault. You may continue your work after a trap occurs, although in some rare cases you will have to exit the Oberon system with the command System.Quit, and to restart it again.
+
+	The following summarizes the basic meaning of the three mouse keys. The ML key is the point key: it is used to focus a certain location; that is, to place the caret. The MM key is the activate key: clicking it causes the appropriate command interpreter to be called. The MR key is the select key: it is used to select text and other objects within a viewer.
+
+Remark: The editing operations presented are not applicable to text only, but are often applicable to most other visual objects too. Activating a command by pointing at its name and clicking the activate key is a more universal operation which applies equally to gadgets with associated commands: placing the mouse focus on such a gadget causes the activation of the command when the activate key is clicked.
+
+
+2.3.2	Editing commands
+
+According to Oberon's basic scheme, additional functionality is provided by the text editing package. It contains the following three commands generally applicable to documents and a collection of commands applicable to text documents. The latter are described in Chapter 4 under the heading "TextDoc" and are also listed in the TextDocs.Tool delivered with the Oberon distribution.
+
+Desktops.OpenDoc DocName
+Desktops.OpenDoc ^
+opens a document. The document name is alternatively specified by a parameter on the command line or, if a "^" symbol follows the command name, by the most recent selection of a name. In order to override automatic viewer allocation, place the marker anywhere on the screen. When a document is opened in the user or system track, it remembers its location, a hint to where it will be opened in future. Notice that the document menu bars change their content according to the width of the track where they are opened, and might vary accordingly each time the document is opened. A fresh text document can be opened by specifying any name not matching the name of an existing file. By convention, a text document is given a name ending with a .Text extension, but that is not compulsory. Remember that the .Tool extension also denotes a text document with a special meaning for the user. A document can also be opened by interclicking the MM key and the MR key on the document name alone.
+
+Desktops.PrintDoc Default *
+Desktops.PrintDoc Default namelist ~
+prints either the marked document or all the documents named in the list on the printer specified by the first name. Depending on your platform, the printer name may vary, but in most cases the printer name is simply ignored. Please check your implementation guide for more details.
+
+Desktops.Recall
+recalls the document closed most recently. The document re-appears in the same attitude as it had when it was closed and it includes the last changes although the document had not been saved. The exclamation point in [Store !] will however not re-appear (See section 2.3.3).
+
+
+2.3.3	Menu commands
+
+
+
+Figure 2.2	A typical menu bar
+
+A text document has a menu bar indicating its name and a sequence of command buttons applicable to that text viewer. The name is normally the name of the file in which the document is stored or the empty string for a new document. In a few cases, it is the name of the command that opened the viewer. The name appears in what is called a NamePlate. The NamePlate and the buttons are examples of visual objects called gadgets. Although a NamePlate can contain only a simple character string, most editing operations work in the same way as those in a main editable text as is explained in Chapter 4 under the heading "NamePlate". Thus, the name can be changed at will and a new name can be assigned to a document before storing it using the [Store] button. We shall be referring to a button by placing its caption text between square brackets as in the previous example. Menu commands related to text documents are the following:
+
+[Close]
+removes the viewer. A viewer closed by mistake can be recalled with the command Desktops.Recall.
+
+[Hide]
+minimizes the document, whereby the meaning of minimizing depends on the environment. When the document is placed on a desktop, the document is removed from the desktop and its name is placed in the Finder. Otherwise, the menu bar of the document is pulled down to the very bottom of the track, leaving the rest of the document invisible.
+
+[Grow]
+lets the viewer grow to the size of a whole track or, if applied to a viewer already filling a track, to the size of the whole display. The original constellation will be re-established when the grown viewer is later closed.
+
+[Copy]
+opens a copy of the original viewer displaying the same instance of content. This means that editing in one viewer will cause changes to be shown in both. If you really want two different documents, you must open the document twice.
+
+[Search]
+searches for a pattern in the text. The pattern is defined by the most recent text selection. If none exists, the previous pattern is used. Searching is started at the position of the caret. If none exists in the marked text, searching starts at the beginning.
+
+[Rep]
+replaces the last pattern found (located at the caret) with the latest selection. Afterwards the following pattern is located in the text. Clicking [Rep] again will repeat this process. In this manner, all occurrences of a pattern can be replaced by another one under the user's control.
+
+[RepAll]
+replaces all occurrences of a pattern by another one in a single action.
+
+[Store]
+writes the document contents to the file with the name of the document specified in the NamePlate. You may edit the name of the document directly in its NamePlate. An exclamation point appears in the caption when the text is modified, when a gadget is inserted or removed, but not when a gadget is manipulated.
+
+	Not all document types feature the same constellation of menu commands and some document types feature the following menu commands (the sytem log for example):
+
+[Locate]
+positions the text in the marked viewer according to the position number indicated by the most recent text selection. Leading non-numerical items in the text selection are ignored. The position number indicates whereabout in a source module an error was detected by the compiler. During compilation, the compiler writes the error position numbers in the system log.
+
+[Clear]
+clears the contents of a document.
+
+
+2.3.4	Fonts
+
+Text may be written using several font families delivered with the system. Font names are written in the form (where [ ] means optional):
+
+	For screen fonts:	Family Size [Style] ".Scn.Fnt"
+	For printer fonts:	Family Size [Style] ".Pr3.Fnt"	(300 dpi)
+
+The most commonly used families are the proportional fonts Oberon and Syntax, both available in the sizes 8, 10, 12, 14, 16, 20 and 24 points (1/72 inch), and in the styles i (italic), m (medium bold) and b (bold). Oberon is a family of typefaces that was specifically designed for the Oberon system by Hans Meier [Caf96]. This typeface combines in a unique manner typical elements of antiqua and modern typefaces. The Syntax typeface family was also designed by H. Meier. The non-proportional Courier font family is available in the sizes 8, 10 and 12 points. PC Native Oberon uses the Oberon10.Scn.Fnt font by default. The other implementations use the Syntax10.Scn.Fnt font by default. Tools are often written in Syntax10.Scn.Fnt and titles in Syntax12i.Scn.Fnt. In most cases you will need to work only with screen font names when creating text documents, and the printer fonts can be ignored. On-the-fly translation is automatically done when you print a text. If your Oberon host operating system supports other fonts like TrueType, you will be able to use these fonts in a similar manner.
+
+
+2.3.5	Using Styles
+
+In addition to adjusting the font, color and vertical offset of text, the text system also supports formatting styles like left, right, center and block adjust. Formatting is controlled by TextStyle gadgets floating inside the text. A style influences the format of the text immediately following the style up to the next style. When editing a text, the styles are visible and can be directly manipulated with the mouse. When an existing text is first read and presented in a viewer, the styles are blended out. Styles are never printed. The following commands control the styles:
+
+TextGadgets.NewStyle
+inserts a style at the caret. The CTRL-ENTER combination is a shortcut for inserting a style during typing. In that case all the styles are made visible. On the Macintosh, use the num-lock key instead.
+
+TextDocs.Controls *
+TextDocs.Controls
+toggles the visibility of the styles in the marked (*) or in the selected document.
+
+	A TextStyle has the shape of a long thin dotted line, the width of which specifies the width of the text block. It is divided into two sections: the top part, above the dotted line, controls the formatting whilst the bottom part controls the setting of the tab stops.
+	The formatting section may show black rectangles at the left and right end of the style as an indication of the current formatting style. The rectangles on each side, called weights, are toggled on and off by pressing the MM key to the left or the right of the center point of the style. An activated weight "pulls" the text in that direction with the following effect:
+
+No weights. Center adjust.
+A left weight. Left adjust mode with word wrapping.
+A right weight. Right adjust mode.
+A weight to the left and the right. Block adjust mode.
+
+
+
+Figure 2.3	A TextStyle gadget set to block adjust
+and three tabulators
+
+
+The weights can be grabbed and moved with the MM key to adjust the left and right margin for text formatting.
+	Mouse commands below the dotted line control the setting of the tab stops. They show up as small black rectangles. Tab stop positions are adjusted with the MM key. A new tab stop is inserted at a specific position with a MM and ML key interclick and a tab stop is removed by dragging it completely out to the left or right of the style gadget. As tabbing does not make much sense in center or right adjust mode, in such cases the tab stops are ignored.
+	Styles have an attribute to switch on page breaking or not. The Columbus gadget inspection tool, introduced in the next chapter, explains some more about attributes. A style with a page break attribute set shows up as a solid instead of a dotted line.
+
+
+2.3.6	The EditTools tool
+
+Oberon's extensibility makes it easy to add functionality to existing applications. A good example of extension is given by the EditTools tool for influencing the text look. The EditTools commands are listed here, in addition to being listed in the EditTools.Tool document:
+
+EditTools.ChangeFamily { old => new } ~
+changes the text selection in family old to family new. A question mark in place of old indicates that the operation should be applied to the selection regardless of the font family. More than one conversion can be specified in one command. Examples are:
+
+	EditTools.ChangeFamily Syntax => Courier Arial => Times~
+	EditTools.ChangeFamily ? => Arial ~
+
+EditTools.ChangeSize { old => new } ~
+changes the text selection in size old to size new. A question mark in place of old indicates that the operation should be applied to the selection regardless of the font size. More than one conversion can be specified in one command. Examples are:
+
+	EditTools.ChangeSize ? => 12 ~
+	EditTools.ChangeSize 12 => 16 ~
+
+EditTools.IncSize n
+EditTools.IncSize -n
+increases the font size of the selected text by a positive or negative number of points.
+
+EditTools.ChangeStyle { old => new } ~
+changes the text selection in style old to style new. Old and new can be a period "." (for the normal typeface), i (italic), m (medium bold), b (bold). A question mark in place of old indicates that the operation should be applied to the selection regardless of the font style. More than one conversion can be specified in one command. Examples are:
+
+	EditTools.ChangeStyle ? => .
+	EditTools.ChangeStyle m => b
+
+EditTools.Change { old => new } ~
+changes the text selection in font old to font new. A question mark in place of old indicates that the operation should be applied to the selection regardless of the font. More than one conversion can be specified in one command. An example is:
+
+	EditTools.Change Syntax10.Scn.Fnt => Syntax12.Scn.Fnt
+
+EditTools.ChangeVoff { old => new } ~
+changes the text selection with vertical offset old to vertical offset new. A question mark in place of old indicates that the operation should be applied to the selection regardless of the vertical offset. More than one conversion can be specified in one command. Examples are:
+
+	EditTools.ChangeVoff ? => 12 ~
+	EditTools.ChangeVoff 12 => 16 ~
+
+EditTools.IncVoff n
+EditTools.IncVoff -n
+increases the vertical offset of the text selection by a positive or negative number of points.
+
+EditTools.ChangeColor { old => new } ~
+changes the text selection with color old to color new. A question mark in place of old indicates that the operation should be applied to the selection regardless of the color. More than one conversion can be specified in one command.
+
+EditTools.ShowAttrs ~
+shows the attributes of the selection. If text is selected, the position of the first characters where font transitions occur are displayed in the system log together with the text attributes: font, color and vertical offset. If gadgets are selected, their position together with their generator are displayed. Select such an information line in the system log and click the menu button [Locate] to set the caret at the corresponding position in the selected text.
+
+Among the files that you might want to convert are MS-DOS ASCII text files which use CR (Carriage Return), LF (Line Feed) where Oberon uses CR. The conversion involves changing the CR/LF pairs to single CRs. If you open a text and find that it is shown with small rectangular boxes (representing the LFs) at the beginning of each line, you can be sure that an MS-DOS ASCII text is involved.
+
+EditTools.OpenAscii filename
+EditTools.OpenAscii ^
+opens a document viewer displaying the named MS-DOS ASCII file converted to Oberon System 3 text.
+
+EditTools.StoreAscii [*]
+stores the marked text document as an MS-DOS ASCII file. Conversion of Oberon text to ASCII (CR/LF) is made. Objects floating in the text are discarded. The file name is taken from the document's NamePlate. If the command is executed from within a document, the document itself is implied: it need not necessarily be marked and the "*" is not required.
+
+Among the files that you might encounter on some FTP sites are Unix ASCII text files which use LF where Oberon uses CR. The conversion involves changing these LFs to CRs. If you open a text and find that it is shown interspersed with small rectangular boxes (representing the LFs), you can be sure that a Unix ASCII text is involved.
+
+EditTools.OpenUnix filename
+EditTools.OpenUnix ^
+opens a document viewer displaying the named Unix ASCII file converted to Oberon System 3 text.
+
+EditTools.StoreUnix [*]
+stores the marked text document as a Unix ASCII file. Conversion of Oberon text to Unix (LF) is made. Objects floating in the text are discarded. The file name is taken from the document's NamePlate. If the command is executed from within a document, the document itself is implied: it need not necessarily be marked and the "*" is not required.
+
+EditTools.StoreMac [*]
+stores the marked text document as a Macintosh ASCII file. Conversion of Oberon text to Macintosh ASCII is made. The file name is taken from the document's NamePlate. If the command is executed from within a document, the document itself is implied: it need not necessarily be marked and the "*" is not required.
+
+EditTools.RemoveObjects *
+removes all objects including styles from the marked document.
+
+EditTools.Words *
+EditTools.Words @
+counts the number of carriage returns, words, characters and objects in the marked document or starting at the beginning of the most recent selection in a document. The result is presented in the system log.
+
+
+2.4	The System tool
+
+The System module manages system-related tasks like file copying, file deleting, module inspection, module freeing, etc. In addition to the commands listed here, you will also find a System.Tool document in your Oberon distribution with the same commands. Before we start, we must review the structure of Oberon file names. In the simplest case, an Oberon file name consists of the letters A to Z (upper or lower case), the digits 0 to 9, and the period ".". Oberon supports long file names up to 32 characters in length containing more than one period. It is very important to note that Oberon is case-sensitive!
+	PC Native Oberon, like the original Oberon, uses a flat file directory and does not support subdirectories. Linux, Mac and Windows Oberon allow you to access any file on your host file system. Consequently, further characters are valid in file names, typically those that are used for specifying directories. For example, on UNIX platforms, the forward slash "/" is used as a directory separator, while on DOS platforms, the backslash "\" is used instead (in additon to ":" as a drive specifier). The Macintosh platform uses ":" instead.
+	Oberon uses "/" as a directory separator and "\" as an option character for introducing command options.
+
+System.Open filename
+System.Open ^
+opens a viewer displaying the content of the named file.
+
+System.OpenLog
+opens the system log viewer. This text document shows the results of commands and lists compiler detected errors for example. The log content is shared between all Oberon modules.
+
+System.CloseTrack
+closes the marked track; that is, removes all viewers in this track.
+
+System.Time
+System.Time dd mm yy hh mm ss
+displays the current date and time in the form dd.mm.yy hh:mm:ss. If date and time parameters (leading zeroes may be omitted in each component) immediately follow the command name, the command sets the date and the time accordingly.
+
+System.Watch
+displays the amount of currently used memory resources. Memory is allocated in a system-wide heap shared by all modules. Parts of the heap are allocated (i.e. in use) and other parts are free.
+
+System.Collect
+initiates a subsequent garbage collection. Garbage collection is the process with which unused memory is returned to the free part of the Oberon heap. A garbage collector is an essential part of an extensible system; without it we would not be able to determine when all extensions have released shared system resources.
+
+System.ShowModules
+displays a map of all currently loaded modules. A module M contains code to implement certain functions and is activated by executing commands in the form M.P. For example, System.ShowModules calls the procedure ShowModules in the module System, which has the task of listing all loaded modules. A module is loaded from an object file only when it is required; that is, the first time you execute a command in that module. For example, the compiled module code of System is located in the file System.Obj (which was generated from the source System.Mod by the Oberon compiler). Once loaded, a module remains in memory until explicitly freed.
+
+System.ShowCommands Modname
+displays a list of all commands (in other words, parameterless procedures) exported by the named module.
+
+System.ShowTasks
+displays a list of all active background tasks.
+
+System.State Modname
+displays the global (exported) data of the named module in a viewer "System.state".
+
+System.Free Modlist ~
+unloads every module named in the parameter list. The module names must appear in an order which guarantees that client modules are freed first -- a module having a client cannot be unloaded. If a module name is immediately followed by * (an option not available in PC Native Oberon), imported modules are also unloaded. Freeing a module is very dangerous when parts of its code are still required, often resulting in a trap or a completely dead system. The * option is even more dangerous and should be used with extreme care.
+
+System.ShowLibraries
+shows a list of the currently loaded libraries. Libraries are shared resources like fonts and reusable objects.
+
+System.FreeLibraries Liblist ~
+System.FreeLibraries ^
+frees shared libraries from memory. This is mostly a harmless operation as the library will simply be loaded again when required. The garbage collector frees libraries automatically when they are not required anymore.
+
+System.CopyFiles { A => B } ~
+System.CopyFiles ^
+processes a parameter list of pairs A => B, copying each file A to B. In the case of a "^" following the command name, do not forget a list terminator.
+
+System.RenameFiles { A => B } ~
+System.RenameFiles ^
+processes a parameter list of pairs A => B, renaming each file A to B. In the case of a "^" following the command name, do not forget a list terminator.
+
+System.DeleteFiles namelist ~
+System.DeleteFiles ^
+deletes all files named in the list.
+
+System.Directory template[\d]
+System.Directory ^
+displays the selection of all files whose names match the template specified by the parameter. The template is a string which may contain the symbol "*" as a wildcard. If the option \d is specified, additional information about file creation dates and file sizes is displayed. If your platform supports multiple directories, you can affix a directory path to the template.
+
+System.Clear
+clears the viewer in which the command is executed.
+
+System.Quit
+terminates the current Oberon session. Better to save all your files before doing this! This is the normal way to exit Oberon. With PC Native Oberon the system is powered off if the system can perform power management functions. If not, the screen will become blank: power off the system - do not attempt to continue. For other implementations the Oberon session terminates. Alternatively, with Oberon for Windows the application can be terminated by choosing "Close" in the application window's system menu or by using the keyboard accelerator Alt-F4.
+
+The following command is available for PC Native Oberon only:
+
+System.Reboot
+terminates the current Oberon session and reboots the system. Alternatively, the usual Alt-Ctrl-Delete combination or also Ctrl-F10 may be used to reboot the system.
+
+The following commands are available for Linux, Mac and Windows Oberon only:
+
+System.CurrentDirectory
+displays full path of the current sub-directory in the system log.
+
+System.CreateDirectory dirname
+creates a new sub-directory in the current directory.
+
+System.DeleteDirectory dirname
+deletes a sub-directory from the current directory.
+
+System.ChangeDirectory path
+System.ChangeDirectory ..
+sets the current working directory to that specified by the path or to the parent directory. By default, except when path names are specified, all stored and generated files land up in the current working directory. The System.Tool contains a gadget that displays the current working directory. You may use the gadget to change the current working directory.
+
+System.Get section [key]
+System.Get ^
+displays the value of the named key in the named section of the registry. If no key is specified, all keys contained in the section are listed together with their associated values. section and key may be either names or strings.
+
+System.Set section key := [keyvalue] ~
+System.Set section ^
+sets the key in the named section of the registry. If necessary a new entry is added to the section. If no keyvalue is specified, the entry for the given section and key is removed from the registry. section, key and keyvalue may be either names or strings.
+
+	Oberon is completely non-modal and often will not ask you to confirm a dangerous action. If you are afraid of executing a dangerous command by mistake, you can prefix it with a "!", as in   !System.Quit   . This will force you to add a space between the "!" and the command before it can be executed. This device is used in several .Tool documents.
+	The System module exports several other commands too. For example, the commands Close, Copy and Grow, are executed from the menu bars. As these commands are hidden behind the menu buttons, we will ignore them.
+
+User tips:
+
+	You can load a module M with am MM key click on M.P in a text, where P is a procedure name of that module. If you do not know a procedure name, you can simply use a random name, even if it is not defined in M. At the limit, executing the command M. also produces the desired effect. This will produce an error message "Call error: [nameXYZ] not found" (in the system log), but the module will have been loaded anyway.
+	During development, it sometimes happens that a document cannot be closed due to the fact that it is always generating a trap. In this case, use the command System.Close * to close the offending document.
+
+
+2.5	Program Development Tools
+
+Originally developed for teaching programming and operating systems, the Oberon system naturally has a large selection of programming tools. Most of these tools still use the textual user interface of Oberon, and thus fit perfectly into this chapter. A knowledge of the programming tools is required to use the material presented in the chapter about Oberon programming.
+
+
+2.5.1	The Compiler tool
+
+One of the most crucial parts of an extensible system is the compiler; without it you would not be able to extend the system. The Oberon system, which is implemented in the Oberon language, uses a fast compiler based on a portable compiler front-end called OP2 developed at the ETH, and provides compiler back-ends for most popular hardware architectures. This guide is not intended to give an introduction to the Oberon language; for this we recommend [Wir88], [RW92], [Ms93], [Ms96] and [ML97].
+	In principle, a compiler takes a syntactically correct source module (conventionally with a .Mod extension) and compiles it to an object file (with a .Obj extension) and a symbol file (with a .Sym extension). This holds true for PC Native Oberon. The other implementations do not generate a symbol file (see below) but the same compiler command is used, though with different options. The object file contains the machine code, and the symbol file contains the definition of the module. The definition tells the world what features clients of that module can use. The .Sym files allow us to compile modules separately, using exported features from imported modules without recompiling them. The resulting run-time structure is a hierarchy of Oberon modules, one importing (using) the other, and in reverse, one module having other modules as clients. Oberon modules are linked together by the run-time system when needed and they must be freed explicitely when they are not required anymore or when they are replaced by new versions during a software development session.
+	The Oberon compiler exports the Compiler.Compile command documented in the Compiler.Tool:
+
+Compiler.Compile [\options] {filename[\options]} ~
+Compiler.Compile ^
+Compiler.Compile @[\options]
+Compiler.Compile *[\options]
+compiles the indicated module(s), reporting success or failure to the system log. In case of success, object files are generated. Compiling a sequence of modules requires you to specify their file names in the sequence of the import hierarchy from the bottom to the top; that is, clients of a module have to be compiled after the module itself. This burden placed on the user can be circumvented using the Builder tool described in the next section. The @ parameter indicates that the compiler should start the compilation process on the current selection. This allows you to compile a module text embedded in a text. Only the beginning of the module's text must be selected, the compiler will search for the final "." by itself. It is allowed to include any number of valid Oberon comments at the beginning of the selection. In a more typical situation, you will be compiling modules directly from the text editor, and thus use the * parameter. There is no need to store the text first unless you want to keep it for further reference. The command accepts a list of options following a "\" for modifying the obvious default values implied. A list of options may appear as first parameter before the list of file names. These options apply globally to all the compilations. Also, each file name in the parameter list may be followed by a list of options which apply locally.
+	Should you change the definition of a module, i.e. the exported features, the Oberon compiler will report an error 155, preventing you from overwriting an existing module definition, if the compiler option \s is not used. This option allows the compiler to change the definition of a module, a potentially dangerous operation that can invalidate clients of the compiled module.
+
+
+
+Figure 2.4	Oberon compiler options
+
+The compiler delivered with Linux, Mac and Windows Oberon System 3 can generate two types of object files: classical native object files containing target machine code or slim binaries [FK96] by default. Slim binaries are a new form of object file that contain no object code at all, but portable descriptions of module contents that makes these files completely independent of the eventual target machine (platform independent). To drive the point home, let us stress that if no option or only the options marked "O" are used, the modules generated by the compiler are portable to all those platforms. In this case the compiler does not generate separate symbol files: equivalent information is stored in the sole object file. Object code generation is carried out on-the-fly [Fra94] by the module loader (depending on the underlying hardware) and takes no longer than loading traditional object files. In this system with dynamic loading, the Object Model Interface (OMI) [Cre94] has been implemented and a fine-grained interface consistency checking is built-in. If a module interface modification may invalidate clients, the compiler reports an error unless the option \s is specified. However, if a pure extension of the interface is made, such as the insertion of a new procedure, the option \e allows the generation of an extended symbol file. Thus, the object model allows a module to be extended without requiring a recompilation of client modules. Clearly, if the module interface is changed or if something is deleted from it the option \s is required to compile successfully. When generating slim binaries, only the options \e, \s, \u and \w can be used. Since code generation is taking place at load time, it can be influenced by commands as documented in the following table (the default states appear in bold face):
+
+
+
+Figure 2.5	Code generation control
+
+	The option \N instructs the compiler to generate native object files which are not portable across platform boundaries. Therefore, the option \N should be used only when writing an extension that uses the non-portable module SYSTEM or the non-portable built-in SIZE function. If garbage collection is suppressed with the option \g, compilation runs faster but might not be completed if too much memory or too many files are used. In this case, Oberon will trap.
+	The file names appearing in the parameter list of the compile command may differ from the module names. Under Linux, Mac and Windows some source modules are prefixed. The prefixes "Win." and "Win32." for example are used by Oberon for Windows.
+
+	The compiler module provided for the Linux, Mac and Windows Oberon exports an additional command:
+
+Compiler.SetDestPath pathName
+directs the compiler to store new object files in the specified sub-directory. Remember that those ports have a directory structure.
+
+
+2.5.1.1	Compiler error handling
+
+The system log plays an important role during program development. For example, successfully compiling a module Hello.Mod with the command:
+
+	Compiler.Compile Hello.Mod ~
+
+results in the log:
+
+	compiling Hello 33
+
+The number following the module name is an indication of the resulting size of the object file. Unsuccessfully compiling a module results in log output with approximately the following form:
+
+	compiling Hello
+		pos    67 err   0	undeclared identifier
+
+A log line starting with pos indicates an error at that character position in the source text followed by an error number and a diagnostic text. The system log menu button [Locate] will show the error position in the marked text when the error position (67 in this case) is selected. The complete list of error numbers with their meaning is stored in Oberon.Text included with the PC Native Oberon distribution or in OberonErrors.Text for the other implementations.
+	Afterwards, activate a procedure in the module by executing M.P, where M is the module name and P is the name of an exported parameterless procedure P. The module will be loaded and linked automatically into the system. If you make changes to a module, you will need to unload the previous version with the System.Free command or with the shortcut MM + ML key interclick on M.P. This works only if M has no client. The compiler will display "(in use)" after the system log message Compiler.Compile xyz.Mod when the module just compiled is currently loaded in memory. This is a reminder to unload the module first.
+	Finally, the Builder tool, described in section 2.5.2, offers a convenient error marking and error interpretation command: Builder.MarkErrors and two associated commands Builder.NextError and Builder.ClearErrors.
+
+
+2.5.1.2	Run-time error handling
+
+When a run-time error occurs, the system falls into a trap. There is no interactive debugger currently available under Oberon. However, a trap handler is automatically called. A "System.Trap" viewer is opened, displaying the state of the interrupted process, including the entire procedure activation stack from the initial command call to the the last procedure (M.P) in which an error condition was detected. For example:
+
+		TRAP xy	index out of range
+		M.P PC=12
+
+The program counter (PC) value displayed can be used to locate the error in the source text by recompiling, using the option \f. Under the assumption that the module's source text appears in a viewer and that it is marked, proceed as follows in PC Native Oberon:
+
+	1 - select the program counter value
+		 (selecting the entire line with a double MR key click may be used as a
+		 shortcut, the alpha string preceding the counter value is ignored)
+	2 - re-compile the program with Compiler.Compile *\f
+
+The error can then easily be located at the position of the caret. The interpretation is left to the programmer. With the other implementations, the trap viewer text is slightly more verbose and five steps are needed to position the caret at the error, under the same assumptions as before:
+
+		Oberon.Loop - 21 (index out of range)
+		PC =  00600051H ( 00000009H) 
+
+	1 - select the program counter value between the round brackets
+	2 - re-compile the program with Compiler.Compile *\f
+	3 - the position in the source text wich corresponds to the PC value
+		 appears in the system log
+	4 - select the value after pos
+	5 - use the [Locate] button to position the caret at pos in the source text.
+
+How to interprete the TRAP information
+
+Each procedure call (M.P) is followed by an enumeration, in alphabetical order, of the procedure parameters and of the local variables with their values. Scalars, strings (ARRAY OF CHAR) and pointers appear in clear. No information appears for structured variables.
+
+Example extracted from an Oberon Windows trap:
+
+TextGadgets0.Call+ 00003D2FH
+   F =  00BA3F00H
+   ch = CHR(0)
+   chl = 749
+   cmd = ""
+   cw = 1024
+   cx = 0
+   cy = 0
+   dlink =  00B9FBA0H
+   i = 1
+   j = 3
+   keysum = {1}
+   obj =  00BA66C0H
+   oldcontext =  00000000H
+   par =  00C22AA0H
+   pos = 218
+   res = 0
+
+corresponding to the following source text (extract):
+
+MODULE TextGadgets0;
+  PROCEDURE Call* (F: Frame; pos: LONGINT; keysum: SET; dlink: Objects.Object);
+    VAR S: Texts.Scanner; res, i, j: INTEGER; oldcontext, obj: Objects.Object;
+    cx, cy, cw, chl: INTEGER; par: Oberon.ParList; A: Objects.AttrMsg;
+    R: Texts.Reader; ch: CHAR;
+    cmd: ARRAY 256 OF CHAR;
+  BEGIN
+
+The practical lesson from this is that some debugging is possible by inspecting additional local variables introduced into the procedures in development.
+
+
+2.5.1.3	Trap from the keyboard
+
+Under PC Native Oberon, Ctrl-Break hit once terminates the execution of the current command at the next Input/Output operation. If no such operation is encountered and the system is in a loop, hitting Ctrl-Break a second time terminates the execution of the current command and opens a trap viewer. If by accident, all viewers have been closed, force a trap with Ctrl-Break: the trap viewer is opened and work can be resumed with System.Open System.Tool.
+	Under Windows 95 or NT, Pause terminates the execution of the current command. If by accident, all viewers have been closed, hit the Pause key to force a trap: the trap viewer is opened and work can be resumed with System.Open System.Tool.
+	Under Windows 3.1, Oberon programs cannot be interrupted with Ctrl-Break. The only way to stop Oberon is with Ctrl-Alt-Del or with the task manager. Windows 3.1 might be clever enough to kill only Oberon; sometimes it is not. Some applications, like the WWW browser, allow you to interrupt them by pressing ESC. If the system beeps at you, a recursive trap has occured.
+
+
+2.5.1.4	Practical hints on how to develop programs
+
+While developing and writing software, it is possible to at least approach error-free programming. Of course, it takes a lot of discipline, because it means reading the program text at least two or three times before proceeding to its compilation or execution. It is a fact of life that programmers do not read their texts well enough after completion, however far from it. Oberon is certainly more readable than many other programming languages, but the programmer himself has the greater responsibility of structuring his text to make it readily understandable to himself and to anybody interested. All in all, this sound attitude can save a lot of time and frustration.
+	Though the built-in traps normally provide enough information for debugging run-time errors, there are further ways to combat one's mistakes. In the first place, develop by stepwise refinement. Large chunks of new code are cumbersome to handle and cost a lot of time in debugging. Frequent compilation in the early phase of development helps finding syntax errors caused by inattention. Further, Out commands inserted at strategic places can sometimes help a lot more than a TRAP. Such commands are not just decorating a piece of code until the software is running as expected, but may become integral part of the software when they appear in well-formatted conditional sections of the code. The condition can be determined by a BOOLEAN constant as in this module stub:
+
+	MODULE Stub;
+	IMPORT Out;
+	CONST Debug=TRUE;
+
+	PROCEDURE Any*;
+	VAR QueriedVarA: ARRAY 32 OF CHAR; QueriedVarB: BOOLEAN;
+
+	BEGIN
+		....
+		IF Debug THEN
+			Out.String("Current values: ");
+			Out.String(QueriedVarA);
+			IF QueriedVarB THEN Out.String("TRUE") ELSE Out.String("FALSE") END;
+			...
+		END;
+		...
+	END Any;
+
+	BEGIN
+		....
+	END Stub.
+
+in which QueriedVarA and QueriedVarB are the variables to be inspected. Instead of writing to the system log, one could choose to write to a Writer instead, with the added advantage of allowing a customized layout of the inspected data and with the advantage of faster execution which will quite noticeable with a high volume data trace. Obviously, the final program version must be compiled with debug=FALSE but this a very little cost compared to the benefit reaped when the module must be modified later on and tested again. The compiler will optimize the object code anyway by removing the dead code parts. Truly enough, the inclusion of permanent Out or Write statements might be regarded as cluttering what is in the eye of the writer "a well-readable source text".
+	In modules containing commands, it is good practice to append a list of commands to the end of the program text. Later on, these commands can then be exercised again and again for testing their correctness at least to some degree. 
+
+Example:
+		(* Text of the module TextPopups *)
+		...
+		END TextPopups.
+		
+		System.Free TextPopups ~
+		TextPopups.Install
+		TextPopups.Remove
+
+
+2.5.1.5	Using HALT to  debug
+
+On encountering a HALT(e) statement, the enclosing program is brought to an abnormal halt with a TRAP. The argument e is an integer constant (30 <= e < 256) whose value identifies the termination. In case of a stubborn abnormal program termination, one may attempt to insert a HALT statement at a strategic point thus forcing the program to reveal the status of some of its variables before the crash. Of course, this brute force approach is not recommendable but it may be used as an expedient for disentangling a difficult TRAP situation.
+
+
+2.5.1.6	Using assertions as a debugging tool
+
+A citation from Niklaus Wirth [Wir73] will set the stage:
+
+Experimental testing of programs can be used to show the presence of errors but never to prove their absence.
+	Consequently, it is necessary to abstract from individual processes and to postulate certain generally valid conditions that can be derived from the pattern of behavior. This analytic method of testing is called program verification. In contrast to program testing, where the individual values of variables are inspected, program verification is concerned with the properties of the program by postulating generally valid ranges of values and relationships among variables.
+
+	Assertions are a means to integrate program specification aspects in program code, thereby increasing the confidence in the quality of the software. Assertions are supported by the compiler which can recognize two forms of assertions:
+
+ASSERT(boolean-expression);
+causes the program to terminate if the expression is FALSE.
+
+ASSERT(boolean-expression, integer-constant);
+causes the program to HALT if the expression is FALSE and is similar to the conditional statement:
+
+	IF ~boolean-expression THEN HALT(integer-constant) END;
+
+The first form uses a system defined termination code is used instead of the user defined integer-constant. 
+
+Oberon System 3 uses the following conventions for this constant:
+
+Precondition (100..109)
+
+A precondition tests for the legal input to procedures, for example a parameter must be in a certain range.
+
+Invariant (110..119)
+
+One may categorize invariants into loop invariants and type invariants. A loop invariant is a condition which must be satisfied at each iteration in a loop.
+
+Postcondition (120..129)
+
+A postcondition verifies the outcome of the execution of a procedure.
+
+Example
+
+Suppose it is required to write a function Sqrt yielding the square root of x within the tolerance tol. An implicit specification would state that the absolute value of the difference between the square of the result res and x must be less than the tolerance. Using this, we then write:
+		ASSERT(ABS(res*res - x) <= tol, 120);
+
+This specification is, so far, incomplete in that the valid values for x and tol have not been defined. REAL will be used to denote the set of all real numbers. But this is still not enough. If Sqrt is to yield a REAL as result, then it can only find the square root of non-negative numbers. Similarly, the tolerance must also be non-negative. We end with:
+
+		PROCEDURE Sqrt*(x, tol: REAL): REAL;
+		VAR res: REAL;
+		BEGIN
+			ASSERT((x>=0) & (tol>=0), 100);
+			calculate the square root of x into res (* Explicit specification *)
+			ASSERT(ABS(res*res - x) <= tol, 120);
+			RETURN res
+		END Sqrt;
+
+How ASSERT statements are treated by the compiler
+
+The compiler evaluates the boolean expression of ASSERT statements with the following outcome:
+	- if an expression is TRUE, the ASSERT is treated as dead code
+	- if an expression is FALSE, an error message (99) is logged
+	- if an expression cannot be evaluated at compile time, the ASSERT
+	   statement is included as a run-time check
+
+How ASSERT statements are controlled in OMI modules
+
+At load time, ASSERT statements can be treated differently depending on the prior execution of two commands:
+	- after the execution of OMI.AssertsOff, ASSERT calls are ignored
+	- after the execution of OMI.AssertsOn, the required code is generated
+In contrast, HALT statements are always treated in the same fashion.
+	Remember that code generation is performed at load time, therefore a module with ASSERT statements must be unloaded after the execution of an OMI.AssertsOff / OMI.AssertsOn command. By default, no code is generated.
+
+Information provided by Watson
+
+ASSERT procedures appearing in exported procedures and commands are transformed by Watson.ShowDef into comments of the form (at the right side):
+
+	ASSERT(param >= 10, 101);			(* precondition (101):	param >=10 *)
+	ASSERT(param >= 10, 111);			(* invariant (111):	param >=10 *)
+	ASSERT(param >= 10, 121);			(* postcondition (121):	param >=10 *)
+
+
+2.5.1.7	Console debugging (Windows Oberon)
+
+The Console module provides a number of procedures (access the module definition with Watson.ShowDef Console) which can be quite useful for low-level debugging, specially of Oberon core components. Console debugging is controlled by the Console keyword in the [System] section of the registry in the following manner (only the first character is meaningful):
+
+Console=
+None	no information is collected
+Console	the information is directed to a MS Windows window having a
+	title bar text "Oberon System 3 - Console" which is automatically
+	opened when Oberon is started and closed when it is quitted.
+Debug	the information is directed to:
+	- the debugger tool under Windows 95 or NT
+	- the AUX port under Windows 3.1
+File	the information is directed to a file "Oberon.Log" in the root
+	directory. Use the command EditTools.OpenUnix ^ to view it.
+
+
+2.5.2	The Builder tool
+
+The Builder provides a convenient front-end to the Oberon compiler described above. It makes sure that module texts are presented to the compiler in a correct order, whatever the order of the file names in the parameter list. The Builder module commands are documented in the Builder.Tool.
+
+Builder.Compile [\options] namelist ~
+Builder.Compile [\options] ^
+Builder.Compile [\options] *
+compiles the files named in the list, automatically determining the correct compilation order of the modules. Only the modules specified are compiled. The options are the same as those of the Compiler.Compile command but they must appear as first command parameter.
+
+Builder.Free namelist ~
+Builder.Free ^
+unloads every module named in the list in the correct order. Since file names must appear in the parameter list, this command can only free modules for which the source text is available. To unload other modules use System.Free.
+
+Builder.InsertHierarchy namelist ~
+inserts an Icon for each source text module named in the list at the caret. The Icons are inserted in a correct order of compilation. Each Icon is captioned with the corresponding file name and its Cmd attribute value is Desktops.OpenDoc '#Caption '. An example of such Icons is found in the Compiler.Panel.
+
+Builder.MarkErrors [^]
+when the selection contains an error message written by the compiler in the system log, this command inserts an error marker in the marked text for that message and for all of the following messages. An error marker is a special gadget displaying the number of the error code discovered at that location in the program text. The error message	pos 111 err 4	would cause  to be placed at the position 111. An MM key click on the error marker replaces the error number by a short error description. Another click toggles it back to the error number.
+
+Builder.NextError
+advances the caret to the next error marker. When the end of text is reached, searching wraps around to the beginning.
+
+Builder.ClearErrors *
+removes all error markers in the marked text. Automatically performed by a Builder.Compile * command. When the source text document is stored, the error markers are automatically removed -- they must not be removed first.
+
+
+2.6	Backup tool
+
+Oberon provides tools for making backups of files on diskette or for some implementations on other external storage, making it possible to exchange Oberon files with most other computer systems as well as with other systems on the same platform.
+
+
+Backup tool for PC Native Oberon and Windows NT
+
+The Backup tool writes and reads files in a proprietary ETH Oberon format compatible with Ceres Oberon or in MS-DOS format on diskette.
+
+The following commands are defined:
+
+Backup.Directory [\d]
+lists the files on the currently inserted diskette. The listing shows the Oberon files with their long file names. If the option \d is present, additional information about file sizes and creation dates is supplied.
+
+Backup.WriteFiles namelist ~
+Backup.WriteFiles ^
+writes all files named in the list to the currently inserted diskette.
+
+Backup.ReadFiles namelist ~
+Backup.ReadFiles ^
+reads all files named in the list from the currently inserted diskette.
+
+Backup.ReadAll
+reads all files from the currently inserted diskette.
+
+Backup.DeleteFiles namelist ~
+Backup.DeleteFiles ^
+deletes all files named in the list from the currently inserted diskette.
+
+Backup.SetDriveA
+Backup.SetDriveB
+selects the appropriate diskette drive A or B to be used by the various Backup commands. Default is drive A.
+
+Any diskette formatted with a standard DOS formatter may be used. Alternatively, the following commands are provided:
+
+Backup.Format \D
+Backup.Format [\H]
+formats, in the Oberon format, a 2-sided double density (\D) or a high density (\H is optional) diskette in the selected drive. This command is not available for Windows NT.
+
+Backup.InitOberon [volName]
+initializes a formatted diskette; that is, creates an Oberon directory and writes a volume label. volName may be either a name or a string. During this process, all existing data is erased from the diskette. This is much faster than Backup.Format. A diskette without volume label can be read on Ceres machines.
+
+Backup.InitDOS [volName]
+initializes a formatted diskette; that is, it creates an MS-DOS directory, and writes a volume label. volName must be a valid MS-DOS name (fname.ftype). During this process, all existing data is erased from the diskette.
+
+
+DOSBackup tool for Windows and Macintosh
+
+The DOSBackup tool reads and writes Oberon files on MS-DOS diskettes. This makes it possible to exchange Oberon files with most other computer systems. As the MS-DOS diskette file system does not support the long Oberon file names, DOSBackup maintains a translation table called TRANS.TBL as a file on the diskette. Files copied onto a diskette under MS-DOS are automatically inserted into the translation table when you use DOSBackup again. On a Macintosh, you can use this tool only if MacOS 7.5 or a tool that extends the Mac with the capability of reading MS-DOS diskettes, such as PC Exchange for instance, is installed.
+	The five first Backup commands described earlier are also valid for this implementation, though their prefix is DOSBackup. However, the DOSBackup.Directory command does not accept an option \d for requesting additional information about file sizes and dates. The DOSBackup.WriteFiles command accepts an option character "%" for compressing files:
+
+DOSBackup.WriteFiles % namelist ~
+DOSBackup.WriteFiles % ^
+writes all files specified by the parameter list to the currently inserted diskette using the LZW compression algorithm. The compressed files have a special header which is automatically detected by the DOSBackup.ReadFiles command for decompressing the files.
+
+The following commands are also defined:
+
+DOSBackup.Init
+erases all the Oberon files and the translation table file on the currently inserted diskette. All the other DOS files stored on the diskette are not affected.
+
+DOSBackup.SetPath path ~
+sets the path for subsequent DOSBackup commands. It can thus be used to change the current directory on the currently inserted diskette, but this command is specially useful to direct the backup operation to a hard disk subdirectory as an alternative to using diskettes. Keep this in mind if you have installed more than one Oberon System 3 on your PC.
+
+DOSBackup does not provide a diskette formatting function. Formatting a new diskette must be done under the underlying operating system.
+
+The following command is available in Mac Oberon only:
+
+DOSBackup.SetDrive
+selects the appropriate diskette in the diskette drive.
+
+
+Backup tool for Macintosh
+
+The Backup tool reads and writes Oberon files from and to a diskette that has been formatted in any of the normal Macintosh floppy diskette formats.
+	The five first Backup commands described in "Backup tool for PC Native Oberon" are also valid for this implementation.
+
+The following command is also defined:
+
+Backup.Eject
+ejects the currently inserted diskette.
+
+Mac Oberon offers an alternative CBackup tool writing and reading files in the original Ceres format. The commands are the same.
+
+
+Backup tool for Linux
+
+The Backup tool reads and writes Oberon files from and to a MS-DOS formatted diskette. Only the double density format (720KB) is currently supported.
+	The five first Backup commands described in "Backup tool for PC Native Oberon" are also valid for this implementation.
+
+The following commands are also defined:
+
+Backup.SetFd0
+Backup.SetFd1
+selects the appropriate diskette drive 0 or 1 to be used by the various Backup commands. Default is drive 0.
+
+Backup.Init
+initializes a formatted diskette; that is, it creates an Oberon directory. During this process, all existing data is erased from the diskette.
+
+
+2.7	Archiving tools
+
+Oberon also provides tools for compressing multiple files into an archive, and for exchanging files with other Oberon users via electronic mail.
+
+
+Compress tool
+
+The Compress tool allows you to compress multiple files into the same archive using the LZSS compression technique (Note: the file format is not compatible with the UNIX utility of the same name). The archive is portable among all Oberon platforms. Compressed files with an .Arc extension can be opened directly with the command Desktops.OpenDoc.
+
+Compress.Directory Archive.Arc
+Compress.Directory \d Archive.Arc
+Compress.Directory ^
+Compress.Directory \d ^
+opens a text viewer listing the names of the files contained in the archive. If the archive does not yet exist, it is automatically created. If the option \d is used, additional information is given for each file: date and time when added to the archive, compressed size in bytes, and size in percent of the original uncompressed file.
+
+Compress.Add Archive.Arc namelist ~
+Compress.Add Archive.Arc ^
+adds all the files named in the list to an archive. If the archive does not already exist, a new one is created.
+
+Compress.Extract Archive.Arc namelist ~
+Compress.Extract Archive.Arc ^
+unpacks all the files named in the list from an archive.
+
+Compress.ExtractAll Archive.Arc
+unpacks all the files from an archive.
+
+Compress.Delete Archive.Arc namelist ~
+Compress.Delete Archive.Arc ^
+deletes all the files named in the list from an archive.
+
+Compress.Open Archive.Arc filename
+Compress.Open Archive.Arc ^
+unpacks a file from an archive and opens it. None of the archived files is stored on disk.
+
+Compress.Rename Archive.Arc { A => B }
+processes a list of pairs following the archive name, renaming each file A to B in the archive.
+
+
+AsciiCoder tool
+
+AsciiCoder can be used to encode and decode any text (including gadgets) visible on screen as well as to encode and decode arbitrary files. The data stream generated by encoding is fully ASCII and is apt to be sent by electronic mail. It is always presented in a text document where it can be edited to become a part of an e-mail message for instance. Once encoded, the resulting text will contain the appropriate command to decode the contents again.
+
+AsciiCoder.CodeText *
+AsciiCoder.CodeText @
+encodes the text of the marked viewer or the text starting at the beginning of the most recent selection. A viewer named "AsciiCoder.CodeText" is automatically opened. It presents the encoded data preceded by an appropriate AsciiCoder.DecodeText command.
+
+AsciiCoder.CodeFiles namelist ~
+AsciiCoder.CodeFiles ^
+encodes all the files named in the list. A viewer named "AsciiCoder.CodeFiles" is automatically opened. It presents the encoded data preceded by an appropriate AsciiCoder.DecodeFiles namelist command.
+
+AsciiCoder.DecodeText @
+decodes the ASCII encoded text, starting at the beginning of the most recent selection.
+
+AsciiCoder.DecodeFiles @
+decodes the ASCII encoded text, starting at the beginning of the most recent selection, and writes the data to files. Existing files are not overwritten since they are first renamed to .Bak files. The file names must appear at the beginning of the selection, before the coded data.
+
+Inserting an (optional) % between the command name and the first parameter, will cause the data to be compressed or expanded, in addition:
+
+AsciiCoder.CodeText % *
+AsciiCoder.CodeText % @
+AsciiCoder.CodeFiles % ^
+AsciiCoder.CodeFiles % ~
+
+AsciiCoder.DecodeText % @
+AsciiCoder.DecodeFiles % @
+
+
+Base64 tool
+
+Base64 can be used both to decode a Base64 encoded data stream appearing in a viewer and to encode files. The ASCII data stream generated by encoding can be forwarded by electronic mail. It is always presented in a text document where it can be edited to become a part of an e-mail message.
+
+Base64.Decode filename ^
+decodes the data, starting at the beginning of the most recent selection, and writes the data to the named file.
+
+Base64.Decode filename ~ codedData
+decodes data which follows the "~", and writes the data to the named file.
+
+Base64.Encode filename ~
+encodes the named file. A document viewer named "Encode" is automatically opened. It presents the encoded data, which may then be sent by e-mail.
+
+
+UUDecoder tool
+
+UUDecoder can be used to decode Unix uuencoded data.
+
+UUDecoder.Decode namelist ~
+UUDecoder.Decode ^
+decodes all the files named in the list, and writes the decoded data to a file whose name appears in the uuencoded files themselves.
+
+UUDecoder.Decode @
+decodes the data, starting at the beginning of the most recent selection, and writes the decoded data to a file whose name appears in the uuencoded data.
+
+UUDecoder.Decode "begin" codedData ~
+decodes the data which follows the command and writes the decoded data to a file whose name appears in the uuencoded data.
+
+
+BinHex tool
+
+BinHex can be used to decode BinHex encoded data.
+
+BinHex.Decode filename ^
+decodes the data, starting at the beginning of the most recent selection, and writes the decoded data to the named file.
+
+BinHex.Decode filename codedData
+decodes data which follows the filename, and writes the decoded data to the named file.
+
+BinHex.Decode filename binHexName
+decodes the binHexName file, and writes the decoded data to the named file.
+
+
+UnZip tool
+
+UnZip can be used to unpack zip archive files. Files with a .zip file name extension can be opened directly with Desktops.OpenDoc.
+
+UnZip.Directory Archive.zip
+opens a text viewer listing the names of the files in an archive.
+
+UnZip.Open Archive.zip filename
+unpacks a document and opens it. No file is written to disk.
+
+UnZip.OpenAscii Archive.zip filename
+unpacks an Ascii text and opens it.
+
+UnZip.Extract Archive.zip namelist ~
+unpacks all the files named in the list from an archive.
+
+UnZip.ExtractAll Archive.zip
+unpacks all the files from an archive.
+
+
+OldFiles tool
+
+OldFiles can be used to read files from older Oberon installations (DOS and Win32s) using MS-DOS 8.3 file names. This tool is not available for PC Native Oberon.
+
+OldFiles.SetPath path ~
+sets the path for subsequent OldFiles commands.
+
+OldFiles.Directory
+OldFiles.Directory \d
+displays the selection of all disk files found in the current path, previously set by an OldFiles.SetPath command. If the option \d is specified, additional information about file date and time and file sizes is displayed.
+
+OldFiles.ReadFiles { A => B } ~
+processes a parameter list of pairs A => B reading each file A in the current path, previously set by an OldFiles.SetPath command, and copying it to the current directory under the name B.
+
+OldFiles.ReadFiles namelist ~
+reads the named files in the current path, previously set by an OldFiles.SetPath command, and copies them to the current directory under the same name.
+
+OldFiles.DeleteFiles namelist ~
+deletes the named files in the current path, previously set by an OldFiles.SetPath command.
+
+
+FileUtils tool
+
+FileUtils facilitates the backup of a load of files without naming them each individually, as must be done with the other backup tools. This tool is not available for PC Native Oberon.
+
+FileUtils.Backup {\pat} srcDir destDir
+copies the files found in srcDir to destDir, ignoring those files with a name matching the patterns appearing in an option list. Each pattern must be a string preceded by a "\".
+
+FileUtils.FindSame [\S] { directory }
+searches all the duplicate file names in the listed directories. When the option \S is specified, the search is extended to the Oberon search path specified in the [System] section of the registry.
+

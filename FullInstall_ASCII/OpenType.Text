@@ -1,0 +1,127 @@
+OpenType for Oberon
+
+Note: the package covered in this document is still considered to be in beta stage. It is provided "as is" without any guarantee that it works as described.
+
+
+1. Introduction to OpenType Typography
+
+OpenType is a joint effort of Microsoft and Adobe to extend the well_known TrueType font format, which in turn was developed by Apple and Microsoft. The main purpose of TrueType is to make arbitrarily scalable computer fonts look good on low resolution displays. In addition to a series of lines and curves describing its outline, each letter (or glyph) in a TrueType font may have a little byte code program associated with it. After the contour of the glyph has been scaled to the requested point size, the glyph program is executed, usually aligning certain key points to the pixel grid and ensuring consistent feature widths among all glyphs in the font. In the TrueType terminology, this process is called grid_fitting.
+
+OpenType differs from TrueType by additionally including the TrueType Open format (offering broader support for internationalization and multi_platform environments) and a special version of PostScript Type 1 fonts called Compact Font Format. PostScript Type 1 fonts also contain outline descriptions for each glyph. Instead of grid_fitting instructions, however, glyphs outlines may be augmented with descriptive hints specifying e.g. horizontal and vertical stem zones. How the control points of an outline have to be moved to comply with these hints is left to the implementation of the scan converter.
+
+
+2. Using OpenType Fonts in Oberon Documents
+
+The current implementation of OpenType for Oberon supports only the TrueType part of OpenType for now. However, this already covers most existing OpenType fonts. Any font file ending in ".TTF" is likely to be accepted. If you have any version of Microsoft Windows running on your computer, you can find several TrueType fonts in the WINDOWS\FONTS directory.
+
+There are two ways how OpenType fonts can be used in Oberon, the first of which is to convert them to Oberon raster font files using the command OTFonts.Make:
+
+	OTFonts.Make <file.TTF> <name> [<style>] {<size>} {<dev>} ~
+
+where <file.TTF> is the filename of the OpenType font file, <name> is the name of the font as Oberon will see it, <style> is a single letter (usually "i", "b" or "m"), <size> is an integer and dev is one of "Scn", "Pr2", "Pr3" or "Pr6". An example would be:
+
+	OTFonts.Make ArialBold.TTF Arial b 8 10 12 14 16 20 24 Scn Pr3 ~
+
+which creates all standard sizes of the Arial_Bold font for screen and printer at 300 dots per inch, from "Arial8b.Scn.Fnt" to "Arial24b.Pr3.Fnt".
+
+As an alternative, Oberon raster fonts can be generated dynamically when they are needed. For this to work, you need to execute the command
+
+	OTFonts.Install
+
+to install the dynamic font converter. If you find you often work with OpenType fonts, you might consider including OTFonts.Install in the startup section of your Oberon.Text.
+
+When the dynamic font converter is installed, every request for a new font (e.g. by executing EditTools.ChangeXYZ) is forwarded to it. If the converter cannot find the corresponding Oberon raster font file, it tries to derive the name of an OpenType font file and, if successful, returns a new font that will scan_convert and cache glyph patterns whenever they are requested. Naming is crucial here: the font name is derived from the Oberon name by concatenating the letters before the size digits and a string representing the style; e.g. "Arial10.Scn.Fnt" is mapped to "Arial.TTF", "Verdana16b.Pr3.Fnt" to "VerdanaBold.TTF". The style character "b" is mapped to "Bold", "m" to "Medium", "i" to "Italic", and "j" to "BoldItalic". If your font fits neither of these, specify the full font name before the size and add no style character, i.e. use "ArialBlack12.Scn.Fnt" if your font is called "ArialBlack.TTF".
+
+It is possible and even recommended to use a combination of dynamically and statically converted raster fonts. The statically converted fonts load faster and may be edited with a standard Oberon font editing tool, which offers a way to correct misplaced pixels (which are guaranteed to occur with the current beta version). On the other hand, the dynamical font converter will take care of fonts that are only seldom used or that take up too much space on your hard disk (especially all *.Pr6 fonts).
+
+
+3. Viewing the Grid_Fitting Process
+
+The OpenType for Oberon distribution contains an additional module for graphically visualizing the grid_fitting process.  This module is distributed with the Applications package, and requires the Gadgets package.  While not being especially useful (except for debugging the instruction interpreter) nor very polished, the grid_fitting simulator can be quite instructive. 
+
+Note: the simulator uses coroutines to change between execution context and interactive context. The problem with coroutines is that they are not completely safe with regard to garbage collection since they use a private stack that is not known to the garbage collector. In the rare case that a trap occurs during execution of grid_fitting instructions, the panel might get closed automatically or your system might even become unstable. Be warned and save all other work before using the simulator panel.
+
+All functions of the simulator can be accessed through the
+
+	Desktops.OpenDoc OTSim.Panel
+
+It is assumed that you are familiar with the gadgets interface of Oberon System 3. Refer to the online documentation (Chapter*.Text) to learn more about using gadgets.
+
+In the top left part of the panel, the OpenType fonts on your system can be listed. If you click with MM on a name in the list, the log window in the upper right part of the panel should display that the font was loaded.
+
+Below the font list are several gadgets to select point size and device resolution. Choose your settings and activate the Instantiate button to create an instance matching your settings. The log window should reflect this step, too.
+
+You are now ready to load individual glyphs. Below the Instantiate button are text fields and sliders to choose a glyph by number or a character. Activating one of the Load buttons loads the glyph into the glyph view in the bottom right part of the panel.
+
+Unless you have checked the Debug Glyph Program option below the log window, all grid_fitting instructions will have been executed in one step and what you see in the glyph view is already the final image for the glyph that you have loaded. Check the Debug Glyph Program option and load the glyph again. You should now see the original outline in the glyph view. The log window ends with a line showing the next instruction that will be executed (usually a push instruction). You can execute this instruction by activating the Next button. Afterwards, a new next instruction is displayed in the log window. In addition, the view to the left of the glyph view will display the elements that have been pushed onto the stack (assuming the first instruction was indeed a push instruction).
+
+The view to the left of the glyph view is called a multiview and can display several internal interpreter data structures. This can be changed by activating one of the buttons in the button row above the view. You will have noted that the log window has a similar button row, indicating that the log window is in fact another multiview. Besides displaying the log text and the interpreter stack, multiviews can also display the current code sequence, the contents of the control value table (CVT) and of the program store, and the coordinates of all points in the glyph outline. Note that most numbers are in hexadecimal notation, which makes it easier to discern the values of fixed point numbers.
+
+The Cont button will execute all remaining instructions. The Step button works like the Next button, except for the case of a CALL or LOOPCALL instruction, where it will stop at the first instruction of the called function (whereas Next will execute all instructions in the function at once). Finally, the Finish button executes all instructions in the current function if within a function, otherwise all remaining instructions.
+
+
+4. The OpenType Application Programming Interface
+
+Several applications could benefit from additional information that is present in OpenType font files. Examples include character kerning for high_quality document processing, using character outlines in graphics applications, additional metrics for horizontal and vertical typesetting, and glyph substitution for non_latin text processing.
+
+The recommended method for accessing this information is to use the OType module that is part of the OpenType for Oberon distribution. What follows is a code fragment that shows how to open a font, allocate a specific instance, and load a glyph:
+
+	VAR font: OType.Font; glyph: OType.Glyph; inst: OType.Instance; num: INTEGER; data: MyData;
+	
+	(* open the font file. ".TTF" or ".OTF" is automatically appended if not specified *)
+	font := OType.Open("Arial");
+	IF font # NIL THEN
+		(* allocate and initialize a glyph structure that is compatible with the font *)
+		NEW(glyph); OType.InitGlyph(glyph, font);
+		
+		(* open an instance for point size 10 (scaled by 40H to fixed point) on a 300 dpi printer *)
+		OType.GetInstance(font, 40H*10, 300, 300, OType.Identity, inst);
+		
+		(* get glyph number for letter "A" *)
+		num := OType.UnicodeToGlyph(font, OType.CharToUnicode[ORD("A")]);
+		
+		(* load glyph with advance width and raster image, applying hints *)
+		OType.LoadGlyph(inst, glyph, num, {OType.Hinted, OType.Width, OType.Raster});
+		(*
+			glyph.awx = character advance width
+			glyph.rw, glyph.rh = dimensions of raster image
+			glyph.hbx, glyph.hby = vector from base line to lower left corner of raster image
+		*)
+		
+		(* the raster image can now be enumerated as a series of rectangles *)
+		data.rect := FillRect; data.xyz := ...; ...
+		OType.EnumRaster(glyph, data);
+	END
+
+Check the complete interface of the OType module to find out in detail what features of the OpenType file format are provided by OType by executing Watson.ShowDef OType. Even if your application needs to access other OpenType tables, using OType can still be beneficial since it manages a font cache, the directory of OpenType tables for each font and provides procedures for reading words and double words in big endian order.
+
+
+5. Links and References
+
+TrueType Typography	http://www.truetype.demon.co.uk/
+An excellent site covering all aspects of TrueType fonts
+
+Microsoft Typography	http://www.microsoft.com/typography/
+Microsoft's site on TrueType and OpenType
+
+Free downloads	http://www.microsoft.com/typography/fontpack/default.htm
+A bunch of high_quality TrueType fonts that can be downloaded for free. You need a Windows or Mac installation to unpack the archives, though.
+
+The FreeType Project	http://www.freetype.org/
+A free TrueType engine
+
+
+6. History
+
+27.11.1998 - release 0.4 (eos)
+	o fixed instance matrix being ignored
+	o glyph advance width is now exported as vector
+	o instance interface provides maximal bounding box
+21.8.1998 - release 0.3 (eos)
+	o fixed illegal CASE trap in OTInt.SZPi
+20.8.1998 - first public beta release 0.2
+
+
+7. Feedback
+
+Please send bug reports and suggestions to mailto:oswald@inf.ethz.ch

@@ -1,0 +1,2078 @@
+Gadgets System Change Log
+======================
+
+This change log is organized with the latest changes first. Comments
+prefixed with SPIRIT mean changes made to the Spirit of Oberon
+distribution, not necessarily related to any other port.
+
+Latest Modifications
+
+DisplayMsg, PrintMsg
+
+The Display.PrintMsg has been integrated into the Display.DisplayMsg. See Display.Def and
+Skeleton.Mod for more details.
+
+Strings, Attributes, Links
+
+Transfered string procedures from Attributes to Strings. Added some service procedures to
+Attributes and Links.
+
+Document menus
+
+The attribute "Menu" is no longer supported, documents have to return their menu with LinkMsg:
+"DeskMenu", "UserMenu", "SystemMenu" instead (see Documents.Def).
+A new command Finder.Minimize allows to minimize documents on the track system as well as on
+the desktop (see Finder.Minimize).
+The MapDocumentNames key has been removed, document names now are allways displayed in
+abolute form ( name path !).
+
+Finder
+
+Finder's look and functionality has totally changes. Now it not only shows all documents opened on
+a desktop, but also has a section containing templates and often used documents. A list of minimized 
+documents is also part of the new Finder (this makes Icons obsolete). For a complete documentation
+refer to the corresponding section in the Oberon Companion Chapter 4 or read at the end of 
+Finder.Def. 
+
+Desktop
+
+Documents opened on a desktop have now a minimal width, so the first three button should always
+be visible ([Close] [Grow] [Min]). The [Grow] command used on the desktop sizes a document to the
+width and height of a new (empty) document of the same type. 
+
+Lists
+
+List have changed dramaticaly. A list now consists of a visible gadget and a model. The concept of
+riders is used to read from and write to list models. Three different models are available by now;
+a linear list, a tree and a dag model (change your own tools and panels to the new lists). A detailed
+description of how to use the new list gadget can be found in the Oberon Companion Chapter 4. 
+
+Console, Debugger
+
+See UserGuide.Text and the debug package for more details on the new Console module and
+Oberon debugging.
+
+21.10.98
+	- bugfixes in TextGadgets.StyleHandler (ejz)
+
+19.10.98
+	- small bugfixes in: UnZip, TextDocs, Gages, Columbus (ejz)
+	- added ShowObj to Browser (ejz)
+
+16.10.98
+	- bugfix in Texts.Store (ejz)
+
+15.10.98
+	- bugfix in TextDocs.ReplaceAll (ejz)
+	- bugfix in TextGadgets.FrameHandler (ejz)
+
+5.10.98
+	- bugfix in TextFields (ejz)
+
+24.8.98
+	- improved handling of Objects.FindMsg in Panels, TextGadgets0 and Gadgets (ejz)
+	- new export in Texts: LoadAscii (ejz)
+
+18.8.98
+	- bugfix in Panels.CopyPanel (ejz)
+	- register constants in SYSTEM (pr, ejz)
+	- preprocessor in Builder (pr)
+
+10.8.98
+	- more detailed Comp list in Columbus (John Stout)
+
+6.8.98
+	- fixed ColorPicker printing (ejz)
+
+31.7.98
+	- copy looks bugfix in TextFrames, ScriptFrames & TextGadgets0 (ejz)
+
+21.7.98
+	- bugfix in Compress.DeleteFile (ejz)
+	- bugfix in OOPT.FPrintRecord (pr)
+
+16.7.98
+	- bugfix in TextGadgets0.FrameHandler (ejz)
+	- removed limit on number of open files (ejz)
+
+9.7.98
+	- bugfix in TextGadgets.ConvertMsg (ejz)
+
+7.7.98
+	- fixed Sisiphus printing (ejz)
+	- improved error messages in Documents & Desktops (ejz)
+
+2.7.98
+	- new font family Default = family of Fonts.Default (pm/ejz)
+		e.g. Default12.Scn.Fnt returns Syntax12.Scn.Fnt on Windows
+			and Oberon12.Scn.Fnt on Native Oberon
+
+1.7.98
+	- implemented Oberon.OpenScanner using Registry (ejz)
+
+24.6.98
+	- bugfix in Attributes.Read (pm/ejz)
+	- bugfix in DocumentSkeleton.Mod
+
+19.6.98
+	- bugfix in PanelDocs.RemovePanel (ejz)
+
+14.6.98
+	- added FreeBit to Kernel (ejz/pm)
+
+4.6.98
+	- bugfix in Clocks.Mod (ejz)
+
+27.5.98
+	- bugfix in Kernel.Mark (pm)
+
+19.5.98
+	- bugfix in Panels (pm)
+	- bugfixe in MIME and GIF (ejz)
+
+12.5.98
+	- added FindMsg to Documents.Handler (ejz)
+	- fixed Cmd-attr in ColorSystem.HandleFrame (ejz)
+
+5.5.98
+	- recall support for TextFiles (pr)
+	- new command FlipCase in EditTools (ejz)
+
+17.4.98
+	- update to Coco (hm/Linz)
+
+16.4.98
+	- bugfix in Compress (ejz)
+
+14.4.98
+	- bugfixes in Sort, FTP & Builder (pm)
+	- fixed som font poblems (eos)
+
+3.4.98
+	- added requires to Installer
+
+31.3.98
+	- bugfix in Installer
+
+17.3.98
+	- new registry entries Temp and Work in System section
+
+11.3.98
+	- new Mail.Mod & Mail.Panel, old version in OldMail.Arc
+
+10.3.98
+	- bugfix in Lists (ejz)
+
+13.2.98
+	- added support for winapi calling convetion to the compiler
+	- BootLinker replaced by PELinker (see PELinker.Tool)
+
+27.10.97
+	- bug fixes in Panels.Mod, Organizers.Mod & TextGadgets.Mod (ps)
+
+23.10.97
+	- Compress.ExtractAll (md, ejz)
+	- FileUtils.FindNewer/FindOlder added (ejz)
+
+2.10.97
+	- new registry section DocumentServices (md)
+
+1.10.97
+	- bugfix in Clipboard (ejz)
+	- new commands Upper and Lower in EditTools (ejz)
+	- improved Words command in EditTools (pm)
+
+30.9.97
+	- bugfix in PSPrinter (md, ejz)
+
+29.9.97
+	- bugfix in Watson (ps)
+	- added UDPExample.Mod and TCPExample.Mod to Network.Arc (ejz)
+
+27.9.97
+	- new version of Oberon Companion (afi)
+
+3.9.97
+	- new ESC/Neutralize mappings
+		F2: always neutralize
+		F3: always escape
+		ESC: either neutralize or escape
+
+20.8.97
+	- bugfix in TextFrames (pm)
+	- bugfix in TextPopups (pm)
+	- added ServerInstallation.Text
+
+21.8.97
+	- more conservative implementation of multi-viewer selection (pm)
+
+18.8.97
+	- new Oberon.INI entry: System.Tracks
+
+15.8.97
+	- alternative Registry module using (Windows) system registry
+
+14.8.97
+	- bugfix in OPL.GetThisReg8 (pr)
+
+13.8.97
+	- new packages Network & Developer
+
+4.8.97
+	- split OldApps.Arc in packages: Paint, Draw, ET, Script, Illustrate and PictureDocs
+	- new package Startup.Arc 
+
+7.8.97
+	- new game: Shanghai (ps)
+
+10.7.97
+	- new tool:
+		Installer - helps you installing the application packages, see Installer.Tool
+		IniEdit - helps you editing your ini file
+
+9.7.97
+	- fixed bug in Mail.SendText
+
+8.7.97
+	- added Rename command to Compress
+	- fixed bug in Compress.DeleteFile
+
+3.7.97
+	- improved mouse cursor handling
+
+13.2.97
+	- new applications:
+		OldFiles - reads your files from DOS and Win32s Oberon installations, see OldFiles.Arc
+		FileUtils - helps you making backups of your oberon files, see FileUtils.Arc
+
+10.2.97
+	- new applications:
+			V24Gadgets - a simple V24 terminal (pm)
+			MultiMail - send e-mail with Base64  attachments
+
+6.2.97
+	- BasicGadgets: Fixed bug in RestoreButton (Look was not properly handled)
+
+5.2.97
+	- The configuration text to be used can now be specified in the oberon.ini file.
+	- TextDocs.SearchDiff\w will skip objects now
+	- new applications:
+			Leonardo - a tool for drawing illustrations, see Leonardo.Arc (eos)
+			Backup - read and write Ceres and Native Oberon floppies (on WinNT only)
+			Juice CDK - Juice Authoring Tool see JuiceCDK.Arc (tk/mf)
+	- new command: System.Execute (Win95/WinNT): executes a command in the background
+
+4.2.97
+	- Printer & Printer3 .String now has the same Interface as Display3.String.
+
+17.1.96
+	- Modules : Fixed ShrinkCodeBlock
+	- new application: LayLa - Layout Language, see LayLa.Arc
+
+16.1.96
+	- made menu-bar changes to more modules
+	- updated Gadgets.Panel & Oberon.Ini
+
+15.1.97
+	- Columbus.Mod : StoreLib now binds all objects to library first
+	- new: PrinterInfo tool
+	- fixed bugs in Win.WinPrinter.Mod
+	- Renamed Windows specific modules.
+			Win		Win32s, Win95 & WinNT
+			Win32s	Win32s only
+			Win32	Win 95 & WinNT
+
+13.1.97
+	- made menu-bar changes at various modules
+
+8.1.97
+	- Icons.Mod , NamePlates.Mod : removed hot icons
+	- Finder.Mod : new look
+	- Organizers.Mod : some bug fixes
+
+7.1.97
+	- Documents.Panel : removed *.Sym entry
+	- ListGadgets.Mod, ListModels.Mod: removed bugs
+	- new: BinHex tool
+
+6.1.97
+	- Modules : Fixed AllocCodeBlock booting on NT up to 5* faster!!!
+
+20.12.96
+	- Added predefined procedure BREAK to the compiler.
+
+13.12.96
+	- fixed bug in Threads, 95 version now runs on NT too
+	- if a '%' is leading (%M.P) a cmd-string in Gadgets.Execute, no text (and Par record) is
+		allocated
+
+11.12.96
+	- TextDocs.Mod : new default sizes
+	- Hex.Mod : fixed RemoveMarks
+	- BartSimpson.Mod , MineSweeper.Mod , Telnet.Mod, TelnetGadgets.Mod ,
+		Tetris.Mod Gages.Mod Win.Directories.Mod : modified tasks
+
+10.12.96
+	- BasicGadgets.Mod : fixed bug in CopyButton
+
+25.9.96
+	- Finder.Mod : changed to new lists
+	- ListModels.Mod : node now stores data-structure, too
+
+22.9.96
+	- Win.Watson0.Mod , Win.Examiner0.Mod : changed to new lists
+
+21.9.96
+	- Dekstops.Mod : bugfix in ModifyFrame
+
+8.10.96
+	- PanelDocs.Mod : improoved Detach
+
+4.10.96
+	- Documents.Panel Gadgets.Panel Files.Panel Rembrandt.Lib Rembrandt0.Mod Rembrandt.Panel
+	- Find.Mod Find.Panel Columbus.Mod Libraries.Panel Script.Panel TextDocs.Panel Keys.Mod Keys.Panel
+	- ColorSystem.Panel TextPopups.Mod
+
+1.10.96
+	- Icons.Mod : fixed bug in TrackPopup
+
+30.9.96
+	- TextGadgets.Mod : fixed bug in Format (tabs in printer metrics)
+
+17.9.96
+	- Freecell.Mod : bug fixed in Freecell
+
+10.9.96
+	- TextGadgets0.Mod : redo changes from 29.8.96
+
+5.9.96
+	- TextGadgets0.Mod : fixed bug in Texts.UpdateMsg
+
+30.8.96
+	- Scramble.Mod , Tetris.Mod : fixed bug in StoreDoc (thanks pjm)
+	- CardGames.Panel: fixed caption Sysem -> System
+	- Win.Display.Mod : adjusted comment
+	- Sisiphus.Mod : new version by pjm
+	- BasicGadgets.Mod : fixed bug in setting link Button.Look
+
+29.8.96
+	- Display3.Mod : fixed Ellipse, Circle (thanks to eos)
+	- TextGadgets.Mod : implemented cancel action in TrackStyle
+	- TextGadgets0.Mod : to select a frame in a locked TG is now not possible anymore
+	- Columbus.Mod : LoadDoc creates view of given Lib
+	- Oberon.Ini : added doc generator for Lib-extension
+	- SetGadgets.Mod : fixed bug in TrackFrame (update problem)
+
+28.8.96
+	- Win95.Modules.Mod : Fixed ShrinkCodeBlock
+	- TextGadgets0.Mod : fixed Locate, now scrolls one line if pos is in last visible line
+
+27.8.96
+	- Icons.Mod : fixed bug with dlink in track popup
+	- Diff.Mod : SYSTEM.ROT -> BIT.LROT
+
+23.8.96
+	- Outlines.Mod : added Replace and ReplaceAll
+	- PS.Mod: added landscape and portrait support
+	- fixed some bugs in System.Trap
+	- PSPrinter & WinPrinter will now work in 300 DPI or 600 DPI mode (see Printers.Tool)
+	- the Mail.Panel has changed again, use MailConvert oldbox newbox ~ to convert your old
+		mail boxes
+
+22.8.96
+	- Definitions.Tool : added new gadgets
+	- Programming.Tool : replaced Builder by Watson
+	- Desktops.Tool, Gadgets.Panel : removed Inspector
+	- Libraries.Panel : renamed Libraries2.Panel to Libraries.Panel
+	- TextGadgets0.Mod : fixed int-overflow in InitPagePosition
+
+21.8.96
+	- Strings.Mod: changed DateToStr & TimeToStr, they use Registry to get the format
+	- Clocks.Mod: now uses new Dates.Mod
+	- Dates.Mod: replaced (now works with Oberon format)
+
+16.8.96
+	- TextGadgets0.Mod: selection remains when updating a text stretch
+
+14.08.96
+	- Attributes.Mod: export lib in Reader, fix in Scan for objects (pm)
+	- Gadgets.Mod: fix in UpArrowMacro for selected objects (pm)
+
+8.8.96
+	-  Games.Tool , Documents.Panel : adjusted text
+
+7.8.96
+	- Dektops.Mod: fixed bug in newMenu (pm)
+	- Intel.Meta.Mod: fixed bug in FindTypeOf (tk)
+
+4.8.96
+	- PSPrinter.Mod: added border (frame)
+	- TextGadgets0.Mod, Edit.Mod, Gadgets.Mod, PanelDocs.Mod, Rembrandt.Mod, RembrandtDocs.Mod:
+		changed printer page dimension, now considers Printer.Frame
+
+2.8.96
+	- PSPrinter.Mod: changed metric font
+	- Win.WinPrinter.Mod: changed to dynamic metrics
+	- TextGadgets0.Mod: changed InitPagePosition
+	- TextGadgets.Mod: added new mode to styles (span -> allways fill to right border)
+
+29.7.96
+	- BasicGadgets.Mod: fix NIL-trap in SetValues
+	- SetGadgets.Mod: changed order of attrs in Set
+	- TextGadgets.Mod: fixed bug in Format (printer metrics)
+
+21.7.96
+	- Module Console now can be used to write to a debugger or a console window (see Console.Def).
+	- improved handling of mouse cursors
+	- added KeyState (SHIFT, CTRL or ALT) to module Input (note: not yet supported by other versions!)
+
+16.07.96
+	- Outlines.Mod : store-bug fix
+	- Icons.Mod : changed to old version
+	- Win.Objects.Mod : fixed bug in DummyObj
+
+15.7.96
+	- Win.Watson0.Mod : \C option for OMI
+	- Watson.Mod : changed to Texts.Scanner
+	- Watson.Panel : adjusted char for Obj-File
+	- Finder.Mod : now handles hot icons
+	- Icons.Mod : Iconizers do not clip agains view when poping up
+
+11.7.96
+	- new SetGadgets.Mod (thanks ps)
+	- some improvements/bugfixes in Gadgets (thanks ps)
+	- made exception-handling and break key more safe in the Win95 version
+
+10.7.96
+	- Watson0.Mod, Watson.Mod, Columbus.Mod: changed optionChar in Watson to Oberon.OptionChar
+	- Gadgets.Panel : added aliases for ScrollView RefFrame SetFrame Reference Set
+
+9.7.96
+	- added System.ShowTasks command
+	- new Mail.Panel
+	- new: Streams.Mod, used by the HTML browser
+	- Texts.Mod: fixed some smaller problems
+	- Watson.Mod : add constant to change between html and Book
+	- TextGadgets.Mod : added some more attributes  to Styles
+
+28.6.96
+	- BasicFigures.Mod : Added 3D-Rect figures
+	- Oberon.Ini : Added 3D-Rects
+
+27.6.96
+	- TextGadgets.Mod : added Tab-Attribute to Styles
+
+23.6.96
+	- Oberon.Ini : added aliases for ScrollView RefFrame SetFrame Reference Set
+	- Gadgets.Panel : added aliases for ScrollView RefFrame SetFrame Reference Set
+
+20.6.96
+	- Icons.Mod : new iconize facility
+	- NamePlate : middle click minimizes document on a desktop
+
+19.6.96
+	- Gadgets.Mod : fixed bug in Execute
+
+7.6.96
+	- Desktops.Mod : fixed parsing of menustring
+	- ScrollViews.Mod : added heavy dragging (still to do: remove flickering)
+	- Views.Mod : fixed handling of transparent components
+	- Objects.Mod : StoreLibrary now traps when one tries to store the lib into the same file
+
+6.6.96
+	- Gadgets.Mod : changed Execute, now creates a text just if necessary
+	- TextGadgets0.Mod : fixed selection problem, when text is display through more than one frame
+
+5.6.96
+	- Organizers.Mod : improoved organizers
+	- Columbus.Mod : fixed bug when adding new string attributes
+
+4.6.96
+	- TextGadgets0.Mod : replaced sliderC by Display3.bottomC
+	- Objects.Mod : changed to new libs (object-load on demand)
+
+3.6.96
+	- bugfixes in TextDocs.Locate, Edit.Locate & ET.Locate
+	- new portable (same as Mac version) interface for Threads
+	- Texts.Mod: support for delayed object loading
+		TextGadgets0.Mod
+		System.Mod
+		ScriptFrames.Mod
+		ScriptGadgets.Mod
+		Outlines.Mod
+		Builder.Mod
+		Books0.Mod
+		Keys.Mod 
+
+1.6.96
+	- new portable interface for V24
+
+30.5.96
+	- TimeStamps.Mod : fixed printing
+
+29.5.96
+	- added don't care value to constraints (Organizers)
+
+28.5.96
+	- added Copy to Files
+
+27.5.96
+	- added Object class to Texts.Scanner
+	- fixed bug in EditTools.IncSize
+	- fixed bug in Compiler.Do
+
+24.5.96
+	- TextGadgets0.Mod : fixed to new behaviour of panels
+	- Organizers.Mod : fixed to new behaviour of panels
+	- Icons.Mod : caption of an icon is now displayed as a centered string
+	- Columbus : document has a a new icon
+
+23.5.96 (all thanks ps)
+	- Panels.Mod: components stay to bottom line of panel when growing upwards or
+		to the right when panel is changing on the left
+	- Desktops.Mod: adjusted to new Panels.Mod 
+
+21.5.96 (all thanks ps)
+	- Rembrandt.Mod: frame changes its size depending on attribute Border
+
+20.5.96 (all thanks ps)
+	- Gadgets.Mod: added alias support to CreateObject
+
+13.5.96
+	- bug-fix in OPLV (thanks tk)
+	- Panels.Mod: fixed shifting of components (thanks ps)
+
+12.5.96
+	- big cleanup in oberon.exe:
+		- removed many undocumented command line options
+		- moved exception handling to module Oberon
+		- oberon.hex can now by contained in oberon.exe (as binary resource: name = Oberon; type = BootFile)
+
+8.5.96 (all thanks ps)
+	- Icons.Mod: fixed Model-Link in icons
+	- Lists.Mod: changed copy over behaviour
+	- ScrollViews.Mod: fixed Oberon.ControlMsg
+	- ScrollViews.Mod: adjust scrollbars when loading from file (version-No)
+	- Libraries2.Panel: adjusted to new ScrollViews
+	- Columbus.Mod: adjusted sizes because of bigger scrollbars in ScrollViews
+
+7.5.96
+	- fixed bug in Files.Old
+	- Win95 version
+		- uses Win95 long-filenames
+		- multithreaded
+		- supports Break key
+	(rest thanks ps)
+	- Icons.Mod: added Close/Open-Link to iconizers
+	- BasigGadgets.Mod: added Look-Link to buttons
+	- System.Tool: changed slash 'a:/*'
+	- TextDocs.Panel: Changed Inspector to Columbus
+	- System3.Tool: Changed Inspector to Columbus, added Files.Panel
+
+6.5.96
+	- fixed bug in NetTools.Mod
+	- fixed bug in Lists.Directory
+
+3.5.96 (all thanks ps)
+	- Gadgets.Panel: fixed Inspector -> Columbus
+	- Gadgets.Tool: fixed New Inspector -> New Columbus
+	- Panels.Mod: fix trap when PictureLink is set to NIL
+	- BasicGadgets.Mod: fixed Checkbox.YesVal attribute
+	- CardGames.Panel replaces now Solitaire, Spider and Freecell panels 
+
+2.5.96
+	- fixed bug in Strings.Mod
+	- added Oberon fonts
+
+1.5.96
+	- add Tetris to Games.Arc (thanks W. Ibl)
+	- added Games.Tool to Games.Arc (thanks pm)
+	- new BartSimpson.Mod (thanks Mad)
+
+25.4.96
+	- fixed bug in Texts.Scan (thanks pm)
+	- renamed Wino.* to Win.*
+
+23.4.96
+	- fixed bug in Out
+
+10.4.96
+	- fixed bugs in HyperDocs, HTTPDocs, HTMLDocs & HTMLDocs
+	- fixed bug in TerminalGadgets
+
+4.4.96
+	- fixed bug in Pictures
+	- fixed bug in TextGadgets0
+
+3.4.96
+	- fixed bugs in FTP, HTMLDocs & HTMLForms
+	- removed HTMLTables, TableGadgets
+	- changed Kernel.GCenabled to INTEGER
+
+2.4.96
+	- fixed bug in PSPrinter
+
+25.3.96
+	- fixed bug with NetSystem.GetPassword
+	- fixed bug in Modules.Free
+
+24.3.96
+	- add readable param. to Crypt.GetPassword
+	- changed Keys.Mod for new Crypt.Mod
+	- changed Linker.Mod for new Crypt.Mod
+	- fixed bug in Wino.Interchange.Mod
+	- changed Wino.NetSystem.Mod
+		SetUser, user, passwd removed
+		GetPassword now uses a dialogbox
+		DelPassword added
+	- updated Mail.Mod, Mail.Panel, Mail.Tool, FTP.Mod, FTP.Tool & Net.Text for new NetSystem
+	- added Audio package to Wino.Make
+	- removed ExternalApps
+
+22.3.96
+	- fixed bug in HTMLDocs.Mod
+	- fixed bug in HTMLImages.Mod
+	- fixed bug in Intel.OPLV.Mod
+
+16.3.95
+	- SPIRIT: added support for grey scale LCD screens (see Registry section of
+	UserGuide.Text)
+	
+15.3.96
+	- Added a WYSIWYG attribute to styles. Has the effect of making
+	the same line breaks of the following text on the printer as on the display.
+	- SPIRIT: Reorganized the printer metric calculation. Printer metric
+	calculation is now under control of the installed printer driver, and thus 
+	extensible.
+	- Added HOME/END support to the text gadgets (TextGadgets0.Mod)
+
+14.3.96
+	- Overflow fix in Attributes.Scan of names (thanks jt)
+	- Eliminate redundant check in EditKeys (thanks jt)
+
+8.3.96
+	- SPIRIT: Bug fixes and reorganization in FileDir (current directory was enumerated twice in search path)
+	- SPIRIT: Changed behavior of SystemDirectory to show all matching files in Oberon search path
+
+7.3.96	Hacker's Evening Off II
+	- SPIRIT: Small fix in Texts.Read (thanks ejz)
+	- Removed Documents.TitleToFilename from TextDocs, RembrandtDocs, EditTools, Documents, Desktops.
+	- SPIRIT: Added a document name to relative filename mapping facility in Documents.Init. This
+	allows you to see from where a document was loaded in the search path.
+	This feature is switched on and off by a registry entry "MapDocumentFilenames=Yes/No" in section
+	[System].
+
+22.2.96	Hacker's Evening Off
+	- SPIRIT: new Registry module with "hidden" section SystemInfo (thanks ejz)
+	- SPIRIT: added hypertext-like System.Directory browsing (thanks ejz)
+	- SPIRIT: Added System.DeleteDirectory, System.CurrentDirectory (thanks ejz)
+	- SPIRIT: Added FileDir.RelFileName, Files.GetName (thanks ejz, jm)
+	- SPIRIT: Added Files.SetDate (thanks ejz)
+	- SPIRIT: Made DOSBackup portable Windows3.1/Win95 (thanks ejz, jm)
+	- SPIRIT: DOSBackup.WriteFiles cuts off the path on writing files; accept strings as filenames too (thanks ejz, jm)
+	- SPIRIT: Added OberonToISO and ISOToOberon to Fonts (thanks ejz, jm)
+	- SPIRIT: Clipboard now supports ISO character set, and copying texts between Oberon versions (thanks ejz, jm)
+	- SPIRIT: EditTools now supports ISO character set for LoadAscii, LoadUnix, StoreAscii, StoreUnix
+	- Bug fix Compress.Mod (thanks ejz)
+	- Bug fix LPRPrinter.Mod (thanks ejz)
+
+20.2.96
+	- added Links.GetLink, Links.SetLink (thanks ejz)
+	- added to Attributes.Mod collection of Get and Set procedures (thanks ejz)
+	- added Gadgets.CopyPublicObject (thanks ejz)
+	- added Desktops.IsInMenu (thanks ejz)
+	- made PSPrinter more portable. Now uses PSHeader.Text instead of _PSHeader.ps.
+		Modified Printers.Tool to reflect this fact.
+	
+10.1.96
+	- updated Sisiphus (thanks jt)
+	- updated BartSimpson (thanks jt)
+
+9.1.96
+	- initialized R.lib in Texts.OpenReader (thanks pm)
+	- Bug fix in Analyzer (thanks shml)
+
+5.1.96
+	- changed filename length of Builder internal data structures to 64 (thanks gs)
+	- fixed constraint solver in Organizes.Mod (thanks rv)
+
+3.1.96
+	- increase initial size of clipping port in Display3.Open
+
+21.12.95
+	- small fix in Panels.Mod so that the Organizers work correctly
+	in all cases.
+	 - Updated Organizers.Mod so that children with constraints
+	 cannot be moved or resized.
+	 
+20.12.95
+	- SPIRIT: Added eps support to PSPrinter.Mod (see Printers.Tool)
+	
+15.12.95
+	- TextsGadgets0.Mod: fixed delete (thanks pm)
+	- Gadgets.CreateObject now uses Modules.resMsg (thanks tk)
+	- SPIRIT: Update of PSPrinter.Mod that exports the print file (thanks ejz)
+	- Bug fixes in Pictures.Mod:
+		12.12.95 - bugs fixed in ScanScrDsc & ConvertGif (ejz)
+		13.12.95 - bug fixed in LZWDecompression (ejz)
+	     6.12.95 - CopyBlock works within a picture (eos)
+	- Updated DOSBackup and LPRPrinter (thanks ejz)
+	- Update of SourceCoder (thanks ejz)
+	- Moved FileDir.OptionChar to Oberon.OptionChar. Deleted Effects.OptionChar.
+		Caused minor updates to TextDocs, Inspectors, and Builder (thanks tk)
+	- Added FileDir.GetRelName, and Files.GetName (implementations
+	are currently empty !) (thanks tk)
+	- Added Pin attribute to iconizers to switch on/off popup pin (Icons.Mod) (thanks tk)
+	- Added underline attribute for captions (TextFields.Mod) (thanks tk)
+	- Added more portability features for module Crypt (thanks tk)
+	- SPIRIT: Made Resources.Mod & Linker.Mod portable and changed format for REAL compression (thanks tk)
+	- Small palette fix in Rembrandt.Mod (thanks tk)
+	- Reduced retries in Dekstops.OpenPrinter (thanks tk)
+	- Added TextDocs.SearchColor to search for colored text (thanks tk)
+	- Added support for short menus when using low-resolution displays / minor fixes in Desktops
+
+14.12.95
+	- SPIRIT: Fixed literals string length in Texts.Scan (thanks pm)
+
+4.12.95
+	- Fixed Rembrandt.Copy
+	- SPIRIT: Added Crochet.Pict, Flock.Pict and Pebbles.Pict to distribution (thanks afi)
+	- SPIRIT: Added document extension .Pict to oberon.ini for old pictures without document headers (thanks afi)
+	- corrected possible range overflow in Documents.TitleToFilename
+ 
+24.11.95
+	- fixed left overhang problem in text gadgets when using very wide objects with right
+	and center adjust styles (TextGadgets.Mod)
+	
+21.11.95
+	- fixed copying of text containing objects to clipboard (Clipboard.Mod) (thanks ps)
+	- fixed context problem when popping up iconizers (Icons.Mod) (thanks eos)
+	- fixed missing RETURN in TextsDocs.replace (thanks pm)
+	- Pictures.Create now initializes the picture palette to the current palette.
+	- SPIRIT: Added PS, Snapshot to the applications part of the release.
+
+17.11.95
+	- SPIRIT: Fixed long DOS filename bug under Windows 95 (FileDir.Mod)
+	This will cause problems when trying to open long filenames under PC NFS.
+
+16.11.95
+	- Detail Inspector now also shows "Add Attribute" for model gadgets (thanks ejz)
+	- The inspector now immediately shows the attributes of the selection
+		when opened. (thanks jt)
+	- Fixed cross Viewer text selection problem in Desktop (thanks afi, jt)
+	- Speeded up TextGadgets a little (TextGadgets.Mod)
+	- Fixed insert problem with locked panels (Panels.Mod) (thanks ejz)
+	- Inserted ReplaceAll into the menubar of the TextDocs (TextDocs.Lib)
+	- Fixed weird copy over behavior of captions in panels (thanks jt)
+	- Pagebreak styles in TextGadgets now always remain visible and editable (thanks jt)
+
+14.11.95
+	- CS, if return value was not placed in EAX then the function failed to return the result.
+		e.g. RETURN ASH(v1, v2) (in GenCode iOPL.Mod)
+
+8.11.95
+	- Made Reals portable with endianess test (thanks jt)
+	- Libraries.PutModel now uses the LinkMsg (thanks jt)
+	- Added System.ClearLog (thanks jt)
+	- Out.Open now skips to an empty line if needed (thanks jt)
+	- Made Dates portable (thanks jt)
+	- Made minor changes to Sisiphus (thanks jt)
+	- Removed Console output from Objects (thanks jt)
+	- Input.TimeUnit is now a LONGINT variable (thanks jt)
+	- Minor change to Skeleton.Mod
+	- Fixed Rembrandt0.InitCross (thanks jt)
+	- Fixed Panels.Align0 (thanks jt)
+	- Moved Desktops.MakeIcon to Icons.InsertIcon
+	
+2.11.95
+	- fixed bug when trying to insert a public object directly in a text (thanks Automatik).
+	
+1.11.95 IMPORTANT CONCEPTUAL CHANGES
+	- Introduced default handling of the LinkMsg in Gadgets.framehandle.
+	A new link field of Gadgets.Object and Gadgets.Frame store the links.
+	A new module Links is responsible for handling the links.
+	
+	- Introduced Gadgets.CmdMsg for scripting purposes:
+	
+		CmdMsg = RECORD( Objects.ObjMsg ) 
+			cmd: ARRAY 128 OF CHAR; (* command gadget should execute *)
+			res: INTEGER;
+		END;
+	
+		The only defined command so far is "PREPARE", used for document
+		attachments (see next section).
+		
+	- Introduced document meta-data. A document is now stored as
+		
+		document-header meta-data doc-data
+		(meta-data is new)
+	
+	The document meta data is attached to the document type itself
+	as attributes and links. This data is called document attachments.
+	Attributes like Author, etc can be attached with the Inspector to
+	documents. Links are used to attach objects to documents. 
+	The following procedures in module Documents load and store the attachments of a document:
+	
+		PROCEDURE LoadAttachments*(VAR R: Files.Rider; VAR attr: Attributes.Attr; VAR link: Links.Link);
+		PROCEDURE StoreAttachments*(VAR R: Files.Rider; attr: Attributes.Attr; VAR link: Links.Link);
+
+	Loading attachments is done BEFORE trying to load the document data.
+	As usual, StoreAttachments writes a one-byte tag (value 0F7X). LoadAttachments assume
+	that the tag has been read already. After loading meta-data, a document can
+	send a command string "PREPARE" with Gadgets.CmdMsg to the links
+	attached to the document. See DocumentSkeleton.Mod. Also see Reminders.Mod
+	for example of a link attachment.
+	- Added support for document meta-data to PanelDocs and TextDocs.
+
+26.10.95
+	- Fixed TextDocs.Locate with out of range location (thanks oertli)
+	- Updated TextFields and NamePlates with scrolling. The left and right
+	arrow keys scroll the caret in such a way that the text remains visisble.
+	
+23.10.95
+	- Fixed trap with Builder.Free ^ with no selection (Builder.Mod) (thanks eos)
+	
+13.10.95
+	- Popout buttons now only execute a command when the mouse is
+	located inside of them (BasicGadgets.Mod) (thanks shml).
+	
+11.9.95
+	- SPIRIT: Changed compiler not to allow exporting of read-only constants, types,
+	and procedures. (iOPP) (thanks tk)
+
+1.9.95
+	- Fixed page number printing bug in TextGadgets0.Mod
+
+31.8.95
+	- ejz: Added a Cmd attribute for Outlines.
+	
+29.8.95
+	- SPIRIT: Made System.DeleteFiles ^ safer (thanks oertli)
+
+28.8.95
+	- Change wording in Gadgets.Mod to "generator procedure" instead
+	of "new procedure".
+	- SPIRIT: pos field width of compiler error messages increased (thanks Marius Ackerman).
+	- Changed Icons.Mod so that Icons do not accept non-frames as models (thanks Patrick Reali).
+
+24.8.95
+	- Panels.Mod, forward SelectMsg, id = reset to children (thanks eos).
+	
+11.8.95
+	- Added font cache font for metric fonts of captions (TextFields.Mod)
+	- SPIRIT: Fixed Display.ResetClip to be screen size independent.
+	
+9.8.95
+	- SPIRIT: changed FileDir and Files so that Oberon does not change the contents
+	of directories marked read-only. This allows you to protect a directory from tampering
+	by Oberon (note that DOS does not seem to regard this flag of directory entries). Use the following
+	DOS commands:
+	
+		attrib +r dirname	(switch RO attribute on)
+		attrib -r dirname	(switch RO attribute off)
+		
+	You need to restart Oberon for this to take effect. Trying to change files in a read-only
+	directory will result in TRAP 99 in module files.
+	
+	- SPIRIT: Compiler.SetDestPath allows you to specify an output directory where the
+	compiler will write .Obj and .Sym files.
+	
+8.8.95
+	- Increased the size of the document pre- and post fixes to 32 characters (Documents.Mod)
+	- SPIRIT: Exported FileDir.PathChar, the directory separator character (\, /, or :).
+	
+7.7.95
+	- SPIRIT: Added Kernel.HeapSize()
+	- Added Spirit of Oberon portable file directory enumerator in FileDir. Also updated Lists to make use of it.
+	
+	TYPE
+		FileEnumerator* = PROCEDURE (path, name: ARRAY OF CHAR; time, date, size: LONGINT; isdir: BOOLEAN);
+	(** Standard Spirit of Oberon way to enumerate files. Detail indicates if time, date and size
+	is returned. When
+		path = "."	=> enumerate files in current directory
+		path = ""	=> enumerate files in search path
+		path = ?	=> enumerate files in indicated directory.
+		
+		Directories are always returned independent of the pattern specified. Only wildcard is "*".
+	*)
+	PROCEDURE EnumerateFiles*(path, pattern: ARRAY OF CHAR; detail: BOOLEAN; enum: FileEnumerator);
+	
+	- SPIRIT: Added Modules.resMsg, an exported string giving translation of the error
+	code Modules.res. The same resMsg applies for Oberon.Call.
+	- SPIRIT: Texts.WriteString writes all characters up to the 0X.
+	- Pictures.Open can now open GIF pictures directly. The GIF reader has been moved
+	from RembrandtDocs to Pictures (making it portable)
+	- SPIRIT: Added FileDir.GetWorkingDirectory has a portable way to get the current directory.
+	
+6.7.95
+	- Fixed TextGadgets0.InsertObj to work correctly with public objects. Modified WriteObj
+	below.
+	- Fixed log message in RembrandtDocs.Store
+	- SPIRIT: Added FileDir.SpecialChar(ch: CHAR): BOOLEAN;
+	Indicates if a certain character is part of a valid Texts.Name. The letters a-z, A-Z, ., 0-9, @,
+	are always part of a valid filename and should NOT be tested with this function. SpecialChars
+	are those needed in addition to the normal ones above, and are by convention the
+	directory separators allowed by the underlying filesystem. On Windows _, \, and :
+	belong to the special characters.
+	
+5.7.95
+	- Fixed TextGadgets0.CopyStretch to work with larger number of objects (thanks ejz)
+	- Fixed TextGadgets0.InsertObj to do the right thing when inserting an object
+	into an already full text private library.
+	- How to write an object into a text:
+	
+	PROCEDURE WriteObj*(VAR W: Texts.Writer; VAR obs: Objects.Library; obj: Objects.Object);
+	VAR lib: Objects.Library;
+	BEGIN
+		IF (obj.lib = NIL) OR (obj.lib.name = "") THEN (* free or private *)
+			IF obs = NIL THEN NEW(obs); Objects.OpenLibrary(obs) END;
+			obs.GenRef(obs, obj.ref);
+			IF obj.ref >= 256 THEN	(* allocate a new library when running out of space *)
+				NEW(obs); Objects.OpenLibrary(obs);
+				obs.GenRef(obs, obj.ref)
+			END;
+			obs.PutObj(obs, obj.ref, obj)
+		ELSIF (obj.ref < 0) OR (obj.ref > 255) THEN HALT(99)	(* public objects have to have byte size refs *)
+		END;
+		lib := W.lib;
+		Texts.SetFont(W, obs); Texts.Write(W, CHR(obj.ref));
+		Texts.SetFont(W, lib)
+	END WriteObj;
+
+	Call this routine with obs set to T.obs, where T is the text the object will land in.
+	
+28.6.95
+	- Fixed Attributes.InsertAttr (thanks TIK)
+	- Updated Views.GetBlock and Views.RestoreBlock to work with the Bitmaps
+	module if no background bitmap is available.
+	
+22.6.95
+	- Removed the processor macros {, |, and } because they
+	were never used. Updated GadgetsGuide to reflect this fact.
+	- Added a header line parameter to TextGadgets0.PrintText. Text Documents
+	now print the name of the text document in the page header.
+	- exported a new flat flag for TextGadgets0. Setting this flag
+	removes the 3D effect of text gadgets.
+	- Made corrections ( and ) to the Syntax20 screen font (thanks afi).
+	
+21.6.95
+	- SPIRIT: fixed NetSystem IP address calculation so that people in
+	Australia can use ftp too (thanks ejz)
+	- fixed Attributes.Read. Also made some minor changes to Gadgets.Mod
+	for macro substitution. Should the handler of macro character return
+	no text at all, the macro character is used instead. The rsult is
+	that ^ now expands to ^ when no selection is present.
+	- SPIRIT: Underscore characters are now mapped to the right character
+	when using truetype fonts.
+	- Views do not reset their contents to the default position when located
+	as main frame in a DocViewer. This solves the problem of the Navigator
+	disappearing when the desktop is temporarily overlapped with grown viewers.
+	Views now look the same everywhere and the border is not adjusted any
+	more to make them more visible when located in panels.
+	
+17.6.95
+	- Got married so I could not fix any bugs.
+	
+12.6.95
+	- SPIRIT: took V24 adaptation for Windows 95 from Daniel Diez (thanks).
+	
+8.6.95
+	- SPIRIT: took LZW compression for DOSBackup from ejz
+	- Incorporated searching by comparing whitespaces in TextDocs.Mod. Changes made by tk.
+	- Added a search button to the TextDoc menu bar in the system track.
+	
+7.6.95
+	- Fixed TextGadgets.Mod to update shared styles correctly.
+	- Adapted Libraries.Mod to support model objects too. (thanks jt)
+	Check the GadgetsGuide for more details.
+	
+30.5.95
+	- SPIRIT: Fixed NetSystem.SetUser to accept longer user names (thanks ejz)
+	- SPIRIT: Fixed character mapping from Oberon to Windows in Fonts.Mod (thanks ejz)
+	- SPIRIT: Changed oberon.exe to the version that does not crash on Windows NT 3.51 beta.
+	
+23.5.95
+	- Fixed Hyperlink button in TextDocs.Panel. Also updated Aliases text (TextControl is now TextHyperlink)
+	- Fixed Libraries Cleanup (Libraries.GC). Made changes to Libraries.Mod, Pictures.Mod, Rembrandt.Mod 
+	
+15.5.95
+	- Desktops now checks for loading an empty document (D.dsc = NIL). (Desktops.Mod)
+	- Fixed Store in DocumentSkeleton.Mod
+	- Fixed cursor problem when trying to delete out of an empty text field (TextFields.Mod)
+	- Changed the scrolling behavior of lists so that the up/down arrows do scrolling
+	in a page up/down fashion. (Lists.Mod)
+	
+10.5.95
+	- Navigator now uses display aspect ratio to calculate its initial size (Navigators.Mod)
+	
+9.5.95
+	- Added error messages to DOSBackup.Mod and TextDocs.ChangeFont.
+	- Adapted Find to Text Gadgets (Find.Mod)
+	
+7.5.95
+	- added support for transparent objects in camera views
+	- removed nervous behaviour of Inspector when no object is selected
+	
+5.5.95
+	- improved opening on documents with a middle+right interclick. Longer
+	names are now accepted. (TextGadgets0.Mod, Desktops.Mod)
+	- Exported TextDocs.ShowText to quickly open an Oberon text.
+	
+4.5.95
+	- Fixed Rembrandt so that the pictures are regarded as true models when storing
+		(thanks eo). (Rembrandt.Mod)
+		
+3.5.95
+	- Added EditTools.OpenAscii and EditTools.StoreAscii for reading and writing
+		ASCII files (MSDOS CR, LF). (EditTools.Mod)
+	- Improved the Directory command of Lists (Lists.Mod)
+	- Improved Documents.Panel
+	- TextGadgets now show control characters like hyperlinks and styles as soon
+	as the first style is inserted with CTRL-ENTER. (TextGadgets.Mod)
+	
+2.5.95
+	- Changed DOSBackup to show files that are not in the translation table (DOSBackup.Mod)
+	- Switched DOSBAckup to text gadgets (DOSBackup.Mod)
+	- Changed EditKeys to work with Text gadgets (EditKeys.Mod)
+	- Changed AsciiCoder to work with Text gadgets (AsciiCoder.Mod)
+	- Changed Browser to work with Text gadgets (Browser.Mod) [Windows version only]
+	- Changed Rembrandt not to reset the palette on loading (Rembrandt0.Mod)
+	
+28.4.95
+	- exported a autoscroll flag for text gadgets (TextGadgets0.Mod)
+	
+27.4.95
+	- Commented Configuration.Mod
+	- switched autoscrolling off by default, only in logs it is switched on (TextDocs.Mod, TextGadgets0.Mod)
+	- Fixed problem where a Panel would resize a selected child although the lockedsize flag is set (thanks jt)
+		(Panels.Mod)
+	- Fixed Normalize spline bounding box calculation in BasicFigures.Mod (thanks jt)
+	- Fixed ColorSystem.StoreColors trap (thanks jt)
+	
+25.4.95
+	- Improved changing of the background picture of the panels (Panels.Mod)
+	- Fixed locking of the Inspector (Inspectors.Mod)
+	- Exported GetText from TextDocs.Mod
+	
+21.4.95
+	- Fixed command execution of checkboxes (BasicGadgets.Mod)
+	
+19.4.95
+	- Added delete right + arrow support to nameplates (NamePlates.Mod)
+	- Added delete right support to TextFields (TextFields.Mod)
+	- Added soft 3D look support to gadgets (TextGadgets0.Mod, Display3.Mod)
+	- Increase the height of the area where the document viewers can be grabbed with the left mouse key
+	(Panels.Mod, Desktops.Mod)
+	
+18.4.95
+	- fixed mask update in Panels	(Panels.Mod)
+	- changed scrollbar behaviour of List gadgets (Lists.Mod)
+	- fixed display line bug in TextGadgets.Mod related to deleting text in front of a invisible control object
+	
+6.4.95
+	- fixed navigator (thanks daniel diez)
+	
+5.4.95
+	- Fixed Rembrandt update (thanks Marc Sperisen)
+	
+28.3.95
+	- Fixed nested panel update problem (thanks jt)
+	- Added vertical lineups to panels (thanks ejz)
+		(A gadget has to return an integer attribute LineupHY that gives its relative base line position)
+	- Optimized text gadgets a little. 
+	
+13.3.95
+	- integrated Rembrandt into system. PictureDocs and PictureGadgets are only delivered
+	in the form of a converter module.
+	- fixed missing scroll bar in Text gadgets
+	
+7.3.95
+	- Improved handling of resize and moving of the DocViewers.
+	
+6.3.95
+	- fixed bug in Display3.Dot.
+	- fixed min = max in slider. In such a case max is forced to be 1 one more than min.
+	
+3.3.95
+	- Removed Printer3.Unit. Use Printer.Unit instead.
+	
+2.3.95
+	- PictureDocs can now open GIF pictures directly. File extension must be ".gif". Dont forget to prefix the file
+	with _.
+	
+24.2.95
+	- added model linkmsg support to picturegadgets
+	
+21.2.95
+	- Fixed locking of TextGadgets
+	
+19.2.95 - Sunday
+	- fixed BookDocs.PrintDoc.
+	- fixed Illustrate.Canvas converter
+	- improved the usesystemcolors option for Windows version. See UserGuide.Text for details and current restrictions.
+	
+18.2.95 - Saturday
+
+	- Added one cache entry for TCP.GetHostByName under Windows
+	- TextDocs.Locate and Edit.Locate made text editor independant.
+	
+	The following code works with Edit, ET, Script, TextDocs.
+	
+		(** Returns the frame that is at X, Y on the display.\ *)
+		PROCEDURE ThisFrame(X, Y: INTEGER; VAR F: Display.Frame);
+		VAR M: Display.LocateMsg;
+		BEGIN M.X := X; M.Y := Y; M.F := NIL; M.loc := NIL; Display.Broadcast(M); F := M.loc
+		END ThisFrame;
+		
+		(** Get the marked text *)
+		PROCEDURE GetText(VAR par: Display.Frame): Texts.Text;
+		VAR M: Objects.LinkMsg; t: Texts.Text;
+		BEGIN
+			t := NIL;
+			ThisFrame(Oberon.Pointer.X, Oberon.Pointer.Y, par);
+			IF par # NIL THEN
+				M.id := Objects.get; M.name := "Model"; M.obj := NIL; M.res := -1; par.handle(par, M);
+				IF (M.obj # NIL) & (M.obj IS Texts.Text) THEN t := M.obj(Texts.Text) END
+			END;
+			RETURN t
+		END GetText;
+
+		(** Set the caret, scrolling if needed *)
+		PROCEDURE SetCaret(F: Display.Frame; T: Texts.Text; pos: LONGINT);
+		VAR M: Oberon.CaretMsg;
+		BEGIN
+			M.id := Oberon.set; M.F := F; M.car := F; M.text := T; M.pos := pos; Display.Broadcast(M)
+		END SetCaret;
+
+17.2.95
+	- @ is now a legal character for Names in Texts.Scanner and Attributes.Scanner. This is needed
+	for DOS-Oberon printer specification.
+	- Increased the size of the document names to 128 bytes. Increased the size of the Attributes.Scanner
+	s field to 128 characters. These are preparations for the net documents mentions on 27.1.95. Currently
+	no changes have been made to the length of string attributes (and no changes are planned).
+	- Added vertical offset support to lists, captions, checkboxes for displaying texts.
+	
+13.2.95
+	- Changed definitions of InitDoc of the TextDocs and PanelDocs to accept W, H parameters.
+	- Fixed ~ bug in Gadgets module.
+	
+9.2.95
+	- Improved Lists.InsertItem.
+	- Improved copy out of list. No more too long lines. No more problem with tabs in list items.
+	- added up/down arrow support to text gadgets
+	- added page up/page down arrow support to text gadgets (keycodes 0A2X and 0A3X respectively).
+	
+8.2.95
+	- added delete right to text gadgets (keycode 0A1X)
+	- fixed underline tracking with block adjust mode in TextGadgets
+	
+7.2.95
+	- fixed recall in TG. Did not work correctly for nested objects
+	- fixed loading of Views.View when obj is not available
+	
+6.2.95
+	- Remove the caret + selection before setting the Model link of the textgadgets.
+	- Added pagebreak support to the styles of the text gadgets. Use the pagebreak attribute
+	of the style gadget.
+	
+3.2.95
+	- LM + MM no inserts a copy of the selected text or gadgets (whatever selected later) at the caret position. Shallow copies
+	are made.
+	- Gadgets can now be dropped directly into a text. The position the gadget is inserted is the left-bottom corner of the
+	gadget during tracking.
+	- Gadgets.CreateViewModel now uses the LinkMsg
+	
+2.2.95
+	- Rewrote TextFields.Caption
+	
+1.2.95
+	- Panels.ChangeBackdrop now resets the panel background if a non-existing picture filename is used.
+	
+30.1.95
+	-  fixed vanishing cursor when resizing transparent gadgets in panels
+	
+27.1.95
+	- Changed def of Display3.StringSize so that Fonts.Font are expected and not the font name.
+	- Prepared Documents module for the next generation of remote documents.
+		Filenames in the form "prefix: ..." where prefix is more that two characters long are
+		assumed to be "generated documents". The prefix determines a document generator procedure
+		with an internal lookup table in the Documents module. For test purposes, the table can
+		be extended with own (prefix, newprocedure) entries by adding them to the file "Documents.Text"
+		as a sequence of {prefix newprocedure}. In near future you will be able to do something like this
+		
+			Desktops.OpenDoc "http://www.ethz.ch/Welcome.Html"
+		
+		A revision for very long string attributes will be required in future.
+		
+24.1.95
+	- Adjusted DocumentSkeleton for version 1.6
+	- Panels now consume Pictures.NewPicture
+	- fixed missing cursor bug in DocViewers
+	
+23.1.95
+	- Larger boxes floating in text gadgets can now be selected as text stretch by clicking on
+	a few pixels below the gadget.
+	
+18.1.95
+	- Builder.NextError now wraps around if no more errors are found
+	
+17.1.95
+	- Change viewer/textframe color scheme according to jg
+	
+13.1.95
+	- Changed selection scope of the TextGadgets (Edit-like selection)
+	
+4.1.95
+	- made minor improvements to Libraries.Mod
+	- Improved Printer3.String (magic numbers do not appear any more)
+	
+3.1.95
+	- Documents.This renamed to Documents.Open
+	- Renamed Desktops.MakeIcons to Desktops.MakeIcon. Only works on the marked document.
+	- Documents now have a "DocumentName" attribute
+	- Fixed bug: text documents can now float inside a text.
+	- Added a command Desktops.InsertDoc which inserts a document (without menu-bar) at the caret.
+	This takes the same parameters as Desktops.OpenDoc.
+	- New rule established: New document types should at least load a default document contents when
+	their new procedures are called. This allows you to insert an empty document with Gadgets.Insert DocGenerator ~
+	- The error markers of the builder now show the error explanations in place---simply middle-click on them.
+	- Improved Panels.Align. Gadgets are now first sorted according to coordinates before aligned vertically or
+	horizontally. The result is more predictable for the user.
+	- improved Gages. The new models like load and memory can now be linked to the BasicGadgets.
+	
+22.12.94
+	- Fixed mask problem with NoteBooks.
+	
+21.12.94
+	- Document new generators can now also be aliased, i.e. Documents.OpenDoc (PanelDoc).
+	- Previously if an attribute of a gadget does not exist, the framehandler would return an empty
+	string attribute by default. Now the the framehandler really returns nothing. All gadgets that
+	depended on this behavior has to be modified. Check the Skeleton.Mod for one way of doing it.
+	
+16.12.94
+	- fixed recursive handling of ^
+	- Inspector now says generator instead of Type
+	- Gadgets.Change does not resize lockedsize gadgets any more
+	
+15.12.94
+	- removed "col" field from Gadgets.Frame. You should declare an own col field in your gadget extension.
+	- improved Locate and Builder.Compile so that even when the Oberon marker has been faded, the
+	marked document is still accepted.
+	
+14.12.94
+	- Improved Panels consuming
+	- fixed clipping problem with Display3.Line
+	- Gadgets.Object can copy themselves now (bug discovered by jt)
+	- Added Popup example module
+	- Ported Sisiphus and Outlines
+	- changed Windows version of the compiler to ignore objects in the text stream. This costs one
+	test per character read --> compiling becomes slower.
+	
+8.12.94
+	- Added Organizer gadgets to the release.
+	- Fixed printing problem in BookDocs
+	- Removed NewPattern and CopyPattern from from Printer3. Cannot
+	be implemented in a portable way with the current printer definition.
+	- updated Inspector for new flag strategy.
+	- Gadgets.Panel - Grid setting removed
+	
+7.12.94
+	- improved heap alloction of Masks
+	- implemented Panels Recall. Last deleted objects are deep copied
+		and integrated.
+		
+6.12.94
+	- Callback from Effects.MoveRect removed again
+	- restricted movement of embedded gadgets in TextGadgets.
+	- Added GetSelection procedure to Gadgets module. Returns, in the
+	same style as Oberon.GetSelection, the list of selected objects by
+	sending a Display.SelectMsg behind the scenes.
+	- can set/retrieve the text of a caption with the LinkMsg, name = "Model"
+	- added Sort attribute to lists (ejz)
+	- improved selection handling in list gadgets
+	
+30.11.94
+	- Desktops: renamed Viewer to DocViewer
+	- Picturepanels incorporated into Panels. Module Comp.PicturePanels.Mod
+		allow you to load older versions. "Panels.NewPicturePanel" creates a default
+		picture panel. "Panels.ChangeBackdrop Pictname" changes the backdrops of
+		the selected panels.
+	- added a base line for TextGadgets, fixed a copying bug in TG too
+	- fixed tab problem in TextGadgets
+	- increased the height of the Styles, fixed copying of styles.
+	
+29.11.94
+	- exchanged panels with new, more extensible version
+	- removed optimization flags from Gadgets
+	- removed nomove, noresize, nodelete, noselect flags from Gadgets
+	- renamed lockchildren to locked
+	- framehandler does resizing and moving by default now. If you don't
+	want your gadget to be resizable, you should change your handler
+	implementation.
+	
+17.11.94
+	- Added a callback to Effects.MoveRect
+	- fixed problems when documents are selected in the viewer
+	system and then the document is resized.
+	- corrected updating of the TextGadgets scrollbar in the Viewer System.
+	
+16.11.94
+	- removed monochrome display support. No more negative colors can be
+	used. Deleted Display3.screentype and Display.SetScreenType.
+	If you want you gadgets to print different on monochrome printers,
+	you will have to change the implementation of your gadget print
+	handling. Printer3 now issues r,g,b selections to the printer.
+	Using Display3 routines with negative colors will trap! (on some machines
+	at least)
+	- added a callback to Effects.SizeRect. Pass NIL as a last parameter
+	if you don't want to use this feature.
+	
+15.11.94
+	- Changed definition of Display3.String and Display3.CenterString to accept a font instead
+	of a font name---more efficient this way
+	- moved Effects.selectpat to Display3.selectpat---often saves importing effects
+	- Effects, some things are not exported anymore:
+		- removed middle, right, left
+		- removed tickspersec
+		- removed font
+		- removed screen
+	- Gadgets:
+		unexported Atom
+		removed GetAttr, NameView, NameModel, GetViewName, GetModelName
+	- Attributes: move alias stuff all to Gadgets module
+	- Display3.MakeMask deleted. Do it the long way.
+	- TextFields.InsertObj deleted
+
+---
+14.11.94
+	- Middle-Right clicking on a word in a text gadget now tries to open the underlined work as a document.
+	- Interface of TextsGadgets0 frame methods modified slightly. Call method now takes the keysum as parameter,
+	not the new flag as before.
+	
+---
+8.11.94
+	- AUTUMN CLEANUP PHASE STARTS/PREPARATIONS FOR RELEASE 1.6 STARTS/SYMBOL FILES WILL CHANGE!
+	- Passing a non-gadget as dlink to Gadgets.IsLocked, sends an AttrMsg with name = "Locked"
+	to dlink to find out if it is locked or not.
+	- Deleted the command Desktops.OpenView
+	- Change the signature of Desktops.ShowDoc to
+		PROCEDURE ShowDoc (D: Documents.Document) (* addview parameter now missing *)
+	- 31 state flag removed. A frame can find out using the "Absolute" attribute of its direct ancestor if
+	it is positioned absolutely on the display, i.e. it is placed in the Oberon viewer system. Only the
+	Desktops.Viewer returns TRUE at the moment. This attribute is only for internal optimization. It
+	is not advertized. Its value cannot be changed.
+	- cleaned up the mess of flags in the Desktops module. More consistent use of Gadgets.lockchildren.
+	I am thinking about getting rid of all the nomove, noresize etc flags soon.
+	
+---
+4.11.94
+	- List gadgets now have a virtual text as model. The list contents can be
+	set and retrieved by addressing the "Model" using the link message. Behind
+	the scenes the text is parsed or built up. The text is NOT linked to the list gadget.
+	
+---
+3.11.94
+	- built naming again as it was before 18.7. This now again allows you to
+	change the name of an object belonging to a public panel with the inspector.
+	
+---
+19.10.94
+	- Added Desktops.Recall command to recall last closed document (thanks to afi).
+	
+---
+13.10.94
+	- Fixed deleting of text over frame boundaries in TextGadgets0
+	
+---
+12.10.94
+	- Desktops do not open non-desktop documents any more
+	- New desktops have now no Tools button 
+	- fixed selectmsg handling in TextGadgets0
+	- fixed linkmsg in TextGadgets0 (forgot to set the res field)
+	
+---
+5.10.94
+	- Fixed binding bug in TextGadgets0
+	
+---
+20.9.94
+	- fixed Illustrate, DragSelectedChildren trap
+	- fixed Illustrate, Positioning of page during printing
+	- Fixed handling of the Oberon.SelectMsg in TextGadgets0
+	
+---
+10.8.94
+	- Fixed printing of large gadgets inside of text gadgets
+	- improved line spacing in text gadgets 
+	
+---
+27.7.94
+	- improved desktops so that documents are not placed on top of each other when no caret is set
+	- improved contents of the GadgetsProg book to reference our standard code examples
+	- improved document placement on the desktop. Desktops now try to prevent placing
+	a document exactly on top of another. The star marker can be used to override placement (thus
+	the caret is now ignored). The star marker can also be used to jump from overlapping to tiled
+	model and vice-versa. Updated GadgetsGuide.Text.
+	
+---
+25.7.94
+	- fixed returning of the selection in views (bug survives 3 years!)
+	- made color pickers a little larger. Older color pickers will still keep their old size. Color grid
+	made larger so that picking colors in 256 color mode is easier
+	- Icons do not move themselves any more when locked
+	- New example Blocks.Mod replaces Skeleton.Mod
+	- New version of Portraits introduced
+	
+---
+22.7.94
+	- Fixed TextGadgets0 and TextGadgets so that invisible control objects are selected correctly
+	
+---
+18.7.94
+	- Improved Gadgets.BindObj
+	- improved mask handling for Icons
+	
+---
+14.7.94
+	- Fixed mask update by the panels. res field wasn't reset after sending a Display3.OverlapMsg.
+
+---
+7.7.94
+	- Fixed bug in Display3 with clipping of CopyPattern
+	- Improved Locate in TextGadgets so that it does not scroll so much
+	- Iconizers floating in text now open to the bottom
+	- Objects in text are now always copied
+	
+---
+29.6.94
+	- Fixed the scrollbar of the text gadgets. Correct position is now showed when
+	the text gadget is changed in size.
+	- Added Alias support for Gadgets.Change
+
+(Release 1.5 on DOS and SPARC)
+	
+---
+9.6.94 
+	- Restricted the working of the navigators to only on the desktop
+	- Improved the Builder so that it works with Edit, Script and TextDocs
+	- When a default text document is created for un unknown document
+	type, the document is always made large
+	
+---
+30.5.94
+	- Improved the handling of Documents.This. Should the document modules be missing, a message
+	"loading failed" is displayed in the log. Should the document be of some unknown type, or be
+	missing, a TextDoc is created by default.
+	- Added two procedures to Desktops:
+	
+		PROCEDURE ReplaceCurrentDoc(D: Documents.Document); (* replace current document *)
+		PROCEDURE ReplaceDoc; (* command with the same syntax as OpenDoc *)
+		
+	The idea is to replace an existing document (i.e. the current document from which the command/procedure is
+	executed) with another.
+	
+	Try for example:
+	
+		Desktops.ReplaceDoc Gadgets.Panel	(replace GadgetsChanges.Text document with the Gadgets.Panel)
+		
+	Clearly, if you want to use this feature you need to organize your documents in an appropriate way.
+	
+---
+27.5.94
+	- Added lineup to text captions. Useful for creating hotwords in texts.
+	- Fixed Track highlight in Gadgets.TrackFrame. 
+	- Added len calculation the Attributes.Scanner
+	- Changes command syntax:
+			TextDocs.Search [ "search string" ]
+		Searches in the current document for the "search string", else if missing, takes the selection. Useful
+		to build "jump" hot links in a text document. For example, click  to see what I did on the 26.4.
+	
+---
+24.5.94
+	- On VGA resolution the menu buttons made themselves a little less wider. This feature is now switched off.
+	- Changes of 13.5 undone. Documents are not changed in size anymore of opened in the viewer system when
+	too big to fit in the desktop. The auto placement heuristic ensures that the top-left corner of the document
+	is visible in the desktop.
+	
+---
+16.5.94
+	- The text notes now bring themselves to the front when you click with the left mouse inside of them. Useful
+	to make post-it notes on your desktop.
+	
+---
+13.5.94
+	- Documents are now reduced in size so that they fit in the current visible area of the desktop. When this is impossible,
+	the document will be opened in the viewer system.
+	
+---
+11.5.94
+	- ErrorGadgets are now removed from the library of the text
+	
+---
+9.5.94
+	- fixed auto-scrolling again
+	- added support for vertical offsets in the text gadgets
+	- Added a command TextDocs.ChangeOffset no, to change the vertical offset of the selection. Measure is
+	in screen pixels.
+	
+---
+6.5.94
+	- made default gadgets palette a little lighter.
+	- simplified the handling of Oberon.InputMsg in Gadgets.FrameHandle.
+	- Lists do not allow inserting of duplicate elements any more.
+	- Exported Effects.optionChar. Is set to the official option character of the current platform ("/" on DOS,
+		"\" on Unix). This is in addition to the portable option char %. This makes the Builder an Inspector a little more portable.
+	- NEW LOCKING STRATEGY INTRODUCED
+	
+	A new bit in the state field of the gadgets called "lockchildren" indicates that the children of this gadget should
+	regard themselves as locked (i.e. no moving or resizing allowed). The flag only affects the direct children. On receiving
+	an Oberon InputMsg, a gadget steps one level up in the message thread to determine if it is locked or not. The process
+	is hidden behind a new procedure called Gadgets.IsLocked(F: Frame; dlink: Objects.Object). It returns TRUE if the
+	context of F is locked. The standard containers i.e. panels, iconizers, textgadgets, textnotes and textbooks now
+	all have a new "Locked" attribute. Recursive locking of panels are not supported anymore; you have to lock/unlock
+	all the levels yourself.
+	Previously locking meant setting the nomove and noresize flag of each gadget involved. 
+	The nomove and noresize flags can be used in addition to the new lockchildren flag. In fact, these flags are consulted after
+	the IsLocked is called by the default FrameHandler. Previously locked panel are of course not compatible with this model
+	and need to be changed and then stored again. Unfortunately the nomove and noresize bits are not set incorrectly
+	throughout many panels. Use the following program to recursively reset these flags in the selection. This may however
+	cause some bits to be set incorrectly anyway.
+	
+	MODULE Unlock; (* jm 6.5.94 *)
+
+	IMPORT Display, Objects, Gadgets, Panels, Out;
+	
+	PROCEDURE UnlockObj(obj: Objects.Object);
+	VAR f: Display.Frame;
+	BEGIN
+		IF (obj # NIL) & (obj IS Gadgets.Frame) THEN
+			WITH obj: Gadgets.Frame DO Out.Char(".");
+				obj.state := obj.state - {Gadgets.nomove, Gadgets.noresize, Gadgets.nodelete};
+				IF obj IS Panels.Panel THEN
+					WITH obj: Panels.Panel DO obj.state0 := obj.state0 - {Panels.noinsert, Panels.noselect, Panels.frozen} END
+				END
+			END;
+			WITH obj: Display.Frame DO f := obj.dsc; 
+				WHILE f # NIL DO UnlockObj(f); f := f.next END
+			END
+		END
+	END UnlockObj;
+	
+	PROCEDURE Unlock*;
+	VAR S: Display.SelectMsg; obj: Objects.Object;
+	BEGIN
+		S.id := Display.get; S.F := NIL; S.time := 0; S.obj := NIL; Display.Broadcast(S);
+		IF S.obj # NIL THEN
+			obj := S.obj; WHILE obj # NIL DO UnlockObj(obj); obj := obj.slink END
+		END;
+		Out.Ln;
+	END Unlock;
+	
+	END Unlock.Unlock
+
+---
+5.5.94
+	- Fixed the mouse tracking in the navigators
+	- Introduced NoteBook gadgets. Source can be found in NoteBooks.Mod.
+	
+---
+4.5.94
+	- Improved the calculation of printer metrics in TextGadgets and Printer3
+	
+---
+2.5.94
+	- Fixed TABing from one TextField to another, now also works in TextGadgets
+	- Added Vertical lineup to text fields inside text gadgets
+	- Fixed handling of Gadgets.UpdateMsg in Text Gadgets
+	- Added left + right arrow support to Textfields
+	- Support for copying document contents and documents over to the caret
+	- Fixed small problem with optimized adjust of TextGadgets
+	- Added InitX procedures for all standard gadgets, in addition to the existing NewX, CopyX, XHandle etc.
+	This makes the gadgets a little easier to extend.
+	
+---
+29.4.94
+	- Added InitFrame to Skeleton.Mod
+	- Fixed Desktops. Does not kill machine when an empty viewer is stored
+	- Desktops.CloseDoc now also works inside of a document
+	
+---
+27.4.94
+	- Fixed missing pagenumbers in the TextGadgets
+	- Improved "keeping" the font in the TextGadgets
+	- Added support for Gadgets.PriorityMsg in Iconizers.
+	- Iconizers now neutralize the child frame after flipping
+
+---
+26.4.94
+	- Did absolutely nothing!
+	
+---
+25.4.94
+	- Added procedures StringSize to Display3 and Printer3. Returns the width, height and ABS
+	descender size of a string in a specific font on the display and the printer. On the printer the
+	metric information is used when available, else a suitable scaling factor will be applied. This
+	relative complicated calculation can now be hidden from the programmer.
+	- Fixed scrolling of a Text Gadget in a TextGadget
+	- Improved Style handling in text notes
+	
+---
+22.4.94
+	- Send Display.ControlMsg with id set to Display.restore before a DocGadget is
+	inserted in the desktop
+	- Added CurMenu procedure to Desktops. In analogue to CurDoc, CurMenu returns
+	the current menu frame.
+	- Fixed jumping captions.
+	- Fixed Star marker fading when setting the caret in a TextGadget 
+	- Change indicator ("Store !") in TextDoc menu-bars
+	
+---
+21.4.94
+	- Added printer support to DocGadgets
+	- Fixed printer support in Icons.Views
+	- PanelDocs no print on the top of the page, not the bottom anymore
+	- Added very simple printing to PictureDocs. No possibility to scale the picture.
+---
+20.4.94
+	- Removed bring to front/take to back introduced yesterday. Now the DocViewers check if they are visible or not
+	before passing the left click event down to their contents i.e. main frame. This is done with an enhancement
+	of the Gadgets.PriorityMsg with id set to Gadgets.visible. This allows a gadget to ensure that it is at least visible, in
+	contrast to Gadgets.top that changed a gadgets priority to top even if it was completely visible. New constant exported
+	from module Gadgets, small change in Desktops, and in Panels were made. All symbol files changed today.
+	- Improved Documents.This so that unknown document types are always regarded as TextDocs.
+	- Added Printer3.ReplPict.
+	- Added printer support to PicturePanels
+	- Added printer support to Lists
+	- Added printer support to Sliders
+	- Added printer support to iconizers
+	- Fixed Printer.CenterString. Now uses Printer metrics to position and format the text caption.
+	- Added Printer support for TextGadget and TextNote views.
+	- Added printer support to Navigators
+	
+---
+19.4.94
+	- Desktop: The left mouse key in the menu-bar, when not used for setting the caret, can be used
+		to "push" the document to behind. The left key plus middle interclick brings the document to the
+		front.
+		[NOTE: SEE 20.4.94 ALSO]
+	- Aliasing has proven to be a problem when scanning with the Attributes Scanner. Some words are automatically
+		aliased without the user noticing it. The new scanner does not do aliasing at all. The procedures GetAlias
+		and SetAlias are still in module Attributes . This allows Gadgets.Insert & Gadgets.Link to use these functions during creating
+		new gadgets. The reading of the aliases file still takes place in module Attributes. If you used aliasing
+		actively before, I suggest adding calls to GetAlias in your own code. Otherwise this change should have
+		little effect on users.
+	- Because Buttons are normally of the "popout" variety, the buttons are now created with the popout attribute
+	set by default.
+	- Builder now support the /d option for locating trap positions in the source code.
+	- Improved LocateString in TextGadgets slightly.
+	- Added ReplaceAll to TextDocs.
+	- Added TextDocs.SearchDiff. It works the same as ET.SearchDiff.
+	- Fixed removing of caret on using the Oberon.CaretMsg to set the caret in a TextDoc.
+	- Added BasicGadgets.Break. Breaks apart a button that contains another object as "view". The content is inserted
+	at the caret.
+	 - The lookup macro ("&") normally functions only in the current context. A next higher/outer context can
+	 be searched by adding further ampersands, for example "&&Obj.Value", "&&&Obj.Value" etc.
+	 - slightly improved text selection over different text gadgets
+	 
+---
+8.4.94
+	- Fixed LinesUp in TextGadgets0
+	
+---
+7.4.93
+	- Added ErrorGadgets to the Builder. These gadgets show the position of an error in the Oberon source code.
+	Builder.Compile *		Compile marked document
+	Builder.Compile /s *	Compile marked document, allow symbol files
+	Builder.MarkErrors ^	Select start of error report in log, mark the text document where the error gadgets are to be inserted.
+	Builder.ClearErrors	  Remove all error gadgets from the marked document
+	Builder.NextError		Advance the cursor to the next error gadget
+	
+	Error gadgets are automatically removed from the marked source code before compilation. You need not use
+	Builder.ClearErrors before compiling. Clicking on an Error gadget gives an explanation of the error in the Log.
+	
+	- If colored text is executed in TextGadgets, search for a control object following, and execute its "Cmd" attr. Else
+	execute the text as normal.
+	- Fixed support for DOS file names in Documents and Attributes.
+	- Allow the use of the middle key in Navigators
+	
+---
+6.4.93
+	- Fixed resize problems when textnotes are nested in text notes.
+	- Fixed TextDocs.Search & TextDocs.Replace problem with caret
+	- TextGadgets now pass things that are not of scanner class Texts.Name to the Point attribute
+	- Changed TextGadgets so that when the middle key does not point directly at any word nothing
+	is underlined. This also makes TextGadgets easier to use when used in Menu like elements
+	- Fixed problem when TextGadgets are made smaller and a tall first line is encountered
+	- Documents.This: TextDocs are now assumed when a document name cannot be resolved to a document type
+	- Added TextDocs.Show. Functions the same way as Edit.Show
+	- Remove bookmark feature from TextGadgets
+	- TextGadgets: When the caret is set, text is selected and the left or right arrows are pressed, the
+		selected paragraph is shifted to the left or the right. TABS or spaces are inserted/deleted as needed.
+		Note that when block adjusted styles are used you may see some strange effects. This feature
+		has been added to simplify program editing.
+		
+	- CONCEPTUAL SIDE-STEP.
+	Previously changing the size of a TextGadget located in the viewer system always caused it to be redrawn completely.
+	To optimize the adjusting of the bottom part of the TG I had to make some changes in Documents. This is because
+	the TG is normally in a Document frame which is then embedded in the main frame of the viewer. Due to the
+	use of relative coordinates, the TG could not determine its old absolute position on the display (probably
+	you need to make a drawing here) (and thus could not determine how it should optimize). Now the documents
+	fool its contents into believing that it has exactly the same coordinates as itself and thus the same origin. It has
+	no effect except that the coordinates do not fit to the normal gadgets scheme. The same scheme should also
+	be used for wrapper like elements when the child is allowed to optimize size changes.
+	In passing I changed the Desktop.Viewer's so that they confirm to the Gadgets semantics of the ModifyMsg.
+	The standard Oberon use of the ModifyMsg has a strange convention for the M.dY field (its always positive, I believe.
+	Check Reiser to confirm).
+		The transparent gadgets make a lot of problems during screen optimizations. Currently the TextGadgets do not
+	always check that they are not completely visible before redrawing new parts after optimizations. By chance this
+	works fine in the Desktop due to use of Display.state as the mode of the ModifyMsg. This also means that the
+	TextGadgets do not optimize resizes in the desktop. For this to be possible either the transparent gadgets
+	has to be banned OR a "not-covered-by-transparent-gadget" flag introduced. The latter will also
+	need some minor changes in DocGadgets in the same style as for Documents. I do not expect this to solve
+	all the problems with transparent gadgets.
+		The changes made have not been tested for all possible side effects. I am not sure that the problem has
+	been solved completely yet. Disturbing is that sometimes I have to "cheat" with coordinate transformations so
+	that certain display optimizations can be made.
+	
+---
+5.4.93
+	- Added TAB support to TextGadgets. Same mouse conventions as for Script. TextGadget styles are
+	not compatible with Script styles and vice-versa.
+	
+	- INTRODUCTION: User definable menus
+		
+		Documents may now customize their menu bars by "exporting" them as public objects from a public library. The
+		public library should contain three menubars for the Desktop, System track and User track respectively.
+		These menus should have the names "DeskMenu", "SystemMenu" and "UserMenu" respectively. For example,
+		the text documents have such a library (called "TextDocs.Lib"). When the library is missing the default menu-bars
+		are used. At the moment the PanelDocs do not have such a library, but you can create your own. Just call it
+		PanelDocs.Lib.
+		
+		Programmers must add support for this feature in their Document handlers. The desktop uses the LinkMsg to request
+		the document to return its menu bar. If nothing is returned, the default menu-bars are used. You should always
+		return a DEEP COPY of the menu-bar from the library. Best is to lock the menu-bars and to set the Border of the
+		Panel to 0. Note that the menu bar can have any height and content. 
+		
+		For example (copied from PanelDocs):
+		
+		VAR C: Objects.CopyMsg;
+		
+		ELSIF M IS Objects.LinkMsg THEN
+			WITH M: Objects.LinkMsg DO
+				IF (M.id = Objects.get) & (M.name = "DeskMenu") THEN M.obj := Gadgets.FindPublicObj("PanelDocs.DeskMenu");
+					IF M.obj # NIL THEN C.id := Objects.deep; Objects.Stamp(C); M.obj.handle(M.obj, C); M.obj := C.obj END;
+					M.res := 0
+				ELSIF (M.id = Objects.get) & (M.name = "SystemMenu") THEN M.obj := Gadgets.FindPublicObj("PanelDocs.SystemMenu");
+					IF M.obj # NIL THEN C.id := Objects.deep; Objects.Stamp(C); M.obj.handle(M.obj, C); M.obj := C.obj END;
+					M.res := 0
+				ELSIF (M.id = Objects.get) & (M.name = "UserMenu") THEN M.obj := Gadgets.FindPublicObj("PanelDocs.UserMenu");
+					IF M.obj # NIL THEN C.id := Objects.deep; Objects.Stamp(C); M.obj.handle(M.obj, C); M.obj := C.obj END;
+					M.res := 0
+				ELSE Documents.Handler(D, M)
+				END
+			END
+			
+	- Adjusted DocumentSkeleton with new Menus. Menus are found in TestMenus.Lib
+	- The text selection in nameplates and textfields are now returned correctly.
+	- Iconizers now support the LinkMsg
+	
+---
+4.4.94
+	- Allow setting of the borderwith of a panel by Inspector
+	- Save & load borderwidth of panels
+	- Modified Views.GetBlock & Views.RestoreBlock. If no view can be found on the message thread to handle the
+	restoring of the display, the background bitmap is used. This allows you to place iconizers in menu-bars. This change 
+	may cause iconizer and other users of Getblock and RestoreBlock not to work correctly in Script frames. Also the
+	size of the elements are restricted to the size (or presence) of the background bitmap.
+	- Gadgets.Obj: Allowed deleting names of public objects
+	- NamePlates: nameplates are not given the name "NamePlate" on creation anymore.
+	
+---
+1.4.94
+	- Fixed mask creation in Gadgets.MakeMask. Now the Clock will not "shine" through at some strange moments.
+	- Added auto-scrolling to TextGadgets. When text is inserted at the end of the document and the previous end was visible,
+	we scroll to ensure that the new end will remain visible. Also when the caret reaches the bottom of the gadget during
+	typing we scroll up to make sure the line we edit is always completely visible.
+	
+---
+31.3.94
+	- Fixed auto-indent in TextGadgets
+	- corrected backward scrolling in TextGadgets
+
+---
+29.3.94
+	- Added Pict and ReplPict to Display3 (changed the symbol file)
+	- Fixed returning of a selection covering two text documents in TextGadgets0
+	- Added Pict to Printer3
+	- Removed Gadgets.Broadcast. Rather use Display.Broadcast
+	- Check for non existent module in Builder
+	- Fixed returning of selection with ^. Last word is now handled correctly.
+	- PicturePanels now use Pict and ReplPict of Display3
+	- Added Printing for Icons. 
+	- Fixed line printing with NIL mask (Printer3.Line)
+	- Text Gadgets now also print page numbers
+	
+---
+25.3.94
+	- Fixed Display3.Subtract. Now works when mask origin # (0, 0) and original mask is rectangular.
+	- Removed overflow trap when printing nameplates.
+	- Relaxed debugging tests for uninitialised message origin in Gadgets.FrameHandle
+	- Improved support for Documents.LocateMsg when star marker is located in a Viewer or in the menu bar
+	   on the desktop.
+	   
+---
+24.3.94
+	- memory eating biest revised so that it works with public panels too
+	- TextGadgets metric font lookup optimized a bit
+	- Added recall of deleted text to TextGadgets
+	- Added TextDocs.Recall. Edit.Recall works too
+	- TextGadgets support for Oberon.CaretMsg and Oberon.SelectMsg. Allows to retrieve and set the caret or the
+	selection
+	- Deep copy of Text Gadgets fixed
+	- Remove caret and selection when a text gadget is selected
+	- increased the command string of ColorPickers to 64 characaters
+	- exported PictureGadgets handler
+	
+---
+23.3.94
+	- memory eating biest removed from panels. Children of panels are not bound immediately to the panels library.
+	- Fixed complete disappearence of text gadget contents when the frame is made 2 pixels or so smaller (ModifyFrame)
+
+---
+24.11.93
+	- fixed a few bugs in the TextGadgets
+	- added a locked state to textgadgets
+	- Added search/replace to TextDocs
+	- improved Desktops.Tool
+	
+---
+23.11.93
+	- Renamed module Colors to ColorTools
+	- Split Panels into Panels and PanelDocs
+	- Split TextGadgets into TextGadgets and TextDocs
+	- Renamed Leonardo to PictureDocs
+	- Updated online documentation
+	
+	After these changes has been made it is now necessary to convert existing
+	panels once to reflect the new document new procedures.
+	This can be done by a document type cast and then saving again:
+	
+		Desktops.OpenDoc x.Panel(PanelDocs.NewDoc)
+	
+	The following document new procedures are now available:
+
+	Panel - PanelDocs.NewDoc
+	Public Panels - PanelDocs.NewPublicDoc (These have to have .Lib extensions)
+	Text Gadgets - TextDocs.NewDoc
+	Log Gadgets - TextDocs.NewLog (Oberon log)
+	Canvas - Illustrate.NewDoc
+	Inspectors - Inspectors.NewDoc
+	Detail Inspector - Inspectors.NewDetailDoc
+
+---
+ 12.11.93
+ 	- Oberon-Tag '93	
+---
+ 08.11.93
+ 	- Remove Document support for pictures from the module PictureGadgets
+ 	- Module Leonardo now allows the opening of picture files in the desktop
+ 
+ ---
+29.10.93 - NEW RELEASE 1.4
+
+Many changes, both technical and conceptual have been incorporated in
+release 1.4.  This means that many modules need to be modified before they
+can be compiled. The following important changes have taken place:
+
+* Desktops and Documents
+
+The concept of a document have been incorporated into the Gadgets Kernel. Documents
+are displayable gadgets that can store and load to and from a named file. The file contains
+enough information to recreate the document gadget, even if just the filename is known.
+This allows the centralization of the Open, Store, and Print commands in the module
+Desktops. The module Desktops manages the placement of documents in the Oberon
+viewer system, and on the desktop itself. The desktop allows the overlapping of
+document gadgets and can store its current layout in a file.
+
+The following desktop commands are available:
+(the graphical equivalent can be found in Desktops.Tool)
+
+	Desktops.Open filename.Desk 		 Opens an existing or new desktop
+	Desktops.Store 						Saves the current desktop
+
+	Desktops.OpenDoc filename 												 Opens an existing document
+	Desktops.OpenDoc (DocumentNewProcedure) 					Creates an empty document of the specified type
+	Desktops.OpenDoc filename(DocumentNewProcedure) 	  Casts a document to a new type, if possible
+
+	Desktops.StoreDoc *					 	Stores marked document
+	Desktops.PrintDoc Printername * 	Print marked document
+	Desktops.MakeIcons * 					  Create an icon for the marked document
+
+Views.Open is not supported anymore.
+
+The document system is context sensitive; opening a document from the viewer system, causes
+the document to be opened in a viewer, and opening a document from the desktop, causes
+the document to be opened in the same desktop. In memory, documents consists of the document gadget
+that contains a primary gadget (Panel, TextGadget, Canvas, etc). The document gadgets are
+created by document new procedures. Executing a document new procedure creates an empty
+document of that type. This document can be sent a message to load and store itself.
+
+The following document new procedures are currently available:
+
+	Panel - Panels.NewDoc
+	Public Panels - Panels.NewPublicDoc (These have to have .Lib extensions)
+	Text Gadgets - TextGadgets.NewDoc
+	Log Gadgets - TextGadgets.NewLog (Oberon log)
+	Canvas - Illustrate.NewDoc
+	Inspectors - Inspectors.NewDoc
+	Detail Inspector - Inspectors.NewDetailDoc
+
+In the viewer system, a document is provided with a menu bar. The menu bar contents
+is determined by the document.
+
+An example document can be found in DocumentSkeleton.Mod.
+	
+* Name Scoping
+
+Previously object names were always inserted into the dictionary of the library they belong too.
+The dictionary was used when one object searched by name for another object (Gadgets.FindObj).
+This had the main disadvantage that names needed to be unique.
+
+In version 1.4 names are stored internal to each gadget. Its name is only inserted into the
+dictionary when the gadget belongs to a public library. Objects in private libraries can be located
+by name using the Objects.FindMsg. It can be sent to a certain gadget whose task it then
+is to find that named object between its descendants. The search may be recursive and is
+done in a breath-first manner. The object found thus depends on the display hierarchy of frames.
+The search context is normally the direct ancestor of the gadget searching for other gadgets.
+On command execution by a gadget (i.e. through the command attribute), the context can
+be found in Gadgets.context, or as normal, in the dlink field of the message received.
+
+The definitions changed slightly:
+
+	Gadgets.FindObj(context: Objects.Object; name: ARRAY OF CHAR): Objects.Object;
+	Gadgets.FindPublicObj(name: ARRAY OF CHAR): Objects.Object; (* "L.O" notation *)
+
+Note that FindObj cannot find global objects anymore. Also, name should NOT start with a
+period, i.e. ".XObj" becomes "XObj". 
+
+* Support for user-programmed abstract gadgets
+
+Buttons, CheckBoxes, Sliders, TextFields now communicate through the attribute message
+with their models. This means new abstract objects can easily be created. An attribute "Field"
+in the displayable gadget determine which component of the abstract gadget is meant. When,
+empty "Value" is used.
+
+Note that textfields tries to set model values using attributes of type string. Type conversion
+should be done by the model itself. Also keep in mind that most gadgets will manage any
+number of attributes, even those that it does not understand. Also, adding a first attribute
+of a certain name determines the type of that attribute for the rest of its existance. Currently
+its type cannot be changed by the Inspector.
+
+An example abstract gadget can be found in Complex.Mod.
+
+* Local mode in the TextFields
+
+Text fields do not enforce view model consistency on each character that is typed. A local
+editing mode is entered during which the model and view will in inconsistent. An inconsistent
+state is shown in a special way. Consistency is restored when RETURN is pressed, or the
+cursor moves to a different field. Note that the cursor now jumps from textfield to textfield when
+return is pressed. The jumping strategy is fixed.
+ 
+* Model for panels
+
+A model can be attached to a panel. Selecting objects in a panel and executing Panels.LinkSelObjs
+will link all selected gadgets in the panel to the panel's model.
+
+* Changes in the macro language
+
+The macro language has changed. This is due to the new name scoping rules. Global objects
+cannot be found anymore. Local objects in the current name scope can be specified without
+the "." prefix, for example "&.X.Value" becomes "&X.Value". Also, everywhere ".Name" appeared
+"Name" can be substituted. Error messages are shown in the log if objects cannot be found.
+
+The Sender and receiver macros has changed to ! and ? respectively (was @ and ! before).
+Often the @ can be used to indicate the object selection, i.e. not the text selection.
+
+* Help,  ActionIcons, Builder, Drawers discontinued
+
+At the moment Help, ActionIcons and the Builder is not supported any more. The drawers will
+be replaced at a later stage by books.
+
+* New Icons
+
+The new icon texts cannot  be edited anymore. A new attribute "Icon" allows the setting of
+icon pictures in "L.O" fashion.
+
+* New TextGadgets
+
+TextGadgets and TextNotes belong to the standard release now. Some extra features
+like styles, control objects and hypertext are supported at the moment, but may change
+in future releases.
+
+* New Lists
+
+Lists can now have scroll bars (selectable by an attribute "ScrollBar").
+
+* Hierarchy changes
+
+The module hierarchy has changed drastically. From bottom to top we now have:
+
+	Gadgets Documents Desktops,
+	then the simpler gadgets,
+	then the document gadgets.
+	
+The loading and stroring of panels are not done over the views module anymore.
+
+* LinkMsg
+
+The LinkMsg is now used to set, get and enumerate links between gadgets. The Inspector
+uses this message to find the model of a gadget.
+
+* Gadgets.UpdateMsg
+
+A conceptual mistake in the semantics of the Gadgets.UpdateMsg has now been corrected.
+
+The update message is used to update a single model gadget, or to update a whole set
+of displayable gadgets. The latter is used when the inspector changes the attributes of the
+selection. In the latter case the M.obj field contains a list of gadgets linked in the slink
+field. Previously, the panels intercepted the Gadgets.UpdateMsg if directed to one
+of its children, displaying all of the changed gadgets in one go. This had the
+disadvantage that the changed gadgets never got the update message themselves and
+could not use this message to indicate what exactly should be updated.
+
+Now the message is forwarded to all children of the panel. The child should check
+if it is in this list and update itself accordingly. In turn, the panel will draw the transparent
+object itself and will ensure that things that are in front of the updated gadgets are
+drawn correctly. One disadvantage of this technique is that updating of many
+transparent gadgets lying on top of each other will be slower.
+
+* Smaller details
+
+- Printing of captions has been corrected
+- Display.Unit is not used anymore. It is false to convert pixels to units using Display.Unit. It
+should only be used to convert document units to pixels. Rather, the fixed number 10000
+should be used instead of Display.Unit.
+- It is now possible to select the contents of a viewer.
+- The iconizer has been improved and allocates less garbage now.
+- A few bugs have been removed out of the Display3 module.
+- The Inspector gives messages to indicate error conditions.
+
+---
+13.07.93 
+	- switch macro substitution off when scanning strings, in single quote strings macro substitution
+		is on.
+		
+---
+01.07.93 
+	- fixed object consume by Buttons
+	
+---
+30.06.93
+	- reduced memory allocation on executing commands
+	- storing and loading of checkboxes corrected
+	- title of the menu bar can now be set by program
+	- improved support for one monitor, color display of the Color Ceres 3.
+	- more gadgets print now, but only on color printers
+
+---
+25.06.93 Release

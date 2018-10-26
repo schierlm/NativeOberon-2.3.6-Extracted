@@ -1,0 +1,551 @@
+Oberon with Gadgets - Getting Started
+
+
+	Introduction
+	The Oberon Programming Language
+	The Oberon System
+	Oberon Applications
+	Use of the Mouse
+	Viewer Layout
+	Commands
+	Editing
+	Disk File Management
+	Programming
+	Introduction to the Gadgets System
+	Conclusion
+
+
+
+
+Introduction
+
+Oberon is the name of a programming language and an operating environment created by the Institute for Computer Systems, ETH Zrich. Originally designed for computer science education by its implementers N. Wirth and J. Gutknecht in 1986, Oberon teaches modern programming language and operating system concepts to ETH students on proprietary computer hardware. Although Oberon is a complete operating system capable of running on bare hardware (as it still does at the ETH), it was ported in a many-year effort to most commercial hardware platforms where it is hosted as an application running on top of the host's operating system and is free available for many processor architectures. This was necessary so that students all over the world can use Oberon. In addition, the history, concepts, design and implementation of the Oberon language and system has been documented in a series of books. Today Oberon is taught at many universities all over the world and has found acceptance in the commercial world with commercial versions of the programming language. 
+Since 1986, many people at ETH have improved Oberon. It was lately extended with a modern document-based user interface, a software component framework, and transparent network support for distributed documents and transportable objects - features that still have to find their way into commercial systems.
+
+
+Acknowledgements
+
+Many people have contributed to Oberon. Many thanks go to those people who released the sources of their applications so that it could be adapted for various distributions.  Countless assistants at the ETH, students and users have contributed in one way or another to Oberon.  The file Acknowledgements.Text is an attempt to list everyone that contributed to Native Oberon directly or indirectly.
+
+
+
+The Oberon Programming Language
+
+Created by N. Wirth, Oberon is the successor of the popular Pascal and Modula-2 family of programming languages. It was specifically designed for systems programming, and was used to create the Oberon system in cooperation with J. Gutknecht.  A few years later, the Oberon language was extended with additional object-oriented features to result in the programming language Oberon-2.  The compiler in this distribution of Oberon can optionally compile Oberon-2 sources.  A short summary of the main features of the Oberon language follows (the full language report is included electronically in the distribution):
+
+Separate compilation of modules with interface checking across module boundaries. Definition and implementation modules are combined in the same source text.
+
+Strong type checking.
+
+Type-safe with no possibility of dangling pointers or memory leaks.
+
+Run-time type checking.
+
+Run-time checks to catch overflow and out of range errors. ASSERT statements for programming by contract.
+
+Architecture neutral with types CHAR, SHORTINT, INTEGER, LONGINT, REAL, LONGREAL, BOOLEAN, SET, POINTER, RECORD, PROCEDURE, open ARRAY and ARRAY. Mixed expressions and string operations.
+
+Type-extension for object-oriented programming, both instance- and class-centered. Type-extension can be used across module boundaries without requiring the source code of the base type. This allows programmers to extend a software system they did not write themselves.
+
+Messages realized as extensible RECORDs for programming message forwarding and message delegation.
+
+Type-bound procedures for implementing methods.
+
+Support for low level programming through module SYSTEM.
+
+I/O operations realized by standardized libraries.
+
+Fast compiler that generates portable and native code. No separate linking required.
+
+
+
+The Oberon System
+
+The original Oberon System was designed, implemented and documented by N. Wirth and J. Gutknecht. The current version is called Oberon System 3 and includes a graphical document-based user interface. Right from the start, the Oberon System incorporated a number of innovations that only later found its way into commercial systems. Its component framework puts it at the cutting edge of system technology. The features of the Oberon distribution include: 
+
+Dynamic and run-time linking of modules.
+
+Clearly structured in a modular fashion. Includes modules for several useful data-types like text, fonts and pictures. A very large degree of code reuse results in very compact applications. Standard I/O modules.
+
+Integrated and fast garbage collector to collect unused objects. Object finalization is supported.
+
+Single-process multitasking with support for non-critical tasks running in the background. Shared 32-bit address space for modules.
+
+Exceptions cause a stack trace to be displayed. Possibility to directly inspect the state of a running module.
+
+Possibility of calling "command" procedures directly from the user interface.
+
+Completely modeless graphical user interface with support for graphical primitives. Both overlapping and tiled windowing systems supported concurrently. Possibility of configuring the working environment.
+
+Support for persistent objects. Objects and datafiles are portable between all Oberon systems. Support for attaching code to objects so that they become transportable between different Oberon implementations.
+
+Component framework allowing the interactive construction and modification of graphical applications without programming. A large set of useful and extensible components are included. New components can be written or existing ones extended. MVC model support.
+
+Dynamic configuration of components through Inspectors. Possibilty to "unlock" existing applications and modify them for own purposes.
+
+Standard text and document editor with support for embedded objects. User configurable keyboard macro facility. Compiler compiles directly from the text window.
+
+Modern document-based user interface with the possibility of generating dynamic documents.
+
+Complete integration with TCP/IP networks with support for network documents.
+
+
+Oberon Applications
+
+Oberon contains several interesting tools and applications. Many of these were developed as productivity tools by ETH assistants and students. Other tools are of a more experimental nature and are still under development at ETH. An incomplete summary of applications in this distribution is:
+
+Internet tools supporting Mail, FTP, News, Telnet, WWW, and Gopher. These tools allow you to open a remote document as if it were local. Mail and News support transmission of Gadget components.
+
+Several tools and example programs related to the Gadgets GUI, including a tool for the management of public libraries of reusable components.
+
+In addition to the Oberon compiler, a symbol file browser, a source code profiler, an analyzer of Oberon source code, a hex editor, and a smart browser called Watson for exploring the hypertext module documentation of the system.
+
+In addition to the document editor, a tool for writing text outlines, a keyboard macro facility, and a string search tool.
+
+A tool to compress and encrypt source modules for further distribution,  and a tool to attach code to documents so that they become transportable.
+
+A bitmap editor called Rembrandt, with associated image manipulation tools, and a tool to create textured wallpapers.
+
+A tool to make backups on diskettes, a tool to prepare files for mailing, an archiver to compress multiple files into a single archive, an interface to the underlying operating system clipboard, and a tool to manipulate the color palette.
+
+Several electronic tutorials with embedded code examples on all aspects of the system, an Oberon-2 language reference, system programmers guide, and a large collection of sample programs, including the source of selected parts of the Gadgets system.
+
+
+
+Use of the Mouse
+
+Oberon's user interface relies on the mouse even more than other mouse_based systems, and is fine_tuned toward a three_button mouse. Unfortunately, most Macintoshes have only a single_button mouse, and many IBM compatible PCs only a two-button mouse, so that the missing mouse buttons need to be simulated via the keyboard. Don't worry, this is not as awkward as it may sound at first. Still, if you use Oberon a lot, you might want to get a three_button mouse. On Macintosh, just configure it so that the left button generates a mouse click, the middle button emulates the "control" key on the keyboard and the right button the "option" button, and you will have a true Oberon mouse.
+The Oberon mouse has three buttons which are called ML, MM, and MR in all documentation relating to Oberon. A large number of functions can be activated by pressing combinations of these buttons.
+
+
+
+
+
+To speed up further operations, Oberon introduces interclicks. To interclick means to press a second mouse button in addition to the first one. This means that while holding the mouse button down, one of the other two buttons is depressed and released. Then all mouse buttons are released (in any sequence). The first mouse button pressed determines the action to be done (as above), and the second button pressed modifies that action. When we for example say to MR + MM interclick, it means that the right button is pressed, followed by a middle button interclick. As interclicking is a little confusing at first (just like learning to play the piano), it is important to know that when you get nervous you can press all three mouse buttons (not necessarily simultaneously) to cancel any operation you started. An operation is only started once all mouse buttons are released.
+
+Basic Mouse Commands
+
+Point = ML
+Set the Caret by pointing to the desired character position with the mouse and pressing the Point button.
+
+Execute = MM
+Execute a command M.P by pointing to its name with the mouse and clicking the Execute button.
+
+Select = MR
+Select any contiguous stretch of text by moving the mouse from the first character to the last character of the desired selection while holding down the Select button (this is called "dragging" the mouse).
+	
+Cancel
+Cancel a mouse command that is just being initiated by pressing all three mouse buttons simultaneously.
+
+
+Special Keys
+
+Mark = PC: F1 key on keyboard    OR    Mac: Enter or F1 key on keypad
+	Set the Star Marker by moving the mouse to the desired location and pressing the Mark key.
+	
+Neutralize = F2 key on keyboard
+	Remove all marks and selections on the screen by pressing the Neutralize key.
+
+Redraw all viewers = F9
+
+
+Scrolling (in scrolling zone to the left of the text)
+
+Forward = ML
+	The line to which the mouse points will be moved to the top of the viewer.
+	
+Absolute = MM
+Scroll to a part of the document that corresponds to the relative position of the mouse in the scroll bar.
+
+Backward = MR
+	The line to which the mouse points will be moved to the bottom of the viewer.
+	
+Top = MM + MR
+	Scroll to the beginning of the document.
+	
+Bottom = MM + ML
+	Scroll to the end of the document.
+
+
+Advanced Commands
+
+Select and Copy to Caret = MR + MM
+	The selected text is copied to the Caret position.
+	
+Set Caret and Copy from Selection = ML + MM
+	The most recent selection is copied to the new Caret position.
+	
+Select and Delete = MR + ML
+	The selected text is deleted.
+	
+Copy Format at Caret to Selection = ML + MR
+	The formatting at the Caret position is applied to the selection.
+	
+Select to Beginning of Line = MR, MR
+	Click twice at the last character of the desired text selection.
+	You may keep dragging from the second click in order to select multiple lines.
+	
+Unload Module prior to Command Execution = MM + ML
+	The command's module will be re-loaded from disk before the command is executed.
+
+Select large amount of text
+Use the System.Copy command in the menu bar to create a copy of the viewer. Move to the end of the text to be selected in the bottom viewer. Now select the start of the text in the top viewer and the end in the bottom viewer and press the SHIFT key.
+
+
+Viewer Layout
+
+The Oberon screen is divided into a user track (for displaying and editing documents) and a system track (for system messages and command input). Each track may contain several viewers (windows). Viewers consist of a title bar showing menu commands and a contents area.
+
+	
+
+Moving Viewer = ML
+	Extend or reduce a viewer by clicking the Point button in its title bar and dragging it to a new location.
+	
+Repositioning Viewer = ML + MM
+	Move a viewer to any new location by interclicking the Execute button during the Move operation.
+
+
+
+Commands
+
+Oberon is an extensible system. There is no difference between functions offered by the operating system and functions added by a user which enhance the basic system. As a matter of fact, Oberon abandons the notion of a Program altogether. Atomic actions in Oberon are called Commands.
+Commands are parameterless procedures which may be executed directly from the operating system interface. Procedures from anywhere in a module hierarchy may be called in this way and there is no need for a "top" module which distributes commands to other modules. Instead, command distribution is built into the operating system. When a command terminates, control is passed back to the operating system's main loop. However, the module that contained the last command remains loaded in the system and all of its global variables remain unaltered. Subsequent commands may reference these variables freely.
+The granularity of commands may be quite fine. Typical commands display the directory of a storage device, increase the font size of the text last selected or compile the contents of the active window. A user may execute commands in any sequence and may thus be working on completely different problems in different windows at the same time. We call this "one_process multitasking".
+Commands are activated by the use of an Action Button (on the Macintosh, this is the "control" key on the keyboard). Pressing the Action Button while pointing at any text anywhere on the screen will try to execute a command of that name. This may be text in a pull_down menu, in a word processor document, captions in a drawing, or even the title string of a window.
+The system will then attempt to interpret the text that is pointed at as "Modulename.Commandname" and search for the corresponding module, possibly loading it from disk if it cannot be found in memory. If the module is present or can be loaded, it will then search for the requested command and execute it. If the module or the command cannot be found, the system will simply resume its usual input state (i.e. not display an error message).
+For example, the text written in italics following this paragraph is a command that will display the current time in the System.Log (the window in the upper right corner). Execute this command by moving the mouse over it and pressing the middle mouse button (or corresponding keyboard key):
+
+										System.Time
+
+
+Parameter Conventions
+
+Many commands operate on texts. Examples of such commands are Desktops.OpenDoc and Compiler.Compile. By convention, these commands accept several different methods of parameter specification, the most common of which is simply a list of file names terminated by a tilde "~" character. Alternatively, an arrow "^" as a parameter indicates that the file name should be taken from the most recent selection and an asterisk "*" tells the command that the contents of the marked viewer (the viewer containing the Star Marker) should be processed.
+
+
+Extensibility
+
+The main feature of Oberon is extensibility. A user can add an arbitrary number of commands to the system at any time simply by writing a module and compiling it. There is no need to install the command (it may be activated as soon as compilation has completed) and modules containing commands are not added to the system until an actual call is made. The <working menus> of commands that users keep (called Tools in Oberon) are regular text documents and freely editable. On the right you see the System Tool that is opened automatically whenever Oberon is started. Eventually, you will edit this file to your own requirements, placing commands there that you execute frequently.
+Even the basic resources of the system are extensible. For example, the editor you are just using supports "live" extensions of characters which are sent messages when editing operations occur. The moving objects that you see below are such "extensions" of characters. They float in the text just as characters, and may be cut, copied and pasted.
+
+																		 
+
+
+Editing
+
+Desktops.OpenDoc <filename>
+Open a new viewer and display the contents of a file. If the file does not exist, an empty viewer will be opened.  A short-cut for this operation is the MM + MR interclick.
+
+Store
+When activated from a menu, stores the contents of the viewer under the filename listed in the menu. A file may be saved under a different name simply by editing the menu and executing Store.
+
+Locate
+Locate the position of an error in a source text. Mark the viewer displaying the source, then select the error message in the Log Viewer, then execute Locate. The source viewer will scroll to the location of the error and the Caret will be placed just behind it. 
+
+Desktops.PrintDoc Default *
+ 
+
+Desktops.Recall
+Undo previous close operation (Recall popup in System3.Tool).
+
+TextDocs.Recall
+Undo previous delete operation: Set caret and execute TextDocs.Recall (or Recall popup in System3.Tool).
+
+
+Disk File Management
+
+List disk directory
+Select a mask (pattern) and execute System.Directory ^. The mask may contain wildcards "*" at any place. For example, the masks *.Text , *B*M* and ProjectX.* specify the set of files ending with extension Text, containing a "B" and an "M" in this order and starting with prefix ProjectX respectively.
+
+Copy or rename files
+Execute System.CopyFiles <pairlist> ~ or System.RenameFiles <pairlist> ~ respectively, where pairlist is a list of pairs of the form fromName => toName and "~" terminates the list.
+
+Delete files
+Select a file name and execute System.DeleteFiles ^ or, alternatively, execute System.DeleteFiles <namelist> ~ , where namelist is a list of file names.
+
+
+Programming
+
+To compile an Oberon module, open the source text with Desktops.OpenDoc and set the Star Marker (F1) in the viewer containing the text.  Then execute the Builder.Compile * command (available in the Compiler iconizer in System3.Tool). In case of a symbol file change use option "s" (allowing the old symbol file to be overwritten).
+
+If errors occur during compilation, the Builder will automatically insert gadgets into the text to mark the error position.  Middle click on the error gadget to see the error message.  The gadgets will be removed automatically when you compile again.
+
+If a run-time error (Trap) occurs when executing a command from your module, the run-time error position can be found as follows.  Set the Star Marker in the source text and select the line in the Trap viewer containing the error position information "PC = nnnn".  Then execute the Builder.Compile \f * command (available in the Compiler iconizer), which will set the caret at the position of the run-time error.  Tip: Double-click MR on the Trap viewer line containing the error to quickly select it.  To open the source text of the module, use the TextDocs.Show ^ command, which converts a procedure name, e.g. SomeModule.SomeProc into a file name by replacing SomeProc with "Mod", e.g. SomeModule.Mod.
+
+To load a new version of a compiled module first execute System.Free <name> ~ to unload any old version of the module with the given name and then simply call any command of the (new version of the) module. Note that modules must be unloaded hierarchically from top to bottom. For example, if module A imports module B then execute System.Free A B ~ to unload B.  As a shortcut, middle + left interclick can be used to reload a module and execute a command.
+
+
+Introduction to the Gadgets System
+
+The Gadget System is the graphical user interface of Oberon System 3. It is an object-oriented and extensible user interface framework based on software components. The software components are called Gadgets. They are tangible in a sense that they can be used wherever you require them, and remain usable in-place, just like a constructor set. For example we can insert some of them into this text to give you an idea what is meant. First we can embed some of them directly in the text (try using the middle mouse button on some of these components):
+
+								
+
+
+Or we can use container components like this panel to group gadgets together:
+
+		
+		
+Practically everything you see on the display, from the buttons right up to the documents are gadgets. Normally gadgets can be used and edited in place. You may try to move gadgets around in the panel above by grabbing them by their sides using the middle mouse button. The middle mouse button in a corner of a gadget can be used to change its size. Don't worry if you make a mess of things -- you will learn later how exactly to use gadgets.
+
+To summarize, the main features of Gadgets are:
+
+	+ They can manipulated interactively wherever they appear.
+	+ You may associate behavior with gadgets (interactively). More about this later!
+	+ They are persistant and can be stored in documents.
+	+ You can compose gadgets together in containers, and so build more complicated hierarchically
+	structured components.
+	+ You can create collections or libraries of gadgets to be shared by different applications.
+	+ Gadgets are portable between all Oberon platforms and behave exactly the same on each.
+	+ and you can program your own gadgets if the standard set does not satisfy your needs (example
+	sources are included in this distribution).
+
+		
+The Sandboxes
+
+The remainder of this document contains some sandboxes for you to play around in. Each sandbox illustrates a few Oberon concepts so you can get to know the system in the shortest time. Beginners are advised to visit them sequentially.
+
+
+Sandbox 1:	Inserting, Moving, and Resizing Gadgets
+
+
+
+1.	Use the left mouse button to place the caret in the panel marked Sandbox. The caret indicates where newly created gadgets will be inserted. Keeping the left mouse button down gives you feedback where the caret will be placed. Only one caret can be placed at any one time in the system; placing the caret removes it from where it was placed before. The caret can be removed completely by pressing the ESC key on the keyboard.
+2.	Push one of the control buttons on the left with the middle mouse button to insert a new gadget of the specified type at the caret. Note that the overlapping sequence of gadgets is determined by the sequence in which the gadgets were inserted into the panel.
+3.	The gadgets we are inserting in the sandbox are all rectangular in form. Rectangular gadgets have control areas along their inside edges. Use the middle mouse button on the sides of a gadget to move it around, and in the corners to change it in size. Note that the control areas are not visible and are only a few pixels wide. Also note that movement of gadgets is restricted to the sandbox container.
+4.	The inside of rectangular gadgets is reserved for "using" the gadget. Move the scrollbar knob by grabbing it with the middle mouse button. Trying using a scrollbar after "hiding" it partially behind another gadget.
+5.	Try placing the caret inside of this sentence and then pushing one of the control buttons. As you can see, text documents also have a caret, although it has a slightly different shape. Try typing on the keyboard with the caret set in the sandbox and then again inside of this text.
+	
+	
+Sandbox 2:	The Selection
+
+
+
+1.	As before, use the two buttons marked insert, to add some gadgets to the sandbox. Click with the right mouse button on a gadget to select the block or the circle. The current selection is often the target of further actions. Use the Fill Circle and Empty Circle buttons to fill and empty the selected circles. Use the middle mouse on the colorpicker to change the color of the selection.
+2.	The selection can be removed by pressing the right mouse key shortly in an area of the panel where no gadget is located. Otherwise the ESC key can be pressed to the same effect. Pressing and dragging the right mouse button in an empty area of the panel selects more than one gadget. Deselect a selected gadget by clicking with the right mouse button on it. Middle dragging the mouse on a selected gadget moves all the selected gadgets in the panel.
+3.	The system can manage multiple selections in different containers, although the last selection made in time is always the target of further actions.
+4.	Note how the circle can be adjusted in size by grabbing the white control points that appear when the circle is selected. This is an example of a non-rectangular gadget with special purpose control areas. Such control areas are normally only used for geometric figures.
+5.	Parts of any text (like this one) can be selected by dragging the right mouse button over the text.
+6.	A gadget can be selected in its control area if it contains something else that can be selected too, for example a textgadget containing some text.
+7.	You can color selected text using the ColorPicker.
+
+
+Sandbox 3:	Interclicks
+
+So far we have seen that
+	- the left mouse button is used to place the caret
+	- the middle mouse key is used to activate, move or resize gadgets
+	- and the right key is used to select gadgets.
+	
+To speed up further operations, Oberon introduces interclicks. To interclick means to press a second mouse button in addition to the first one. This means that while holding the mouse button down, one of the other two buttons is depressed and released. Then all mouse buttons are released (in any sequence). The first mouse button pressed determines the action to be done (as above), and the second button pressed modifies that action. When we for example say to right+middle interclick, it means that the right button is pressed, followed by a middle button interclick. As interclicking is a little confusing at first (just like learning to play the piano), it is important to know that when you get nervous you can press all three mouse buttons (not necessarily simultaneously) to cancel any operation you started. An operation is only started once all mouse buttons are released.
+
+Interclicks are pretty much standardized in the Oberon system (otherwise nobody would remember all the possible combinations!). Once used to them, you will be able to guess quite quickly how to use most Oberon applications and gadgets.
+
+
+Interclicks that modify selection (right):
+
+Deleting gadgets and text --- Interclicking the left mouse button while selecting gadgets or stretches of text (right button), causes the selection to be deleted. Press the Recall buttons to recall the last deleted gadget or part of text to the caret.
+Copying the selection --- Interclicking the middle mouse button while selecting gadgets or stretches of text (right button), causes the selection to be copied and the copy inserted at the caret. Try placing the caret in the panel below, then selecting and "copying over" a part of this sentence. Also try out the Cancel mouse combination (all buttons pressed).
+
+
+
+
+Interclicks that modify placing the caret (left):
+
+Copying the selection --- Placing the caret with the left mouse button and interclicking with the middle mouse button makes a copy of the current selection and inserts it at the caret. As you can see, left+middle and right+middle have the same meaning except that they are applied in the opposite direction. We call these combinations the copying-over interclicks.
+ 
+ 
+Interclicks that modify the middle mouse button:
+
+The mouse modifiers for the middle mouse button depends on if you are manipulating text or gadgets. The text manipulation interclicks are explained in the next sandbox. Here we will concentrate on the modifiers while using gadgets.
+
+The middle button modifiers apply only when gadgets are changed in position (i.e. grabbed by the sides with the middle mouse button or moved together as a group).
+
+Making a copy of a gadget  --- Interclicking with the right mouse button while moving a single or a group of selected gadgets, inserts a copy of the gadgets at the place where the mouse buttons are released.
+Dropping a gadget into another --- Interclicking with the left mouse button while dragging a gadget with the middle mouse button, drops the gadget into the gadget located at the position where the mouse buttons are released. Dragging and dropping a gadget is often called consuming a gadget, implying that the destination gadget consumes the dropped gadget. As panels disallow movement outside of their boundaries, dragging and dropping is the only way to move a gadget from one container to another.
+
+Try it out below:
+
+From Panel 1:		To Panel 2: 
+
+Dragging and dropping can be used to build more complicated gadgets out of simpler ones. Below we have a special container called an iconizer. Press the button in the top left corner of it to "turn" the iconizer around. Drop the other gadgets in the panel (the map and the second panel) onto each of the sides of the iconizer. Try pressing the "turn" button again. You can also drop copies with the middle+right mouse combination.
+
+
+
+
+Revision
+
+At this point you might need to get all the mouse combinations straight in your head. Don't worry if you can't remember all of the combinations. With a little practise it quickly becomes second nature. In summary:
+
+	General mouse conventions:
+		ML: Place caret
+		MM: Move / Resize / Execute
+		MR: Select
+		
+		ML + MM: Copy selection to caret
+
+		MR + ML: Delete selection
+		MR + MM: Copy selection to caret
+
+	Mouse conventions inside gadget control areas:
+		MM + ML: Consume gadget
+		MM + MR: Consume copy of gadget
+
+
+Sandbox 4:	Text, Modules, Commands
+
+Text plays an important role in the Oberon system. You already learned the mouse clicks to manipulate text:
+
+	ML: Place the caret
+	MR: Select text stretch
+	
+	ML+MM: Copy selection to the caret
+	MR+MM: Copy selection to the caret
+	MR+ML: Delete selection
+	
+One further, but very important behavior, is that of middle clicking on a word in a text. This indicates to Oberon that the word must be regarded as an Oberon command. A command is an atomic action of typically short duration that has some side-effect. For example, press the middle mouse button on the word below (note how the text is underlined):
+
+												System.Time
+												
+Note how the current time is written in the viewer at the top-right of your display (this viewer is called the Oberon Log --- it shows status information). Of course not all words can be regarded as commands. A period "." appearing inside of a word gives a hint to Oberon that a command must be executed. If we regard a command of the form "M.P", then M is the name of a compiled Oberon module, and P is the name of a procedure in that module (for the non-programmers: a module is a compiled program written in the Oberon language. The Oberon system is constructed out of a set of modules). In the above case we are activating the procedure "Time" in the module called "System".
+
+A command can be given parameters by simply writing them following the command. For example, try executing the following 3 commands after placing the caret somewhere in this text:
+
+			Gadgets.Insert Button ~		Gadgets.Insert Scrollbar ~		Gadgets.Insert Clock ~
+												
+As you may guess, some of these commands are hidden behind the buttons you used before while playing in the sandboxes. In the next sandbox you will learn how to associate such commands with the gadgets you created so far. Interactively !
+
+Just as the gadget selection plays an important role when manipulating gadgets, the text selection does while executing commands. Note that the Oberon System keeps track separately of the selected gadgets and the selected text. The reason should become clear once you try some of the commands of the Oberon system.
+
+Thus instead of writing the parameter straight after the command, you can write an up-arrow (^ or ^ depending on the font used) to indicate that the parameter is the text selection. For the case above we have:
+
+			Gadgets.Insert ^		Button ~		Scrollbar ~	Clock ~
+
+You first need the select (at least) the first character of the words "Button", "Scrollbar" etc before activating the command. The Oberon system uses only a few conventions in writing parameters:
+
+	- An ^ indicates the selection
+	- A ~ terminates a list of word parameters (for example Gadgets.Insert  TextField  Integer ~ )
+	- and a * indicates that the marked document is the parameter (the marker is placed with the F1 key).
+
+The parameters following a command can either be:
+	- words consisting of alphanumeric characters (the slash as directory separator is also accepted so
+	 that we can write filenames as words)
+	- special symbols with fixed interpretation line ^, * and ~.
+	- words containing special symbols or spaces and tabs in double quotes (like "Hello World !").
+	- numbers like -10, 42.3 and 10E5.
+
+Sometimes commands expect parameters in one of the above formats, and write an error message in the Oberon log if a wrong format is used.
+
+MOST IMPORTANT: Oberon is case sensitive. Upper and lowercase letters, although the same, is regarded as different.
+
+
+Sandbox 5:	Attributes, Columbus, and Command Macros
+
+Gadgets have properties or attributes for specializing their behaviour. An attribute is a name and value pair, where the value is forced to the type INTEGER, REAL, BOOLEAN, and String respectively. For example, the Cmd attribute specifies the command a button should execute when it is pressed. A tool called the Columbus is used to view and change the attributes of a gadget. Embedded in the text below we have an Columbus document; select a gadget (and only one) and hit the Inspect button. You may now change the attributes. The Apply button updates the attributes of the selected gadget (which might be a different one).
+
+		<= Try to inspect this button and to change its command.
+	
+	
+
+Some attributes appear often:
+
+*	Name is the name of the gadget. It is used so that we can find a gadget again. Names need not be unique, although that has distinct advantages!
+
+*	Value is the current value of the gadget (for example pushed, or not pushed, in the case of the button above).
+
+*	Caption is the markings that appear in the gadget.
+
+*	Cmd is the Oberon command to be executed when the gadget is activated.
+
+*	ConsumeCmd is the command to be executed when another gadget is dropped inside the gadget.
+
+A detour:
+By now you must be curious to see what other gadgets and attributes exist. The Gadgets.Panel is the toolkit we use to create new user interfaces. Click here to take a look at it. It contains a list of gadgets marked View. Place the caret somewhere and pick a gadget from the list using the middle mouse button. Click here to open a scratch panel to play around in (Close it with the Close button in the menubar). The documents that open in new viewers can be moved around in the vertical tracks with the left mouse button in the upper part of the menubar!
+
+In this sandbox we will only take a look how to use the lookup macro in Cmd attributes; some more macros are described in the GadgetsGuide. The lookup macro is used in the form:
+
+			&ObjName.AttributeName
+
+It expands to the attribute with name AttributeName of the gadget called ObjName in the current context. The context is essentially the container (like a panel) from where the command is executed. Below we have a panel with an open button and a textfield called Filename (Check with Columbus). The button has the Cmd attribute:
+
+			Desktops.OpenDoc &Filename.Value
+	
+Desktops.OpenDoc is the command we use to open documents. For example:
+
+			Desktops.OpenDoc Gadgets.Panel
+
+When we click on the button, the Cmd attribute is parsed and expanded, and the lookup macro (with parameters) replaced by the Value attribute of the object Filename. The value attribute is of course what is written inside the textfield (again check with Columbus).
+
+				
+
+Once you get to know the macros and the gadgets available to you, you will be able to create much more complicated user interfaces --- all interactively.
+
+
+Sandbox 6:	Model Gadgets
+
+So far we have been experimenting with visual gadgets i.e. gadgets we see on the display. They were divided into two classes: elementary and container gadgets. A second important class is the so-called model gadgets. They are used to store data-values for applications and do not know how to display themselves. Instead we have to use other visual gadgets to do the job. For example, here we have a textfield and a scrollbar gadget showing the value of an integer model gadget. We say that the integer gadget is linked to the two visual gadgets. This separation of view and data is called the Model-Viewer-Controller framework. Try adjusting the scrollbar or changing the value in the textfield (remember to press RETURN !).
+
+	
+
+You may link model gadgets interactively to visual gadgets. Simply select the visual gadgets that should have the same model, and select the model from the model list in the gadgets panel. The most typical ones are the Integer, real, boolean and string models. Some other models do special things like store the current working directory or how much memory is being used. For some fun, try linking the scope visual gadget with the CurrentLoad gadget to check how hard Oberon is working.
+
+The system uses a special communications protocol to exchange information between the visual and the model gadgets. This allows us to mix and match them in any way we like. You can for example build new model gadgets that work with all the existing visual gadgets (well, only when some compatibility rules are obeyed !). It is also possible to have model gadgets that store more than one value, for example a client model gadget with a name, address and age. The textfields and other visual gadgets are also able to display selected fields of the model; for more details check the Gadgets guide.
+
+
+Sandbox 7:	Documents and Desktops
+
+Gadgets uses a unified document model. Documents (i.e. files on disk) "know" what they are (a text, a panel, a picture or something special etc). Thus only a single command is needed to open all documents. You have seen the command before:
+
+			Desktops.OpenDoc <filename>
+
+To create a new document of a specified type, we have to write the type in round brackets. For example:
+
+		Desktops.OpenDoc (PanelDoc)
+		
+Some useful documents are PanelDoc, TextDoc, and Columbus. The text gadgets have a short cut built-in to open documents even quicker: simply middle + right click on a word to open it as a document. Although we often use filename extensions like Panel and Text to store documents, you can pick whatever you want. A document contains a nameplate (use it to change the name of a document) and a menubar of often used commands. The Store button stores the document back to disk.
+
+You may influence the placement of documents when they are opened by setting the marker (press F1 to set the marker at the mouse position). The marker is often used to mark documents for further operations. Commands that use the marked document have a star * as parameter.
+
+Oberon System 3 uses two windowing strategies concurrently. By windowing strategy is meant how the documents are arranged on the display. There are two ways of doing this: overlapping or non-overlapping (also called tiled). Oberon originally only used the tiled way of organizing documents; it is ideally suited for text-oriented documents. It is the default used when Oberon is started and is often called the Oberon Viewer system --- by viewers are meant the frames in which the documents are shown including their menubars. More details about the viewer system is found in the next sandbox.
+
+After the introduction of the Gadgets system, desktops were added to the system; they implement the overlapping windowing strategy. Desktops are opened with the command:
+
+		Desktops.Open <filename>
+		
+"Desk" is normally the default extension for a desktop (and Oberon.Desk is the "standard" desktop). Notice that the desktop file is used to store the desktop configuration; this you cannot do with the Viewer system. Desktops always fill a viewer but can be grown in size until they cover the whole display. They do not have menubars; instead the control buttons are placed somewhere inside of the desktop. The top few pixels of a desktop is reserved for moving the desktop with the left mouse button.
+
+Try playing around with the Oberon desktop:	Desktops.Open Oberon.Desk
+
+
+Sandbox 8: Viewers and Tracks
+
+As introduced in sandbox 8, the document viewers use the tiled windowing strategy. Viewers are placed one below the other in vertical organizations called tracks. The two standard tracks are the user track on the left-hand side of the display and the system track on the right-hand side. The user track is wider than the system track and thus suited for displaying larger documents. The system track often contains tools that operate on the documents in the user track.
+
+The vertical organization of a track is changed by grabbing a viewer with the left mouse button in the upper part of its menubar. Movement is restricted to inside the track and between the viewer above and below. This restriction can be over ridden by interclicking with the middle mouse button.
+
+When not indicated otherwise, the Oberon system will try to place newly opened viewers at the most "intelligent" place. As this is sometimes not what is wanted, the marker can be placed with the F1 key to indicate where the viewer should be placed. The marker can also be used to place a document right into a desktop when activating a command from the viewer system. This is necessary to make the switch between tiled and overlapping strategies as the system assumes you want to continue working in one or the other.
+
+The behaviour of the Close and Store buttons in the menubar of viewers is what expected. The behavior of Grow and Copy needs some additional explanation. Clicking on Grow, "grows" the viewer to the full vertical size of the track. This is done by overlaying a new track to cover the existing one, and then opening a copy of the document to the full height of the track. This means that two copies of the same document are open, but only the top-most one is visible. Pressing the Close button in a growed viewer, closes the viewer and its associated track, so that the old document below is visible again. Any changes you made to the growed document will be reflected in the original document. Pressing the Grow button twice, grows the document first to the track size, and then to the size of the whole display. You need to press close twice to get back to the original situation again. This behaviour is quite useful to quickly zoom into a document.
+
+Pressing the Copy button opens a copy of a viewer. Both viewers show the same document although perhaps different parts. Changes in one viewer is reflected in the other (if visible).
+
+Notice: One of the first traps all first-time Oberon users fall into is to close all viewers on the display. To say that this has happened to you too, we suggest trying it out. It is an important lesson that illustrates the Oberon philosophy: complete freedom to do whatever you want without any warning from the system (no more warnings or dialogue boxes popping up to ask things you anyway want to do). As this is clearly not ideal for a nervous user, you either grow to like or to hate it !
+
+
+Conclusion
+
+This text has given an introduction to some of the features of the Oberon System. There are however lots of other things to discover. You now have the background knowledge to go look how to
+
+*	create libraries of gadgets for reuse in your own user interfaces
+*	write, compile and analyze Oberon programs
+*	create new gadgets for your applications
+*	connect to the "Infobahn" through the Internet world-wide communications network
+*	create your own documents like this (this document was created completely interactively)
+*	relax with a few Oberon games
+*	learn about the new wave of document-based user interfaces
+*	understand what componentware really means !
+
+We wish you lots of fun on your journey into the Oberon world !
+
+Johannes L. Marais, Emil Zeller and Thomas Kistler
+Adapted for Native Oberon by Pieter Muller

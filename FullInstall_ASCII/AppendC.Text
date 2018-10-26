@@ -1,0 +1,36 @@
+
+Appendix C
+
+How to get Oberon System 3
+
+
+
+
+
+Oberon System 3 can be obtained via anonymous file transfer:
+		ftp://ftp.inf.ethz.ch/pub/Oberon/System3/
+
+The subdirectory names for the different implementations are:
+
+Native	for Intel-based PC
+Win32	for Windows 95 and Windows NT (supports long file names)
+Win32s	for Windows 3.1, WfWG 3.11, Windows 95 and Windows NT
+Linux	for Linux on Intel-based PC
+Macintosh	for MacOS on PowerMac and 68K-based Apple Macintosh II
+
+MacOberon can also be obtained from:
+		ftp://ftp.ics.uci.edu/pub/oberon/System3/Macintosh/
+
+The Oberon home page URL is: http://www.oberon.ethz.ch
+The Oberon System 3 home page URL is: http://www.oberon.ethz.ch/system3
+The Oberon newsgroup is: news:comp.lang.oberon
+
+For further information, please contact
+
+		Institute for Computer Systems
+		ETH Zentrum
+		CH-8092 Zrich
+		Switzerland
+
+		Telephone +41 (0) 1 632 7311	Facsimile +41 (0) 1 632 1307
+		E-mail: oberon@inf.ethz.ch

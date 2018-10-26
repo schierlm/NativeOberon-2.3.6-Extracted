@@ -1,0 +1,141 @@
+Script
+
+Ralph Sommerer, ETH Zrich, May 1994
+
+
+Introduction
+
+Script is a simple formatting text editor for Oberon System 3, which allows arbitrary objects like graphics or pictures to be integrated directly into the text flow and manipulated in place. Script does not support a sophisticated document model, but produces the same line breaking both on the display and the printer ("wysiwyg").
+
+
+Normal Text
+
+In Oberon System 3, a text is a sequence of objects. Besides character (objects) arbitrary graphical objects are supported, which flow in the text stream like ordinary characters. Lines exceeding a certain width are automatically broken (implicit line breaking) and placed one below the other. These line breaks will be the same also on the printed page.
+	Script supports all editing operations known from the Edit tool package, i.e. mouse operations for copying and deleting of text stretches and for copying of attributes from the caret to the selection. When typing characters, their text looks such as type font, color and vertical offset are always adopted from the position after the caret.
+	A soft hyphen for hyphenating words may be inserted at the caret location by typing CTRL-"-" on the keyboard (minus key with control key hold down). The soft hyphen's display will be suppressed, unless a word containing it overflows a line. It is deleted by placing the caret in front of the subsequent character and pressing the delete key. Left and right cursor keys on the keyboard are supported.
+
+Mouse Commands
+
+ \ interclick	none	left	middle	right
+initial click
+left	track caret	-	copy to caret	copy look
+middle	execute	reload module	-	discard
+right	select	delete selection	copy to caret	-
+
+
+Arbitrary Objects
+
+Script allows arbitrary graphical objects to flow within the text stream. These objects can be manipulated directly within the text area without switching to a special graphics editor. Script is totally unaware of the facilities offered by specific graphical objects. Therefore, in order to manipulate the content of these objects, please refer to the corresponding manuals. Manipulations to concern the size of the graphical objects or their position within the text (dragging and dropping) are supported by Script, if the graphical object is behaving correctly. Hence, most graphical objects will be able to be resized directly within the text by dragging any of its corner or moved to a different location by grabbing it at a border and dropping it at the location indicated by its lower left corner (for the corresponding mouse commands refer to their manuals).
+	Figures that are copied within a text stretch will become totally distinct though they share their initial content (deep copy). Figures are always located within a text line the same way as normal characters.
+
+
+Script Commands
+
+Script.Open (name | ^)	open a script document or any text
+	option \n after the name forces all styles
+	to be initially invisible
+Script.Store	store the document
+Script.Recall	undo last delete operation, i.e. insert stretch
+	at caret
+	(may be applied several times)
+
+Script Commands to operate on the most recent text selection
+
+Script.ChangeOffset n	change vertical offset of in percent of
+	current font height
+Script.ChangeColor n	change color to index n
+Script.ChangeFont name	change font
+	(font extension *.Scn.Fnt may be omitted)
+
+Script.Search	search for the next occurrence of the
+	selected pattern starting at the caret
+	location (or the beginning of the text if
+	no caret)
+Script.Replace	replace search pattern by most recent text
+	selection and continue search
+	(caret must be located immediately after
+	the pattern)
+Script.ReplaceAll	replace all occurrences of the pattern
+	subsequent to the caret position
+
+
+Printing
+
+Script guarantees a similar look of the text both on the screen and on the printer, if either the metric or the corresponding printer fonts are available (*.Md3.Fnt, *.Pr3.Fnt respectively). Lines are placed on the page one below the other until the bottom of the printing area has been reached (implicit page break) or a page break is initiated by means of a style symbol (explicit page break). A simple pretty print mechanism avoids solitary lines of a paragraph at the top or at the bottom of the page and titles being separated from their subsequent paragraphs. Therefore, at least two lines of a paragraph are printed immediately before or after a page break.
+
+Script.Print server name [options] ~
+Script.Print server * [options]
+	\h	include header (Name of document)
+	\p[a][t][f][c] n	add page numbers starting with n (default = 0)
+		sub-options
+		a	alternating position of page number depending
+			on its parity
+			(default = at the right margin)
+		t	top of page (default = bottom of page)
+		f	suppress page number on first printed page
+		c	continue page numbering after last printed
+			document
+	\c n	print n copies (default = 1)
+	\f fontname	preset font for page numbers and header
+	\r n0 n1	print pages within the range of numbers n0 up to
+		and excluding n1
+		(numbers depending on page number option)
+	\u	use US letter page format for printing
+
+Styles
+
+Script supports and uses a special class of objects that control the look of the text following its occurrence. These objects are called style symbols. While font, offset and color specify the look of a document at the character level, style symbols allow to define the overall look of the document at the paragraph level. As the formatting style cannot be changed within a line, a style character always breaks a line. Style symbols themselves have an effect but no extent, thus are invisible on the printed page.
+	Style attributes cover formatting modes, widths of the left and right margins, tabulator stops, line spacing and page break at the style location. If not explicitly suppressed, Script always displays a "ruler" at the style location showing the current state of the style symbol. The most important style attributes can be set directly at the ruler with mouse commands.
+	Alternatively, all attributes of a given Style can be copied to any other Style with the attribute copy command the same way as text attributes (from the ruler pointed at with the left+right interclick to the selected ruler). All mouse operations can be discarded by interclicking with the remaining, i.e. yet unused, mouse button (typically the right button).
+	A new style with the same attributes as the most previous style may be inserted at the caret location by pressing the break key on the keyboard.
+Remark: If the script frame's width is less than the current style width, the ruler is nevertheless displayed with its typical shape. Attributes, however, to reach beyond the right script frame border cannot be changed, unless the view is enlarged to cover the whole document width.
+
+Script.NewStyle	insert a style symbol at the caret location
+Script.Style	toggles visibility of style rulers on/off  (default on)
+		if invisible, page breaks are nevertheless indicated
+		with dotted lines
+Script.SetStyle (attribute value | ^)
+		set style parameter attribute to value
+Script.GetStyle (attribute | ^)
+		display value of style parameter attribute
+
+Style Parameters
+
+The most frequently used style parameters can be set directly at the visual ruler associated to the style symbol. For that, the ruler consists of the following sensitive areas to be activated by clicking with the command button of the mouse (middle button) at the corresponding ruler area: the tabulator area below the horizontal bar, the left and right margin area above the horizontal bar, indicated by small boxes at both edges of the ruler, and the formatting mode area above the horizontal bar between the left and right boxes. For each of the sensitive ruler areas, the mouse commands and their effects are subsequently listed, together with an Oberon command to be alternatively used in order to yield the same effect.
+
+Formatting Mode
+The formatting mode area of the ruler is split in a left and right half, each of which controls the adjustment of text lines at the corresponding margin. Clicking thus with the command button within the left or the right half of the formatting mode area of a ruler toggles adjustment of text lines at the corresponding margin on/off. Adjustment at a margin is indicated with the box at the corresponding ruler edge being filled.
+
+	Script.SetStyle ^	adjust (block | left | right | center)
+
+Left Margin
+The left margin of the subsequent text section is adjusted by dragging the left box of a ruler with the command button pressed. Interclicking with the left button while adjusting the left margin lets the paragraph's width remain constant, i.e. allows the text section to be horizontally shifted.
+
+	Script.SetStyle ^	left n ~ with n a number in units of 1/10 mm
+
+Right Margin
+The right margin and with it the width of the subsequent text section is adjusted by dragging the right box of a ruler with the command button pressed. If the paragraph width exceeds the frame width, dragging beyond the visible range is not possible.
+
+	Script.SetStyle ^	right n ~ with n a number in units of 1/10 mm
+	Script.SetStyle ^	width n ~
+
+Tabulator Stops
+A tabulator stop position is modified by dragging a tabulator symbol below the horizontal bar with the command button pressed. A new tabulator stop is inserted by interclicking with the left button while clicking with the middle mouse button at a free location of the tabulator area. A tabulator stop is deleted by dragging it beyond the right margin of the ruler. If the paragraph width exceeds the frame width, dragging beyond the visible range is not possible.
+
+	Script.SetStyle ^	tab {n} ~ with n a number in units of 1/10 mm
+
+The following style options are not set at the ruler
+
+Line Spacing
+Allows to set a minimal line space in units of 1/10 mm or depending on the height of a (document) type font. A grid option may be set in order to snap line heights to multiples of the minimum line height. This parameter is not set at a style ruler.
+
+	Script.SetStyle ^	line (font | value)
+	Script.SetStyle ^	grid (on | off)
+
+Page Breaks
+A dotted horizontal bar denotes page breaking at the style location turned off, while a continuous bar denotes page breaking turned on, respectively. When printing, the current page will be output before printing continues after the style. This parameter is not set at a style ruler.
+Remark: if the display of style rulers is suppressed, page breaks are nevertheless indicated with a dotted line (see: Script.Style).
+
+	Script.SetStyle ^	break (before | normal)
+
+ScriptGuide.Text
